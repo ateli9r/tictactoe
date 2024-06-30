@@ -1,0 +1,21 @@
+# apps
+
+# script/**/node_modules
+# script/**/package-lock.json
+# script/webapp/dist/*
+
+# docs/trash
+# docs/assets/bundle.vendors.js.LICENSE.txt
+
+
+docs
+target
+
+script/webapp/dist
+script/**/node_modules
+script/**/package-lock.json
+
+src/main/webapp/js/app.js
+
+**/.DS_Store
+

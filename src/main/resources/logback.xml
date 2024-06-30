@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 패턴 지정 -->
+    <!-- [%d{yyyy-MM-dd HH:mm:ss}] [%-5level] [%thread] %logger{36} - %msg%n -->
+    <property name="FILE_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}] [%-5level] %logger{36} - %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 쿼리 조회 결과 로깅 X -->
+    <logger name="java.sql.ResultSet">
+        <level value="OFF" />
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+</configuration>
