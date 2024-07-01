@@ -7,10 +7,12 @@
 # docs/trash
 # docs/assets/bundle.vendors.js.LICENSE.txt
 
+.vscode
 
 docs
 target
 
+script/frontend/output/**
 script/webapp/dist
 script/**/node_modules
 script/**/package-lock.json

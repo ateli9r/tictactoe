@@ -1,0 +1,6 @@
+{
+    "buildPath": "./output",
+    "distPath": "../../src/main/webapp/WEB-INF/jsp/egovframework/portal/admin",
+    "assetsPath": "../../src/main/webapp",
+    "assetsCreateDir": true
+}
