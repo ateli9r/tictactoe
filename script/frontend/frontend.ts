@@ -7,11 +7,9 @@ class HTMLProcessor {
   private fileExtension: string;
   private assetsPath: string = ''; // Initialize assetsPath with an empty string
   private distPath: string = '';
-  private distMode: boolean = false;
 
   constructor() {
     this.frontendRoot = '.';
-    // this.outputRoot = path.join(__dirname, 'output');
     this.fileExtension = 'html'; // Default file extension
     this.loadConfig(); // Load configuration including assetsPath
   }
@@ -29,7 +27,8 @@ class HTMLProcessor {
     }
   }
 
-  private copyDirectory(src: string, dest: string, excludes: [string?] = []): void {
+  // private copyDirectory(src: string, dest: string, excludes: [string?] = []): void {
+  private copyDirectory(src: string, dest: string): void {
     if (!fs.existsSync(src)) {
       console.error(`Source directory "${src}" does not exist.`);
       return;
@@ -41,27 +40,28 @@ class HTMLProcessor {
     const entries = fs.readdirSync(src, { withFileTypes: true });
 
     for (let entry of entries) {
-        let isExclude = false
-        for (let exc of excludes) {
-            if (entry.name.indexOf(exc!) > -1) {
-                isExclude = true
-                break
-            }
-        }
-        if (isExclude) continue
+        // let isExclude = false
+        // for (let exc of excludes) {
+        //     if (entry.name.indexOf(exc!) > -1) {
+        //         isExclude = true
+        //         break
+        //     }
+        // }
+        // if (isExclude) continue
 
       const srcPath = path.join(src, entry.name);
       const destPath = path.join(dest, entry.name);
 
       if (entry.isDirectory()) {
-        this.copyDirectory(srcPath, destPath, excludes);
+        // this.copyDirectory(srcPath, destPath, excludes);
+        this.copyDirectory(srcPath, destPath);
       } else {
         fs.copyFileSync(srcPath, destPath);
       }
     }
   }
 
-  private processIncludes(content: string): string {
+  private processIncludes(content: string, isDist: boolean = false): string {
     const includePattern = /<!--\s*@?\s*(#extension\s+".*?"|#include\s+"([^"]+)")\s*-->/g;
     let match;
     while ((match = includePattern.exec(content)) !== null) {
@@ -70,8 +70,10 @@ class HTMLProcessor {
       if (command.startsWith('@')) {
         // Ignore this command, remove from content
         content = content.replace(match[0], '');
-      } else if (command.startsWith('#extension')) {
-        if (this.distMode && command.indexOf('"') > -1) {
+      }
+
+      if (command.startsWith('#extension')) {
+        if (isDist && command.indexOf('"') > -1) {
           let fileExtension = command;
           fileExtension = fileExtension.substring(fileExtension.indexOf('"') + 1);
           fileExtension = fileExtension.substring(0, fileExtension.indexOf('"'));
@@ -79,21 +81,23 @@ class HTMLProcessor {
         }
         content = content.replace(match[0], '');
       } else {
-        const includePath = path.join(this.frontendRoot, 'template', match[2] + '.html');
+          const includePath = path.join(this.frontendRoot, 'template', match[2] + '.html');
 
-        if (!this.distMode && match[2].indexOf('prefix') > -1) {
+          if (!isDist && match[2].indexOf('prefix') > -1) {
             content = content.replace(match[0], '');
-        } else {
+          } else {
             if (fs.existsSync(includePath)) {
-                const includeContent = fs.readFileSync(includePath, 'utf8');
-                content = content.replace(match[0], includeContent);
-                // Recursively process other includes
-                content = this.processIncludes(content);
-              } else {
-                console.error(`Include file "${includePath}" does not exist.`);
-              }
-        }
+              const includeContent = fs.readFileSync(includePath, 'utf8');
+              content = content.replace(match[0], includeContent);
+  
+              // Recursively process other includes
+              content = this.processIncludes(content);
+            } else {
+              console.error(`Include file "${includePath}" does not exist.`);
+            }
+          }
       }
+
     }
     return content.trim(); // Trim leading and trailing whitespace
   }
@@ -130,9 +134,7 @@ class HTMLProcessor {
     }
   }
 
-  public build(page: string = '', distMode: boolean = false): void {
-    this.distMode = distMode
-
+  public build(page: string = '', isDist: boolean): void {
     if (page.length > 0) {
       const pageFilePath = path.join(this.frontendRoot, 'template', 'page', page);
       if (!fs.existsSync(pageFilePath)) {
@@ -162,7 +164,8 @@ class HTMLProcessor {
     }
   
     // Copy all files from outputRoot to destDir
-    this.copyDirectory(srcDir, destDir, ['assets']);
+    // this.copyDirectory(srcDir, destDir, ['assets']);
+    this.copyDirectory(srcDir, destDir);
     console.log(`Copied files from ${srcDir} to ${destDir}`);
   
     if (fs.existsSync(srcAssetsDir)) {
@@ -187,7 +190,7 @@ const processor = new HTMLProcessor();
 const command = process.argv[2];
 if (command === 'build') {
   const page = process.argv[3]; // Optional page argument for build command
-  processor.build(page);
+  processor.build(page, false);
 } else if (command === 'dist') {
     processor.build('', true);
     processor.dist();
