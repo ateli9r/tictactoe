@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "jest",
+    "dist": "webpack",
     "watch": "webpack --watch",
     "product": "webpack --mode=production"
   },

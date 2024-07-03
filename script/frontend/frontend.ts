@@ -5,7 +5,7 @@ class HTMLProcessor {
   private frontendRoot: string;
   private buildPath: string = '';
   private fileExtension: string;
-  private assetsPath: string = ''; // Initialize assetsPath with an empty string
+  private distAssetsPath: string = ''; // Initialize assetsPath with an empty string
   private distPath: string = '';
 
   constructor() {
@@ -19,7 +19,7 @@ class HTMLProcessor {
     try {
       const configData = fs.readFileSync(configPath, 'utf8');
       const config = JSON.parse(configData);
-      this.assetsPath = config.assetsPath || ''; // Update assetsPath based on config
+      this.distAssetsPath = config.distAssetsPath || ''; // Update assetsPath based on config
       this.distPath = config.distPath || './dist';
       this.buildPath = config.buildPath || './output';
     } catch (error: any) {
@@ -27,7 +27,6 @@ class HTMLProcessor {
     }
   }
 
-  // private copyDirectory(src: string, dest: string, excludes: [string?] = []): void {
   private copyDirectory(src: string, dest: string): void {
     if (!fs.existsSync(src)) {
       console.error(`Source directory "${src}" does not exist.`);
@@ -40,20 +39,10 @@ class HTMLProcessor {
     const entries = fs.readdirSync(src, { withFileTypes: true });
 
     for (let entry of entries) {
-        // let isExclude = false
-        // for (let exc of excludes) {
-        //     if (entry.name.indexOf(exc!) > -1) {
-        //         isExclude = true
-        //         break
-        //     }
-        // }
-        // if (isExclude) continue
-
       const srcPath = path.join(src, entry.name);
       const destPath = path.join(dest, entry.name);
 
       if (entry.isDirectory()) {
-        // this.copyDirectory(srcPath, destPath, excludes);
         this.copyDirectory(srcPath, destPath);
       } else {
         fs.copyFileSync(srcPath, destPath);
@@ -91,7 +80,7 @@ class HTMLProcessor {
               content = content.replace(match[0], includeContent);
   
               // Recursively process other includes
-              content = this.processIncludes(content);
+              content = this.processIncludes(content, isDist);
             } else {
               console.error(`Include file "${includePath}" does not exist.`);
             }
@@ -102,7 +91,7 @@ class HTMLProcessor {
     return content.trim(); // Trim leading and trailing whitespace
   }
 
-  private processDirectory(dirPath: string): void {
+  private processDirectory(dirPath: string, isDist: boolean): void {
     if (!fs.existsSync(dirPath)) {
       console.error(`Directory "${dirPath}" does not exist.`);
       return;
@@ -113,14 +102,15 @@ class HTMLProcessor {
       const fullPath = path.join(dirPath, entry.name);
 
       if (entry.isDirectory()) {
-        this.processDirectory(fullPath); // Recursive call for subdirectories
+        this.processDirectory(fullPath, isDist); // Recursive call for subdirectories
       } else if (entry.isFile() && entry.name.endsWith('.html')) {
         // Process HTML files
         const pageContent = fs.readFileSync(fullPath, 'utf8');
-        const processedContent = this.processIncludes(pageContent);
+        const processedContent = this.processIncludes(pageContent, isDist);
 
+        const buildPath = `${this.buildPath}/${isDist ? 'dist' : 'build'}`
         const relativePath = path.relative(path.join(this.frontendRoot, 'template', 'page'), fullPath);
-        const outputFilePath = path.join(this.buildPath, relativePath.replace(/\.html$/, `.${this.fileExtension}`));
+        const outputFilePath = path.join(buildPath, relativePath.replace(/\.html$/, `.${this.fileExtension}`));
 
         // Ensure the output directory exists
         const outputDir = path.dirname(outputFilePath);
@@ -142,35 +132,34 @@ class HTMLProcessor {
         return;
       }
 
+      const buildPath = `${this.buildPath}/${isDist ? 'dist' : 'build'}`
       const pageContent = fs.readFileSync(pageFilePath, 'utf8');
-      const processedContent = this.processIncludes(pageContent);
-      const outputFilePath = path.join(this.buildPath, page.replace(/\.html$/, `.${this.fileExtension}`));
+      const processedContent = this.processIncludes(pageContent, isDist);
+      const outputFilePath = path.join(buildPath, page.replace(/\.html$/, `.${this.fileExtension}`));
       fs.writeFileSync(outputFilePath, processedContent, 'utf8');
       console.log(`Processed ${page} to ${outputFilePath}`);
     } else {
       const pagePath = path.join(this.frontendRoot, 'template', 'page');
-      this.processDirectory(pagePath);
+      this.processDirectory(pagePath, isDist);
     }
   }
 
   public dist(): void {
     const outputDirectory = this.distPath;
-    const srcDir = this.buildPath;
+    const srcDir = `${this.buildPath}/dist`;
     const destDir = path.resolve(outputDirectory);
-    const srcAssetsDir = path.resolve(`${srcDir}/assets`);
+    const srcAssetsDir = path.resolve(`${this.frontendRoot}/assets`);
   
     if (!fs.existsSync(destDir)) {
       fs.mkdirSync(destDir, { recursive: true });
     }
   
     // Copy all files from outputRoot to destDir
-    // this.copyDirectory(srcDir, destDir, ['assets']);
     this.copyDirectory(srcDir, destDir);
-    console.log(`Copied files from ${srcDir} to ${destDir}`);
   
     if (fs.existsSync(srcAssetsDir)) {
-        const assetsPath = `${this.assetsPath}/assets`
-        let destAssetsDir = path.resolve(assetsPath); // Get absolute path of assets directory
+        let destAssetsPath = `${this.distAssetsPath}/assets`
+        let destAssetsDir = path.resolve(destAssetsPath); // Get absolute path of assets directory
 
         if (!fs.existsSync(destAssetsDir)) {
             fs.mkdirSync(destAssetsDir, { recursive: true })
@@ -179,7 +168,6 @@ class HTMLProcessor {
 
         console.log(`Copied assets from ${srcAssetsDir} to ${destAssetsDir}`)
     }
-
   }
 }
 

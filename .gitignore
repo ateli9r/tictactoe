@@ -12,6 +12,7 @@
 docs
 target
 
+script/frontend/assets/**
 script/frontend/output/**
 script/webapp/dist
 script/**/node_modules

@@ -19,7 +19,8 @@ module.exports = {
     },
     output: {
         filename: "app.js",
-        path: path.resolve(__dirname, "../../docs/assets/js/"),
+        // path: path.resolve(__dirname, "../../docs/assets/js/"),
+        path: path.resolve(__dirname, "../frontend/assets"),
         library: "ateli9r",
     },
     plugins: [
