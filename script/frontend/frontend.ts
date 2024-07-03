@@ -7,6 +7,7 @@ class HTMLProcessor {
   private fileExtension: string;
   private distAssetsPath: string = ''; // Initialize assetsPath with an empty string
   private distPath: string = '';
+  private watchPath: string = '';
 
   constructor() {
     this.frontendRoot = '.';
@@ -22,6 +23,7 @@ class HTMLProcessor {
       this.distAssetsPath = config.distAssetsPath || ''; // Update assetsPath based on config
       this.distPath = config.distPath || './dist';
       this.buildPath = config.buildPath || './output';
+      this.watchPath = config.watchPath || './output/build'
     } catch (error: any) {
       console.error(`Error loading config file at ${configPath}: ${error.message}`);
     }
@@ -169,6 +171,35 @@ class HTMLProcessor {
         console.log(`Copied assets from ${srcAssetsDir} to ${destAssetsDir}`)
     }
   }
+
+  public watch(): void {
+    const chokidar = require('chokidar');
+    let isWatchInitialied = false
+
+    chokidar.watch(this.watchPath).on('ready', () => {
+      setTimeout(() => {
+        isWatchInitialied = true
+      }, 1000)
+    })
+
+    chokidar.watch(this.watchPath).on('all', (event: any, path: any) => {
+      if (!isWatchInitialied) return
+      if (!(path.indexOf('template/page/') > -1 && (event == 'add' || event == 'change'))) return
+      let isApplied = false
+
+      try {
+        const page = path.replace(/template\/page\//, '')
+        this.build(page, false)
+        isApplied = true
+      } catch (e) { /* ignore */ }
+
+      if (!isApplied) {
+        this.build('', false)
+      }
+    })
+
+    console.log(`Watching for changes in ${this.watchPath}`)
+  }
 }
 
 // Script execution
@@ -182,6 +213,10 @@ if (command === 'build') {
 } else if (command === 'dist') {
     processor.build('', true);
     processor.dist();
+} else if (command == 'watch') {
+  processor.watch()
 } else {
   console.error('Unknown command. Please use "build" or "dist".');
 }
+
+// private setupWatch(): void {

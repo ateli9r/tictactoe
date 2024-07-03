@@ -4,7 +4,8 @@
   "main": "frontend.js",
   "scripts": {
     "build": "npx ts-node frontend.ts build",
-    "dist": "npx ts-node frontend.ts dist"
+    "dist": "npx ts-node frontend.ts dist",
+    "watch": "npx ts-node frontend.ts watch"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +14,8 @@
   "devDependencies": {
     "@types/node": "^20.14.9",
     "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0"
   }
 }
