@@ -1,11 +1,11 @@
 package admin;
 
-import egovframework.portal.admin.AdminUserService;
-import egovframework.portal.admin.AdminUserServiceImpl;
-import egovframework.portal.admin.AdminUserStore;
-import egovframework.portal.admin.AdminUserStoreLocal;
-import egovframework.portal.admin.dto.AdminUserLoginRequestDto;
-import egovframework.portal.admin.dto.AdminUserLoginResponseDto;
+import egovframework.ateli9r.admin.AdminUserService;
+import egovframework.ateli9r.admin.AdminUserServiceImpl;
+import egovframework.ateli9r.admin.AdminUserStore;
+import egovframework.ateli9r.admin.AdminUserStoreLocal;
+import egovframework.ateli9r.admin.dto.AdminUserLoginRequestDto;
+import egovframework.ateli9r.admin.dto.AdminUserLoginResponseDto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

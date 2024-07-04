@@ -1,8 +1,8 @@
-package egovframework.portal.admin;
+package egovframework.ateli9r.admin;
 
-import egovframework.portal.admin.domain.AdminUserData;
-import egovframework.portal.admin.domain.AdminUserList;
-import egovframework.portal.admin.domain.AdminUserSearch;
+import egovframework.ateli9r.admin.domain.AdminUserData;
+import egovframework.ateli9r.admin.domain.AdminUserList;
+import egovframework.ateli9r.admin.domain.AdminUserSearch;
 import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 

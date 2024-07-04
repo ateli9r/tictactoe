@@ -1,6 +1,6 @@
-package egovframework.portal.admin;
+package egovframework.ateli9r.admin;
 
-import egovframework.portal.admin.dto.*;
+import egovframework.ateli9r.admin.dto.*;
 
 /**
  * 관리자 회원 인터페이스

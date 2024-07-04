@@ -1,7 +1,7 @@
-package egovframework.portal.admin;
+package egovframework.ateli9r.admin;
 
 // import egovframework.example.sample.service.impl.EgovSampleServiceImpl;
-import egovframework.portal.admin.dto.*;
+import egovframework.ateli9r.admin.dto.*;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 // import org.slf4j.Logger;

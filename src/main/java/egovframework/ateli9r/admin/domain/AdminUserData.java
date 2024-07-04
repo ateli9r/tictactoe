@@ -1,11 +1,11 @@
-package egovframework.portal.admin.domain;
+package egovframework.ateli9r.admin.domain;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class AdminUserList {
+public class AdminUserData {
     private String userId;
     private String email;
 }

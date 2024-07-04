@@ -1,4 +1,4 @@
-package egovframework.portal.admin;
+package egovframework.ateli9r.admin;
 
 import egovframework.example.sample.service.impl.EgovSampleServiceImpl;
 import org.egovframe.rte.fdl.property.EgovPropertyService;

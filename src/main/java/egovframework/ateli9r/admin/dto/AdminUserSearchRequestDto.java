@@ -1,4 +1,4 @@
-package egovframework.portal.admin.dto;
+package egovframework.ateli9r.admin.dto;
 
 import lombok.Builder;
 import lombok.Getter;

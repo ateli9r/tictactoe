@@ -1,4 +1,4 @@
-package egovframework.portal.admin.domain;
+package egovframework.ateli9r.admin.domain;
 
 import lombok.Builder;
 import lombok.Getter;
