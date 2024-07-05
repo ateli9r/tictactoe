@@ -7,6 +7,7 @@ interface Config {
   serverAppName: [string];
   requestSuffix: string;
   serverIndexDir: string;
+  serverRootFiles: [any];
 }
 
 class Server {
@@ -42,12 +43,19 @@ class Server {
     const listAppName = this.config!.serverAppName;
     const suffix = this.config!.requestSuffix;
     const indexDir = this.config!.serverIndexDir;
+    const listRootFiles = this.config!.serverRootFiles;
 
     this.app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
     this.app.get('/', (req: Request, res: Response) => {
       res.sendFile(path.resolve(indexDir))
     });
+
+    listRootFiles.forEach((rootFile) => {
+      this.app.get(`/${rootFile.name}`, (req: Request, res: Response) => {
+        res.sendFile(path.resolve(rootFile.path))
+      });
+    })
 
     console.log('Frontend App Setup', listAppName)
     listAppName.forEach((appName) => {

@@ -1,0 +1,55 @@
+{
+    "projectName": "틱택토 게임",
+    "items": [
+        {
+            "appName": "tictactoe",
+            "pages": [
+                {
+                    "page": "game.html",
+                    "subject": "",
+                    "describe": "",
+                    "charge": "",
+                    "start": "",
+                    "end": "",
+                    "status": "",
+                    "progress": 0.0
+                },
+                {
+                    "page": "home.html",
+                    "subject": "",
+                    "describe": "",
+                    "charge": "",
+                    "start": "",
+                    "end": "",
+                    "status": "",
+                    "progress": 0.0
+                },
+                {
+                    "page": "login.html",
+                    "subject": "",
+                    "describe": "",
+                    "charge": "",
+                    "start": "",
+                    "end": "",
+                    "status": "",
+                    "progress": 0.0
+                }
+            ]
+        },
+        {
+            "appName": "test",
+            "pages": [
+                {
+                    "page": "test.html",
+                    "subject": "",
+                    "describe": "",
+                    "charge": "",
+                    "start": "",
+                    "end": "",
+                    "status": "",
+                    "progress": 0.0
+                }
+            ]
+        }
+    ]
+}

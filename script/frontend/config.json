@@ -3,8 +3,12 @@
     "watchPath": "./template",
     "distPath": "../../src/main/webapp/WEB-INF/jsp/egovframework/ateli9r/admin",
     "distAssetsPath": "../../src/main/webapp",
-    "serverIndexDir": "./template/page/index.html",
+    "serverIndexDir": "./template/dashboard.html",
     "serverDocRoot": "./output/build",
     "serverAppName": ["tictactoe", "test"],
+    "serverRootFiles": [
+        {"name": "dashboard.json", "path": "./dashboard.json"},
+        {"name": "robots.txt", "path": "./assets/robots.txt"}
+    ],
     "requestSuffix": ".do"
 }
