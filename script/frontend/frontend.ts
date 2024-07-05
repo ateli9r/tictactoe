@@ -101,6 +101,9 @@ class HTMLProcessor {
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
     for (let entry of entries) {
+      // root에 있는 index.html은 제외
+      if (dirPath == 'template/page' && entry.name == 'index.html') continue
+
       const fullPath = path.join(dirPath, entry.name);
 
       if (entry.isDirectory()) {

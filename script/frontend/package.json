@@ -6,7 +6,8 @@
     "build": "npx ts-node frontend.ts build",
     "dist": "npx ts-node frontend.ts dist",
     "watch": "npx ts-node frontend.ts watch",
-    "server": "npx ts-node server.ts"
+    "server": "npx ts-node server.ts",
+    "clean": "rm -rf ./output/*"
   },
   "keywords": [],
   "author": "",

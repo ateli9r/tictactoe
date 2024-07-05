@@ -3,7 +3,8 @@
     "watchPath": "./template",
     "distPath": "../../src/main/webapp/WEB-INF/jsp/egovframework/ateli9r/admin",
     "distAssetsPath": "../../src/main/webapp",
-    "serverDocRoot": "../frontend/output/build",
-    "serverAppName": "tictactoe",
+    "serverIndexDir": "./template/page/index.html",
+    "serverDocRoot": "./output/build",
+    "serverAppName": ["tictactoe", "test"],
     "requestSuffix": ".do"
 }

@@ -4,8 +4,9 @@ import fs from 'fs';
 
 interface Config {
   serverDocRoot: string;
-  serverAppName: string;
+  serverAppName: [string];
   requestSuffix: string;
+  serverIndexDir: string;
 }
 
 class Server {
@@ -38,20 +39,23 @@ class Server {
 
   private setupRoutes(): void {
     const htmlDir = this.config!.serverDocRoot;
-    const appName = this.config!.serverAppName;
+    const listAppName = this.config!.serverAppName;
     const suffix = this.config!.requestSuffix;
+    const indexDir = this.config!.serverIndexDir;
 
     this.app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
     this.app.get('/', (req: Request, res: Response) => {
-      res.sendFile(path.resolve(path.join(htmlDir, 'index.html')));
+      res.sendFile(path.resolve(indexDir))
     });
 
-    this.app.get(`/${appName}/:id${suffix}`, (req: Request, res: Response) => {
-      const filePath = `${htmlDir}/${appName}/${req.params.id}.html`;
-      console.log(filePath);
-      res.sendFile(path.resolve(filePath));
-    });
+    console.log('Frontend App Setup', listAppName)
+    listAppName.forEach((appName) => {
+      this.app.get(`/${appName}/:id${suffix}`, (req: Request, res: Response) => {
+        const filePath = `${htmlDir}/${appName}/${req.params.id}.html`;
+        res.sendFile(path.resolve(filePath));
+      });
+    })
   }
 
   public start(): void {
