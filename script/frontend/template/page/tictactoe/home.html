@@ -43,151 +43,84 @@
 <!-- Main -->
 <div id="main">
     <article id="sign_in">
-        <h2 class="major">sign in</h2>
-        <form method="post" action="#">
+        <h2 class="major">로그인</h2>
+        <form>
             <div class="fields">
                 <div class="field half">
-                    <label for="demo-name">Name</label>
-                    <input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+                    <label for="userId">아이디</label>
+                    <input type="text" id="userId" value="" placeholder="아이디" />
                 </div>
                 <div class="field half">
-                    <label for="demo-email">Email</label>
-                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
-                </div>
-                <div class="field">
-                    <label for="demo-category">Category</label>
-                    <select name="demo-category" id="demo-category">
-                        <option value="">-</option>
-                        <option value="1">Manufacturing</option>
-                        <option value="1">Shipping</option>
-                        <option value="1">Administration</option>
-                        <option value="1">Human Resources</option>
-                    </select>
-                </div>
-                <div class="field half">
-                    <input type="radio" id="demo-priority-low" name="demo-priority" checked>
-                    <label for="demo-priority-low">Low</label>
-                </div>
-                <div class="field half">
-                    <input type="radio" id="demo-priority-high" name="demo-priority">
-                    <label for="demo-priority-high">High</label>
-                </div>
-                <div class="field half">
-                    <input type="checkbox" id="demo-copy" name="demo-copy">
-                    <label for="demo-copy">Email me a copy</label>
-                </div>
-                <div class="field half">
-                    <input type="checkbox" id="demo-human" name="demo-human" checked>
-                    <label for="demo-human">Not a robot</label>
-                </div>
-                <div class="field">
-                    <label for="demo-message">Message</label>
-                    <textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+                    <label for="userPw">패스워드</label>
+                    <input type="password" id="userPw" value="" placeholder="패스워드" />
                 </div>
             </div>
             <ul class="actions">
-                <li><input type="submit" value="Send Message" class="primary" /></li>
-                <li><input type="reset" value="Reset" /></li>
+                <li><button type="button" class="primary">로그인</button></li>
             </ul>
         </form>
     </article>
 
     <article id="sign_up">
-        <h2 class="major">sign up</h2>
+        <h2 class="major">회원가입</h2>
         <form method="post" action="#">
             <div class="fields">
                 <div class="field half">
-                    <label for="demo-name">Name</label>
-                    <input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+                    <label for="userId">아이디</label>
+                    <input type="text" id="userId" value="" placeholder="아이디" />
                 </div>
                 <div class="field half">
-                    <label for="demo-email">Email</label>
-                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
-                </div>
-                <div class="field">
-                    <label for="demo-category">Category</label>
-                    <select name="demo-category" id="demo-category">
-                        <option value="">-</option>
-                        <option value="1">Manufacturing</option>
-                        <option value="1">Shipping</option>
-                        <option value="1">Administration</option>
-                        <option value="1">Human Resources</option>
-                    </select>
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" value="" placeholder="이메일" />
                 </div>
                 <div class="field half">
-                    <input type="radio" id="demo-priority-low" name="demo-priority" checked>
-                    <label for="demo-priority-low">Low</label>
+                    <label for="userPw">패스워드</label>
+                    <input type="password" id="userPw" value="" placeholder="패스워드" />
                 </div>
                 <div class="field half">
-                    <input type="radio" id="demo-priority-high" name="demo-priority">
-                    <label for="demo-priority-high">High</label>
-                </div>
-                <div class="field half">
-                    <input type="checkbox" id="demo-copy" name="demo-copy">
-                    <label for="demo-copy">Email me a copy</label>
-                </div>
-                <div class="field half">
-                    <input type="checkbox" id="demo-human" name="demo-human" checked>
-                    <label for="demo-human">Not a robot</label>
-                </div>
-                <div class="field">
-                    <label for="demo-message">Message</label>
-                    <textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+                    <label for="userPwRe">패스워드 재입력</label>
+                    <input type="password" id="userPwRe" value="" placeholder="패스워드 재입력" />
                 </div>
             </div>
             <ul class="actions">
-                <li><input type="submit" value="Send Message" class="primary" /></li>
-                <li><input type="reset" value="Reset" /></li>
+                <li><button type="button" class="primary">회원가입</button></li>
             </ul>
         </form>
     </article>
 
     <article id="user_lost">
-        <h2 class="major">user lost</h2>
+        <h2 class="major">계정찾기</h2>
         <form method="post" action="#">
             <div class="fields">
                 <div class="field half">
-                    <label for="demo-name">Name</label>
-                    <input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+                    <input type="radio" id="find_id" name="find_mode" checked>
+                    <label for="find_id">아이디 찾기</label>
                 </div>
                 <div class="field half">
-                    <label for="demo-email">Email</label>
-                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
-                </div>
-                <div class="field">
-                    <label for="demo-category">Category</label>
-                    <select name="demo-category" id="demo-category">
-                        <option value="">-</option>
-                        <option value="1">Manufacturing</option>
-                        <option value="1">Shipping</option>
-                        <option value="1">Administration</option>
-                        <option value="1">Human Resources</option>
-                    </select>
+                    <input type="radio" id="find_pw" name="find_mode">
+                    <label for="find_pw">패스워드 찾기</label>
                 </div>
                 <div class="field half">
-                    <input type="radio" id="demo-priority-low" name="demo-priority" checked>
-                    <label for="demo-priority-low">Low</label>
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" value="" placeholder="이메일" />
                 </div>
                 <div class="field half">
-                    <input type="radio" id="demo-priority-high" name="demo-priority">
-                    <label for="demo-priority-high">High</label>
+                    <label for="verifyNo">인증번호</label>
+                    <input type="email" id="verifyNo" value="" placeholder="인증번호" />
                 </div>
                 <div class="field half">
-                    <input type="checkbox" id="demo-copy" name="demo-copy">
-                    <label for="demo-copy">Email me a copy</label>
+                    <label for="userPw">패스워드</label>
+                    <input type="password" id="userPw" value="" placeholder="패스워드" />
                 </div>
                 <div class="field half">
-                    <input type="checkbox" id="demo-human" name="demo-human" checked>
-                    <label for="demo-human">Not a robot</label>
-                </div>
-                <div class="field">
-                    <label for="demo-message">Message</label>
-                    <textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+                    <label for="userPwRe">패스워드 재입력</label>
+                    <input type="email" id="userPwRe" value="" placeholder="패스워드 재입력" />
                 </div>
             </div>
             <ul class="actions">
-                <li><input type="submit" value="Send Message" class="primary" /></li>
-                <li><input type="reset" value="Reset" /></li>
+                <li><button type="button">이메일 발송</button></li>
+                <li><button type="button">인증번호 확인</button></li>
+                <li><button type="button" class="primary">확인</button></li>
             </ul>
         </form>
     </article>
