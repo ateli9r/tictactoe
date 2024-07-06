@@ -184,14 +184,16 @@ class HTMLProcessor {
 
     chokidar.watch(this.watchPath).on('all', (event: any, path: any) => {
       if (!isWatchInitialied) return
-      if (!(path.indexOf('template/page/') > -1 && (event == 'add' || event == 'change'))) return
+      if (!(event == 'add' || event == 'change')) return
       let isApplied = false
 
-      try {
-        const page = path.replace(/template\/page\//, '')
-        this.build(page, false)
-        isApplied = true
-      } catch (e) { /* ignore */ }
+      if (path.indexOf('template/page/') > -1) {
+        try {
+          const page = path.replace(/template\/page\//, '')
+          this.build(page, false)
+          isApplied = true
+        } catch (e) { /* ignore */ }
+      }
 
       if (!isApplied) {
         this.build('', false)

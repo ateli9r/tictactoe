@@ -2,6 +2,303 @@
 <!-- #include "prefix/jsp" -->
 <!-- #include "layout/header" -->
 
-home.html
+
+<!-- Header -->
+<header id="header">
+    <div class="logo">
+        <span class="icon fa-dice-d6"></span>
+    </div>
+    <div class="content">
+        <div class="inner">
+            <h1>TICTACTOE</h1>
+        </div>
+    </div>
+    <nav v-if="isShowMenu">
+        <ul>
+            <li v-if="isLoggedIn"><a href="#new_game">새 게임</a></li>
+            <li v-if="isLoggedIn"><a href="#join_game">게임 참가</a></li>
+            <li v-if="isLoggedIn"><a href="#my_page">마이 페이지</a></li>
+            <li v-if="isLoggedIn"><a href="#list_rank">랭킹</a></li>
+            <li v-if="!isLoggedIn"><a href="#sign_in">로그인</a></li>
+            <li v-if="!isLoggedIn"><a href="#sign_up">회원가입</a></li>
+            <li v-if="!isLoggedIn"><a href="#user_lost">계정찾기</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Game -->
+<div id="game">
+    <div v-if="isShowGame">
+        <table>
+            <tr v-for="row in board">
+                <td v-for="cell in row" @click="onClickCell">{{ cell }}</td>
+            </tr>
+        </table>
+        <div class="text-center">
+            <button class="button primary small" @click="onClickQuit">나가기</button>
+        </div>
+    </div>
+</div>
+
+<!-- Main -->
+<div id="main">
+    <article id="sign_in">
+        <h2 class="major">sign in</h2>
+        <form method="post" action="#">
+            <div class="fields">
+                <div class="field half">
+                    <label for="demo-name">Name</label>
+                    <input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+                </div>
+                <div class="field half">
+                    <label for="demo-email">Email</label>
+                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
+                </div>
+                <div class="field">
+                    <label for="demo-category">Category</label>
+                    <select name="demo-category" id="demo-category">
+                        <option value="">-</option>
+                        <option value="1">Manufacturing</option>
+                        <option value="1">Shipping</option>
+                        <option value="1">Administration</option>
+                        <option value="1">Human Resources</option>
+                    </select>
+                </div>
+                <div class="field half">
+                    <input type="radio" id="demo-priority-low" name="demo-priority" checked>
+                    <label for="demo-priority-low">Low</label>
+                </div>
+                <div class="field half">
+                    <input type="radio" id="demo-priority-high" name="demo-priority">
+                    <label for="demo-priority-high">High</label>
+                </div>
+                <div class="field half">
+                    <input type="checkbox" id="demo-copy" name="demo-copy">
+                    <label for="demo-copy">Email me a copy</label>
+                </div>
+                <div class="field half">
+                    <input type="checkbox" id="demo-human" name="demo-human" checked>
+                    <label for="demo-human">Not a robot</label>
+                </div>
+                <div class="field">
+                    <label for="demo-message">Message</label>
+                    <textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+                </div>
+            </div>
+            <ul class="actions">
+                <li><input type="submit" value="Send Message" class="primary" /></li>
+                <li><input type="reset" value="Reset" /></li>
+            </ul>
+        </form>
+    </article>
+
+    <article id="sign_up">
+        <h2 class="major">sign up</h2>
+        <form method="post" action="#">
+            <div class="fields">
+                <div class="field half">
+                    <label for="demo-name">Name</label>
+                    <input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+                </div>
+                <div class="field half">
+                    <label for="demo-email">Email</label>
+                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
+                </div>
+                <div class="field">
+                    <label for="demo-category">Category</label>
+                    <select name="demo-category" id="demo-category">
+                        <option value="">-</option>
+                        <option value="1">Manufacturing</option>
+                        <option value="1">Shipping</option>
+                        <option value="1">Administration</option>
+                        <option value="1">Human Resources</option>
+                    </select>
+                </div>
+                <div class="field half">
+                    <input type="radio" id="demo-priority-low" name="demo-priority" checked>
+                    <label for="demo-priority-low">Low</label>
+                </div>
+                <div class="field half">
+                    <input type="radio" id="demo-priority-high" name="demo-priority">
+                    <label for="demo-priority-high">High</label>
+                </div>
+                <div class="field half">
+                    <input type="checkbox" id="demo-copy" name="demo-copy">
+                    <label for="demo-copy">Email me a copy</label>
+                </div>
+                <div class="field half">
+                    <input type="checkbox" id="demo-human" name="demo-human" checked>
+                    <label for="demo-human">Not a robot</label>
+                </div>
+                <div class="field">
+                    <label for="demo-message">Message</label>
+                    <textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+                </div>
+            </div>
+            <ul class="actions">
+                <li><input type="submit" value="Send Message" class="primary" /></li>
+                <li><input type="reset" value="Reset" /></li>
+            </ul>
+        </form>
+    </article>
+
+    <article id="user_lost">
+        <h2 class="major">user lost</h2>
+        <form method="post" action="#">
+            <div class="fields">
+                <div class="field half">
+                    <label for="demo-name">Name</label>
+                    <input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+                </div>
+                <div class="field half">
+                    <label for="demo-email">Email</label>
+                    <input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
+                </div>
+                <div class="field">
+                    <label for="demo-category">Category</label>
+                    <select name="demo-category" id="demo-category">
+                        <option value="">-</option>
+                        <option value="1">Manufacturing</option>
+                        <option value="1">Shipping</option>
+                        <option value="1">Administration</option>
+                        <option value="1">Human Resources</option>
+                    </select>
+                </div>
+                <div class="field half">
+                    <input type="radio" id="demo-priority-low" name="demo-priority" checked>
+                    <label for="demo-priority-low">Low</label>
+                </div>
+                <div class="field half">
+                    <input type="radio" id="demo-priority-high" name="demo-priority">
+                    <label for="demo-priority-high">High</label>
+                </div>
+                <div class="field half">
+                    <input type="checkbox" id="demo-copy" name="demo-copy">
+                    <label for="demo-copy">Email me a copy</label>
+                </div>
+                <div class="field half">
+                    <input type="checkbox" id="demo-human" name="demo-human" checked>
+                    <label for="demo-human">Not a robot</label>
+                </div>
+                <div class="field">
+                    <label for="demo-message">Message</label>
+                    <textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+                </div>
+            </div>
+            <ul class="actions">
+                <li><input type="submit" value="Send Message" class="primary" /></li>
+                <li><input type="reset" value="Reset" /></li>
+            </ul>
+        </form>
+    </article>
+
+    <article id="new_game">
+        <h2 class="major">새 게임</h2>
+        <form>
+            <div class="fields">
+                <div class="field">
+                    <label for="game_room_name">제목</label>
+                    <input type="text" id="game_room_name" value="" placeholder="제목" />
+                </div>
+            </div>
+            <ul class="actions">
+                <li><button type="button" class="primary" @click="clickTest">만들기</button></li>
+            </ul>
+        </form>
+    </article>
+
+    <article id="join_game">
+        <h2 class="major">게임 참가</h2>
+        <div class="table-wrapper">
+            <table class="alt">
+                <thead>
+                    <tr>
+                        <th>플레이어</th>
+                        <th>상태</th>
+                        <th>보드</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in [{}]">
+                        <td>
+                            <div class="text-center">
+                                <b>O</b><br>
+                                #player
+                            </div>
+                            <br>
+                            <div class="text-center">
+                                <b>X</b><br>
+                                #player
+                            </div>
+                        </td>
+                        <td>#status</td>
+                        <td>
+                            <table style="margin-bottom:0px;">
+                                <tr>
+                                    <td>O</td>
+                                    <td>O</td>
+                                    <td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>O</td>
+                                    <td>O</td>
+                                    <td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>O</td>
+                                    <td>O</td>
+                                    <td>O</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+    </article>
+
+    <article id="my_page">
+        <h2 class="major">마이 페이지</h2>
+        <form>
+            <div class="fields">
+                <div class="field half">
+                    <label for="demo-name">사용자명</label>
+                    <span>#player</span>
+                </div>
+                <div class="field half">
+                    <label for="demo-email">전적</label>
+                    <span>0전 0승 0패 0무 (9999위)</span>
+                </div>
+            </div>
+            <ul class="actions">
+                <li><button type="button" class="small">닉네임 변경</button></li>
+                <li><button type="button" class="small">패스워드 변경</button></li>
+            </ul>
+        </form>
+    </article>
+
+    <article id="list_rank">
+        <h2 class="major">랭킹</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>플레이어</th>
+                        <th>전적</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Item One</td>
+                        <td>Ante turpis integer aliquet porttitor.</td>
+                        <td>29.99</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+</div>
 
 <!-- #include "layout/footer" -->

@@ -1,0 +1,24 @@
+#game table {
+    margin-top: 2rem;
+}
+
+#game table td {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    text-align: center; /* Ensures the image is centered horizontally */
+    vertical-align: middle; /* Ensures the cell's content is centered vertically */
+}
+
+#game table td img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px; /* Adjust the width as needed */
+    height: 80px; /* Adjust the height as needed */
+}
+
+.text-center {
+    text-align: center;
+}

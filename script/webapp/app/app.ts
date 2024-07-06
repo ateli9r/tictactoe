@@ -1,6 +1,7 @@
 import HomeApp from './home_app'
 import CounterApp from './modal/counter_app'
 import HelloApp from './modal/hello_app'
+import TicTacToeApp from './tictactoe_app'
 
 export default class App {
     /**
@@ -37,7 +38,7 @@ export default class App {
      */
     private initialize() {
         // 마우스 우클릭 금지
-        document.oncontextmenu = () => { return false }
+        // document.oncontextmenu = () => { return false }
 
         // 홈 컨텐츠 불러오기
         this.loadHome()
@@ -47,12 +48,15 @@ export default class App {
      * 홈 컨텐츠 불러오기
      */
     private loadHome() {
-        const home = new HomeApp()
-        home.render('#story')
-        home.render('#skill', true)
-        home.render('#service', true)
-        home.render('#values')
-        home.render('#portfolio', true)
+        const ttt = new TicTacToeApp()
+        ttt.renderHeader('#header')
+        ttt.renderSignIn('#sign_in')
+        ttt.renderSignUp('#sign_up')
+        ttt.renderNewGame('#new_game')
+        ttt.renderJoinGame('#join_game')
+        ttt.renderMyPage('#my_page')
+        ttt.renderRanking('#list_rank')
+        ttt.renderGame('#game')
     }
 
     /**
