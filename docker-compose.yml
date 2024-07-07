@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mariadb:
     image: mariadb:latest
-    container_name: portal-db
+    container_name: tictactoe-db
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -12,7 +12,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - portal-db_data:/var/lib/mysql
+      - tictactoe-db_data:/var/lib/mysql
 
 volumes:
-  portal-db_data:
+  tictactoe-db_data:

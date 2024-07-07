@@ -1,6 +1,8 @@
 import { createApp, onMounted, ref } from 'vue'
 import CommonUtil from '../util/common'
 import TicTactoeModel from '../model/tictactoe_model'
+import TicTacToeFetchRepository from '../repos/tictactoe_fetch'
+import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto'
 
 /**
  * 틱택토 앱
@@ -11,17 +13,22 @@ export default class TicTacToeApp {
      */
     private model: TicTactoeModel
 
-    // private isLoggedIn = ref(false)
-    private isLoggedIn = ref(true)
+    private isLoggedIn = ref(false)
+    // private isLoggedIn = ref(true)
     private isShowGame = ref(false)
     private isShowMenu = ref(true)
 
     constructor() {
-        this.model = new TicTactoeModel()
+        const repos = new TicTacToeFetchRepository()
+        this.model = new TicTactoeModel(repos)
     }
 
     closeModal() {
         location.hash = ''
+    }
+
+    move(key: string) {
+        location.hash = key
     }
 
     async renderHeader(selector: string) {
@@ -40,14 +47,41 @@ export default class TicTacToeApp {
     }
 
     async renderSignIn(selector: string) {
-        const onClickLogin = () => {
-            console.log('onClickLogin')
+        const dataUserId = ref('')
+        const dataUserPw = ref('')
+
+        const onClickLogin = async () => {
+            if (dataUserId.value.length == 0 || dataUserPw.value.length == 0) {
+                const msg = '아이디, 패스워드를 입력해주세요.'
+                alert(msg)
+                return
+            }
+
+            const resp = await this.model.login({
+                userId: dataUserId.value,
+                userPw: dataUserPw.value,
+            } as LoginRequestDto) as LoginResponseDto
+
+            if (!resp.success) {
+                const msg = resp.msg
+                alert(msg)
+                return
+            }
+            const user = await this.model.getUserInfo()
+            
+            console.log(user)
+
+            if (user != null) {
+                this.isLoggedIn.value = true
+            }
+            this.closeModal()
         }
 
         const app = createApp({
             setup() {
                 return {
-                    // 
+                    dataUserId,
+                    dataUserPw,
                     onClickLogin,
                 }
             }

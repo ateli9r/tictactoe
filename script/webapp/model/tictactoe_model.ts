@@ -1,40 +1,48 @@
-// import { marked } from 'marked'
+import TicTacToeRepository from '../repos/tictactoe_repos'
+import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto'
+import { UserInfoDto } from '../typedef/user_dto'
 import CommonUtil from '../util/common'
 
 /**
  * 틱택토 모델
  */
 export default class TicTactoeModel {
-    private debug: boolean = false
+    /**
+     * 레파지토리
+     */
+    private repos: TicTacToeRepository | null = null
 
     /**
-     * 테스트 플래그 설정
-     * @param debug 디버그 모드
+     * 생성자
+     * @param repos 레파지토리
      */
-    setDebugMode(debug: boolean) {
-        this.debug = debug
+    constructor(repos: TicTacToeRepository) {
+        this.repos = repos
+    }
+    
+    /**
+     * 로그인
+     * @param request 로그인 요청
+     * @returns 로그인 응답
+     */
+    async login(request: LoginRequestDto): Promise<LoginResponseDto | null> {
+        return await this.repos?.login(request) ?? null
     }
 
     /**
-     * 컨텐츠 가져오기
-     * @param contentId 컨텐츠 ID
-     * @returns html 변환된 텍스트
+     * 로그아웃
+     * @returns 정상 실행 여부
      */
-    // async content(contentId: string): Promise<string | null> {
-    //     const resp = await CommonUtil.readData(`/contents/home/${contentId}.md`, this.debug)
-    //     if (resp == null) return null
-    //     // return this.parse(resp)
-    //     return CommonUtil.parseMarkdown(resp)
-    // }
+    async logout() {
+        return await this.repos?.logout()
+    }
 
-    /*
-        async renderSignIn(selector: string) {
-        async renderSignUp(selector: string) {
-        async renderUserLost(selector: string) {
-        async renderNewGame(selector: string) {
-        async renderJoinGame(selector: string) {
-        async renderMyPage(selector: string) {
-        async renderRanking(selector: string) {
-        async renderGame(selector: string) {
-    */
+    /**
+     * 사용자 정보 가져오기
+     * @returns 사용자 정보
+     */
+    async getUserInfo(): Promise<UserInfoDto | null> {
+        return await this.repos?.getUserInfo() ?? null
+    }
+
 }

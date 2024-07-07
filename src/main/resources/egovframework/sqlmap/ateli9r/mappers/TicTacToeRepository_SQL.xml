@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.ateli9r.tictactoe.repos.TicTacToeRepository">
+
+    <select id="login" resultType="boolean">
+        SELECT COUNT(*) = 1
+        FROM `t_user`
+        WHERE `user_id` = #{userId}
+        AND `user_pw` = #{userPw}
+    </select>
+
+    <select id="getUserInfo" resultMap="UserInfoResultMap">
+        SELECT u.`user_id` AS userId, u.`nickname`,
+            r.`total`, r.`wins`, r.`losses`, r.`draws`
+        FROM `t_user` u
+        INNER JOIN `t_rank` r ON u.`user_id` = r.`user_id`
+        WHERE u.`user_id` = #{userId}
+    </select>
+
+    <resultMap id="UserInfoResultMap" type="egovframework.ateli9r.tictactoe.typedef.domain.UserRecord">
+        <result property="userId" column="userId"/>
+        <result property="nickname" column="nickname"/>
+        <association property="record" javaType="egovframework.ateli9r.tictactoe.typedef.domain.RankRecord">
+            <result property="total" column="total"/>
+            <result property="wins" column="wins"/>
+            <result property="losses" column="losses"/>
+            <result property="draws" column="draws"/>
+        </association>
+    </resultMap>
+
+</mapper>

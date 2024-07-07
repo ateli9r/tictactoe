@@ -18,16 +18,16 @@ class Server {
   private config: Config | null;
 
   constructor(port: number, configFilePath: string) {
-    this.app = express();
-    this.port = port;
-    this.config = this.readConfigFile(configFilePath);
+    this.app = express()
+    this.port = port
+    this.config = this.readConfigFile(configFilePath)
 
     if (!this.config) {
-      throw new Error('Failed to read config file.');
+      throw new Error('Failed to read config file.')
     }
 
-    this.setupRoutes();
-    this.setupOptions();
+    this.setupRoutes()
+    this.setupOptions()
   }
 
   private readConfigFile(configFilePath: string): Config | null {

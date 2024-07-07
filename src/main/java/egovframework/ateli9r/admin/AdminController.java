@@ -43,7 +43,7 @@ public class AdminController {
 //
 //			}
 //		}
-		LOGGER.info("home.do");
+		// LOGGER.info("home.do");
 		return "admin/home";
 	}
 

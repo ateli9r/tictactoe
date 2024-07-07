@@ -1,7 +1,7 @@
 {
     "buildPath": "./output",
     "watchPath": "./template",
-    "distPath": "../../src/main/webapp/WEB-INF/jsp/egovframework/ateli9r/admin",
+    "distPath": "../../src/main/webapp/WEB-INF/jsp/egovframework/ateli9r/tictactoe",
     "distAssetsPath": "../../src/main/webapp",
     "serverIndexDir": "./template/dashboard.html",
     "serverDocRoot": "./output/build",
