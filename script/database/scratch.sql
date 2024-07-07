@@ -241,3 +241,33 @@ set
 where 1=1;
 
 
+
+SELECT u.user_id AS userId, u.nickname, r.total, r.wins, r.losses, r.draws
+FROM t_user u
+INNER JOIN t_rank r ON u.user_id = r.user_id
+WHERE u.user_id = 'user1'
+;
+
+
+SELECT COUNT(*) = 1
+FROM `t_user`
+WHERE `user_id` = 'user1'
+AND `user_pw` = SHA2('user2', 256)
+
+
+
+SELECT u.`user_id` AS userId, u.`nickname`,
+	r.`total`, r.`wins`, r.`losses`, r.`draws`
+FROM `t_user` u
+INNER JOIN `t_rank` r ON u.`user_id` = r.`user_id`
+WHERE u.`user_id` = 'user1'
+
+
+
+
+SELECT u.`user_id` AS userId, u.`nickname`, r.`total`, r.`wins`, r.`losses`, r.`draws` FROM `t_user` u INNER JOIN `t_rank` r ON u.`user_id` = r.`user_id` WHERE u.`user_id` = ${userId}
+
+
+
+
+

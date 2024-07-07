@@ -1,7 +1,6 @@
 package egovframework.ateli9r.tictactoe.repos;
 
-import egovframework.ateli9r.tictactoe.typedef.domain.RankRecord;
-import egovframework.ateli9r.tictactoe.typedef.domain.UserRecord;
+import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
 
 public class TicTacToeLocalRepository implements TicTacToeRepository {
 
@@ -15,17 +14,15 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
     }
 
     @Override
-    public UserRecord getUserInfo(String userId) {
+    public UserInfoRecord getUserInfo(String userId) {
         if (userId.equals("login_ok")) {
-            return UserRecord.builder()
+            return UserInfoRecord.builder()
                 .userId("login_ok")
                 .nickname("테스트")
-                .rank(RankRecord.builder()
-                    .total(123)
-                    .wins(50)
-                    .losses(50)
-                    .draws(23)
-                    .build())
+                .total(123)
+                .wins(50)
+                .losses(50)
+                .draws(23)
                 .build();
         }
         return null;

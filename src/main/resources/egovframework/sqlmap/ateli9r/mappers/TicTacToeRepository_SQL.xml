@@ -9,6 +9,15 @@
         AND `user_pw` = #{userPw}
     </select>
 
+    <resultMap id="UserInfoResultMap" type="egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord">
+        <result property="userId" column="userId"/>
+        <result property="nickname" column="nickname"/>
+        <result property="total" column="total"/>
+        <result property="wins" column="wins"/>
+        <result property="losses" column="losses"/>
+        <result property="draws" column="draws"/>
+    </resultMap>
+
     <select id="getUserInfo" resultMap="UserInfoResultMap">
         SELECT u.`user_id` AS userId, u.`nickname`,
             r.`total`, r.`wins`, r.`losses`, r.`draws`
@@ -16,16 +25,5 @@
         INNER JOIN `t_rank` r ON u.`user_id` = r.`user_id`
         WHERE u.`user_id` = #{userId}
     </select>
-
-    <resultMap id="UserInfoResultMap" type="egovframework.ateli9r.tictactoe.typedef.domain.UserRecord">
-        <result property="userId" column="userId"/>
-        <result property="nickname" column="nickname"/>
-        <association property="record" javaType="egovframework.ateli9r.tictactoe.typedef.domain.RankRecord">
-            <result property="total" column="total"/>
-            <result property="wins" column="wins"/>
-            <result property="losses" column="losses"/>
-            <result property="draws" column="draws"/>
-        </association>
-    </resultMap>
 
 </mapper>
