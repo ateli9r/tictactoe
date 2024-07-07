@@ -1,6 +1,7 @@
 import express, { Request, Response, Application } from 'express';
 import path from 'path';
 import fs from 'fs';
+import { FrontendBuilder } from './frontend';
 
 interface Config {
   serverDocRoot: string;
@@ -8,6 +9,7 @@ interface Config {
   requestSuffix: string;
   serverIndexDir: string;
   serverRootFiles: [any];
+  serverOptions: any;
 }
 
 class Server {
@@ -25,6 +27,7 @@ class Server {
     }
 
     this.setupRoutes();
+    this.setupOptions();
   }
 
   private readConfigFile(configFilePath: string): Config | null {
@@ -64,6 +67,15 @@ class Server {
         res.sendFile(path.resolve(filePath));
       });
     })
+  }
+
+  private setupOptions(): void {
+    const options = this.config!.serverOptions
+
+    if (options.watchFrontend) {
+      const builder = new FrontendBuilder()
+      builder.watch()
+    }
   }
 
   public start(): void {

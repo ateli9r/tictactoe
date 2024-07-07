@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-class HTMLProcessor {
+class FrontendBuilder {
   private frontendRoot: string;
   private buildPath: string = '';
   private fileExtension: string;
@@ -204,21 +204,23 @@ class HTMLProcessor {
   }
 }
 
-// Script execution
-const processor = new HTMLProcessor();
+if (process.argv.length > 2) {
+  // Script execution
+  const builder = new FrontendBuilder();
 
-// Determine which command is being run
-const command = process.argv[2];
-if (command === 'build') {
-  const page = process.argv[3]; // Optional page argument for build command
-  processor.build(page, false);
-} else if (command === 'dist') {
-    processor.build('', true);
-    processor.dist();
-} else if (command == 'watch') {
-  processor.watch()
-} else {
-  console.error('Unknown command. Please use "build" or "dist".');
+  // Determine which command is being run
+  const command = process.argv[2];
+  if (command === 'build') {
+    const page = process.argv[3]; // Optional page argument for build command
+    builder.build(page, false);
+  } else if (command === 'dist') {
+      builder.build('', true);
+      builder.dist();
+  } else if (command == 'watch') {
+    builder.watch()
+  } else {
+    console.error('Unknown command. Please use "build" or "dist".');
+  }
 }
 
-// private setupWatch(): void {
+export { FrontendBuilder }

@@ -6,6 +6,9 @@
     "serverIndexDir": "./template/dashboard.html",
     "serverDocRoot": "./output/build",
     "serverAppName": ["tictactoe", "test"],
+    "serverOptions": {
+        "watchFrontend": true
+    },
     "serverRootFiles": [
         {"name": "dashboard.json", "path": "./dashboard.json"},
         {"name": "robots.txt", "path": "./assets/robots.txt"}
