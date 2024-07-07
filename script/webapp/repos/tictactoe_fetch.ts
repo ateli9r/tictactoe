@@ -15,7 +15,6 @@ export default class TicTacToeFetchRepository implements TicTacToeRepository {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: formBody.toString()
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -27,10 +26,39 @@ export default class TicTacToeFetchRepository implements TicTacToeRepository {
     }
 
     async logout(): Promise<boolean> {
+        try {
+            // const host = 'http://localhost:8080/tictactoe'
+            // const response = await fetch(`${host}/api/userInfo.do`, {
+            //     method: 'POST',
+            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            //     // body: formBody.toString()
+            // });
+            // if (!response.ok) {
+            //     throw new Error('Network response was not ok');
+            // }
+            // return await response.json() as UserInfoDto
+        } catch (error) {
+            // console.error('There was a problem with the fetch operation:', error);
+        }
         return false
     }
 
     async getUserInfo(): Promise<UserInfoDto | null> {
+        try {
+            const host = 'http://localhost:8080/tictactoe'
+            const response = await fetch(`${host}/api/userInfo.do`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                // body: formBody.toString()
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log(response)
+            return await response.json() as UserInfoDto
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
         return null
     }
 }

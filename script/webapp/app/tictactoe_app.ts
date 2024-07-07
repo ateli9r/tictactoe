@@ -67,14 +67,20 @@ export default class TicTacToeApp {
                 alert(msg)
                 return
             }
-            const user = await this.model.getUserInfo()
-            
-            console.log(user)
+            callUserInfo()
+        }
 
-            if (user != null) {
-                this.isLoggedIn.value = true
-            }
-            this.closeModal()
+        const callUserInfo = async () => {
+            console.log('!!! callUserInfo')
+            setTimeout(async () => {
+                const user = await this.model.getUserInfo()
+                console.log(user)
+    
+                if (user != null) {
+                    this.isLoggedIn.value = true
+                }
+                this.closeModal()
+            }, 1000)
         }
 
         const app = createApp({

@@ -33,8 +33,8 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         return LoginResponseDto.builder().success(success).msg(msg).build();
     }
 
-    public UserInfoDto getUserInfo(String userId) {
-        return null;
+    public UserInfoDto getUserInfo(String userId) throws Exception {
+        return this.ticTacToeRepository.getUserInfo(userId).toDto();
     }
 
     public String hash(String input) {

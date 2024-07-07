@@ -1,8 +1,13 @@
 package egovframework.ateli9r.tictactoe.typedef.domain;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class RankRecord {
-    public int total;
-    public int wins;
-    public int losses;
-    public int draws;
+    private int total;
+    private int wins;
+    private int losses;
+    private int draws;
 }

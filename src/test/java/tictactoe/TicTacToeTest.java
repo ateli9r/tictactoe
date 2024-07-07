@@ -7,6 +7,7 @@ import egovframework.ateli9r.tictactoe.repos.TicTacToeLocalRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,7 +75,11 @@ public class TicTacToeTest {
         LoginResponseDto resp = model.login(req);
         assertTrue(resp.isSuccess());
         assertEquals(resp.getMsg(), "");
+
+        UserInfoDto user = model.getUserInfo(req.getUserId());
+        assertTrue(user != null);
     }
+
 
 
     /**

@@ -22,13 +22,13 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
         if (this.isLoggedIn) {
             return {
                 userId: 'test1',
-                userNm: '테스트',
+                nickname: '테스트',
                 rank: {
                     rankNo: 123,
                     total: 123,
-                    win: 50,
-                    lose: 50,
-                    draw: 23,
+                    wins: 50,
+                    losses: 50,
+                    draws: 23,
                 } as RankInfoDto
             } as UserInfoDto
         }

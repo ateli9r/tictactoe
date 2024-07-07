@@ -41,8 +41,11 @@ describe('TicTacToeModel 테스트', () => {
         const user = await model?.getUserInfo()
         expect(user != null).toBe(true)
         expect(user?.userId).toBe('test1')
-        expect(user?.userNm).toBe('테스트')
-        expect(user?.rank.total).toBeGreaterThanOrEqual(123)
+        expect(user?.nickname).toBe('테스트')
+        expect(user?.rank.total).toBeGreaterThan(1)
+        expect(user?.rank.wins).toBeGreaterThan(1)
+        expect(user?.rank.losses).toBeGreaterThan(1)
+        expect(user?.rank.draws).toBeGreaterThan(1)
     })
 
     // test('signUp', () => {

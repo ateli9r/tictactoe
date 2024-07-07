@@ -4,6 +4,7 @@ package egovframework.ateli9r.tictactoe.app;
 import egovframework.ateli9r.tictactoe.model.TicTacToeModel;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
 import egovframework.example.sample.service.impl.EgovSampleServiceImpl;
 
 
@@ -53,6 +54,18 @@ public class TicTacToeApp {
 			session.setAttribute("userId", reqDto.getUserId());
 		}
 		return respDto;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/api/userInfo.do", method = RequestMethod.POST)
+	public UserInfoDto userInfo(HttpServletRequest request) throws Exception {
+		HttpSession session = request.getSession();
+		if (session.getAttribute("userId") != null) {
+			String userId = (String) session.getAttribute("userId");
+			UserInfoDto respDto = ticTacToeModel.getUserInfo(userId);
+			return respDto;
+		}
+		return null;
 	}
 
 }

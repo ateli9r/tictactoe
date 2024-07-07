@@ -1,14 +1,13 @@
 interface RankInfoDto {
-    rankNo: number;
     total: number;
-    win: number;
-    lose: number;
-    draw: number;
+    wins: number;
+    losses: number;
+    draws: number;
 }
 
 interface UserInfoDto {
     userId: string;
-    userNm: string;
+    nickname: string;
     rank: RankInfoDto;
 }
 
