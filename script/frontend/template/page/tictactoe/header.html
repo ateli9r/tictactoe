@@ -1,0 +1,19 @@
+<div class="logo">
+    <span class="icon fa-dice-d6"></span>
+</div>
+<div class="content">
+    <div class="inner">
+        <h1>TICTACTOE</h1>
+    </div>
+</div>
+<nav v-if="isShowMenu">
+    <ul>
+        <li v-if="isLoggedIn"><a href="#new_game">새 게임</a></li>
+        <li v-if="isLoggedIn"><a href="#join_game">게임 참가</a></li>
+        <li v-if="isLoggedIn"><a href="#my_page">마이 페이지</a></li>
+        <li v-if="isLoggedIn"><a href="#ranking">랭킹</a></li>
+        <li v-if="!isLoggedIn"><a href="#sign_in">로그인</a></li>
+        <li v-if="!isLoggedIn"><a href="#sign_up">회원가입</a></li>
+        <li v-if="!isLoggedIn"><a href="#user_lost">계정찾기</a></li>
+    </ul>
+</nav>

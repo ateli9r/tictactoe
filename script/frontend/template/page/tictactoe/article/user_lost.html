@@ -1,0 +1,40 @@
+<article id="user_lost">
+    <h2 class="major">계정찾기</h2>
+    <form method="post" action="#">
+        <div class="fields">
+            <div class="field half">
+                <input type="radio" id="find_id" name="find_mode" value="find_id" v-model="findMode">
+                <label for="find_id">아이디 찾기</label>
+            </div>
+            <div class="field half">
+                <input type="radio" id="find_pw" name="find_mode" value="find_pw" v-model="findMode">
+                <label for="find_pw">패스워드 찾기</label>
+            </div>
+            <template v-if="status == 'email'">
+                <div class="field half">
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" value="" placeholder="이메일" />
+                </div>
+                <div class="field half">
+                    <label for="verifyNo">인증번호</label>
+                    <input type="email" id="verifyNo" value="" placeholder="인증번호" />
+                </div>
+            </template>
+            <template v-if="status == 'changeUserPw'">
+                <div class="field half">
+                    <label for="userPw">패스워드</label>
+                    <input type="password" id="userPw" value="" placeholder="패스워드" />
+                </div>
+                <div class="field half">
+                    <label for="userPwRe">패스워드 재입력</label>
+                    <input type="email" id="userPwRe" value="" placeholder="패스워드 재입력" />
+                </div>
+            </template>
+        </div>
+        <ul class="actions">
+            <li v-if="status == 'email'"><button type="button" @click="onClickSendEmail">이메일 발송</button></li>
+            <li v-if="status == 'email'"><button type="button" @click="onClickVerifyNo">인증번호 확인</button></li>
+            <li v-if="status == 'changeUserPw'"><button type="button" @click="onClickChangeUserPw">확인</button></li>
+        </ul>
+    </form>
+</article>

@@ -1,6 +1,6 @@
 import { createApp, onMounted, ref } from 'vue'
 import CommonUtil from '../util/common'
-import HomeModel from '../model/home_model'
+import TicTactoeModel from '../model/tictactoe_model'
 
 /**
  * 틱택토 앱
@@ -9,14 +9,15 @@ export default class TicTacToeApp {
     /**
      * 틱택토 모델
      */
-    // private model: HomeModel
+    private model: TicTactoeModel
 
-    private isLoggedIn = ref(false)
+    // private isLoggedIn = ref(false)
+    private isLoggedIn = ref(true)
     private isShowGame = ref(false)
     private isShowMenu = ref(true)
 
     constructor() {
-        // this.model = new HomeModel()
+        this.model = new TicTactoeModel()
     }
 
     closeModal() {
@@ -39,10 +40,15 @@ export default class TicTacToeApp {
     }
 
     async renderSignIn(selector: string) {
+        const onClickLogin = () => {
+            console.log('onClickLogin')
+        }
+
         const app = createApp({
             setup() {
                 return {
                     // 
+                    onClickLogin,
                 }
             }
         })
@@ -50,10 +56,45 @@ export default class TicTacToeApp {
     }
 
     async renderSignUp(selector: string) {
+        const onClickSubmit = () => {
+            console.log('onClickSubmit')
+        }
+
         const app = createApp({
             setup() {
                 return {
                     // 
+                    onClickSubmit,
+                }
+            }
+        })
+        app.mount(selector)
+    }
+
+    async renderUserLost(selector: string) {
+        const findMode = ref('find_id')
+        const status = ref('email')
+
+        const onClickSendEmail = () => {
+            console.log('onClickSendEmail')
+        }
+
+        const onClickVerifyNo = () => {
+            console.log('onClickVerifyNo')
+        }
+
+        const onClickChangeUserPw = () => {
+            console.log('onClickChangeUserPw')
+        }
+
+        const app = createApp({
+            setup() {
+                return {
+                    status,
+                    findMode,
+                    onClickSendEmail,
+                    onClickVerifyNo,
+                    onClickChangeUserPw,
                 }
             }
         })
@@ -97,10 +138,19 @@ export default class TicTacToeApp {
     }
 
     async renderMyPage(selector: string) {
+        const onClickChangeName = () => {
+            console.log('onClickChangeName')
+        }
+
+        const onClickChangeUserPw = () => {
+            console.log('onClickChangeUserPw')
+        }
+
         const app = createApp({
             setup() {
                 return {
-                    // 
+                    onClickChangeName,
+                    onClickChangeUserPw,
                 }
             }
         })

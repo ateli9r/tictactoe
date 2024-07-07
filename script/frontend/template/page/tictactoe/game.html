@@ -1,9 +1,10 @@
-<!-- #extension "jsp" -->
-<!-- #include "prefix/jsp" -->
-<!-- #include "layout/header" -->
-
-<div class="container">
-    game.html
+<div v-if="isShowGame">
+    <table>
+        <tr v-for="row in board">
+            <td v-for="cell in row" @click="onClickCell">{{ cell }}</td>
+        </tr>
+    </table>
+    <div class="text-center">
+        <button class="button primary small" @click="onClickQuit">나가기</button>
+    </div>
 </div>
-
-<!-- #include "layout/footer" -->

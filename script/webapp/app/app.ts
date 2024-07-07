@@ -1,4 +1,4 @@
-import HomeApp from './home_app'
+// import HomeApp from './home_app'
 import CounterApp from './modal/counter_app'
 import HelloApp from './modal/hello_app'
 import TicTacToeApp from './tictactoe_app'
@@ -52,10 +52,11 @@ export default class App {
         ttt.renderHeader('#header')
         ttt.renderSignIn('#sign_in')
         ttt.renderSignUp('#sign_up')
+        ttt.renderUserLost('#user_lost')
         ttt.renderNewGame('#new_game')
         ttt.renderJoinGame('#join_game')
         ttt.renderMyPage('#my_page')
-        ttt.renderRanking('#list_rank')
+        ttt.renderRanking('#ranking')
         ttt.renderGame('#game')
     }
 
