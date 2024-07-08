@@ -1,5 +1,7 @@
 import { describe, expect, test, beforeAll } from '@jest/globals'
 import { LoginRequestDto } from '../typedef/login_dto'
+import { SignUpFormDto } from '../typedef/user_dto'
+import { StatusResponseDto } from '../typedef/cmmn_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
 import TicTacToeModel from '../model/tictactoe_model'
 
@@ -48,10 +50,47 @@ describe('TicTacToeModel 테스트', () => {
         expect(user?.rank.draws).toBeGreaterThan(1)
     })
 
-    // test('signUp', () => {
-    //     //
-    //     expect(false).toBe(true)
-    // })
+    test('signUp', async () => {
+        const form = {
+            userId: '',
+            nickname: '',
+            email: '',
+            password: '',
+        } as SignUpFormDto
+        
+        let resp = await model?.signUp(form) as StatusResponseDto
+        expect(resp != null).toBe(true)
+        expect(resp.success).toBe(false)
+        expect(resp.msg).toBe('아이디를 입력해 주세요.')
+
+        form.userId = 'test'
+
+        resp = await model?.signUp(form) as StatusResponseDto
+        expect(resp != null).toBe(true)
+        expect(resp.success).toBe(false)
+        expect(resp.msg).toBe('닉네임을 입력해 주세요.')
+
+        form.nickname = 'test'
+
+        resp = await model?.signUp(form) as StatusResponseDto
+        expect(resp != null).toBe(true)
+        expect(resp.success).toBe(false)
+        expect(resp.msg).toBe('이메일을 입력해 주세요.')
+
+        form.email = 'test@test.com'
+
+        resp = await model?.signUp(form) as StatusResponseDto
+        expect(resp != null).toBe(true)
+        expect(resp.success).toBe(false)
+        expect(resp.msg).toBe('패스워드를 입력해 주세요.')
+
+        form.password = 'test@test.com'
+
+        resp = await model?.signUp(form) as StatusResponseDto
+        expect(resp != null).toBe(true)
+        expect(resp.success).toBe(true)
+        expect(resp.msg).toBe('')
+    })
 
     // test('sendVerifyEmail', () => {
     //     //

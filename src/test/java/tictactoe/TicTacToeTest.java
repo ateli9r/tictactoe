@@ -7,6 +7,8 @@ import egovframework.ateli9r.tictactoe.repos.TicTacToeLocalRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -86,7 +88,7 @@ public class TicTacToeTest {
      * 로그아웃
      */
     @Test
-    public void testLogout() {
+    public void testLogout() throws Exception {
         /*
          * # 전제조건
          * - 세션이 생성되어 있다
@@ -105,7 +107,7 @@ public class TicTacToeTest {
      * - 사용자의 계정을 생성한다
      */
     @Test
-    public void testCreateUser() {
+    public void testCreateUser() throws Exception {
         /*
          * # 전제조건
          * - 생성하고자 하는 아이디로 기생성된 계정이 없어야 한다
@@ -120,6 +122,60 @@ public class TicTacToeTest {
         //  회원 가입	T-02-0002	중복항목 확인	가입하기 버튼 클릭 시, 기존 유저와 겹쳐지는 항목(비밀번호 제외)이 있을 경우 오류사항 안내를 출력한다.
         //  회원 가입	T-02-0003	회원 가입 성공	회원가입이 완료 되면 안내창과 함께 로그인 페이지로 이동한다.
          
+        StatusResponseDto respDto1 = model.signUp(SignUpFormDto.builder()
+            .userId("")
+            .nickname("")
+            .email("")
+            .password("")
+            .build());
+
+        assertNotNull(respDto1);
+        assertEquals(respDto1.isSuccess(), false);
+        assertEquals(respDto1.getMsg(), "아이디를 입력해 주세요.");
+
+        StatusResponseDto respDto2 = model.signUp(SignUpFormDto.builder()
+            .userId("test")
+            .nickname("")
+            .email("")
+            .password("")
+            .build());
+
+        assertNotNull(respDto2);
+        assertEquals(respDto2.isSuccess(), false);
+        assertEquals(respDto2.getMsg(), "닉네임을 입력해 주세요.");
+
+        StatusResponseDto respDto3 = model.signUp(SignUpFormDto.builder()
+            .userId("test")
+            .nickname("test")
+            .email("")
+            .password("")
+            .build());
+
+        assertNotNull(respDto3);
+        assertEquals(respDto3.isSuccess(), false);
+        assertEquals(respDto3.getMsg(), "이메일을 입력해 주세요.");
+
+        StatusResponseDto respDto4 = model.signUp(SignUpFormDto.builder()
+            .userId("test")
+            .nickname("test")
+            .email("test@test.com")
+            .password("")
+            .build());
+
+        assertNotNull(respDto4);
+        assertEquals(respDto4.isSuccess(), false);
+        assertEquals(respDto4.getMsg(), "패스워드를 입력해 주세요.");
+
+        StatusResponseDto respDto5 = model.signUp(SignUpFormDto.builder()
+            .userId("test")
+            .nickname("test")
+            .email("test@test.com")
+            .password("test@test.com")
+            .build());
+
+        assertNotNull(respDto5);
+        assertEquals(respDto5.isSuccess(), true);
+        assertEquals(respDto5.getMsg(), "");
     }
 
     /**
@@ -127,7 +183,7 @@ public class TicTacToeTest {
      * - 사용자의 아이디를 조회한다
      */
     @Test
-    public void testFindUserId() {
+    public void testFindUserId() throws Exception {
         /*
          * # 전제조건
          * - 회원가입시 입력한 이메일을 알고 있어야 한다
@@ -149,7 +205,7 @@ public class TicTacToeTest {
      * - 사용자의 비밀번호를 조회한다
      */
     @Test
-    public void testFindUserPw() {
+    public void testFindUserPw() throws Exception {
         /*
          * # 전제조건
          * - 회원가입시 입력한 아이디와 이메일을 알고 있어야 한다
@@ -173,7 +229,7 @@ public class TicTacToeTest {
      * - 사용자의 게임 전적을 조회한다
      */
     @Test
-    public void testViewGameRank() {
+    public void testViewGameRank() throws Exception {
         /*
          * # 전제조건
          * - 조회하고자 하는 아이디를 알고 있거나 랭킹 5위 내의 정보(닉네임, 프로필, 전적)를 조회할 수 있어야 한다
@@ -191,7 +247,7 @@ public class TicTacToeTest {
      * - 사용자의 게임 전적을 변경한다
      */
     @Test
-    public void testChangeGameRank() {
+    public void testChangeGameRank() throws Exception {
         /*
          * # 전제조건
          * - 아이디에 매핑된 전적을 변경할 수 있어야 한다
@@ -208,7 +264,7 @@ public class TicTacToeTest {
      * - 사용자의 정보를 변경한다
      */
     @Test
-    public void testChangeUserInfo() {
+    public void testChangeUserInfo() throws Exception {
         /*
          * # 전제조건
          * - 세션에 저장된 아이디에 매핑된 계정이 있어야 한다
@@ -227,7 +283,7 @@ public class TicTacToeTest {
      * - 사용자의 정보를 삭제한다
      */
     @Test
-    public void testDeleteUserInfo() {
+    public void testDeleteUserInfo() throws Exception {
         /*
          * # 전제조건
          * - 세션에 저장된 아이디에 매핑된 계정이 있어야 한다
@@ -246,7 +302,7 @@ public class TicTacToeTest {
      * - 게임 룸을 생성한다
      */
     @Test
-    public void testCreateGameRoom() {
+    public void testCreateGameRoom() throws Exception {
         /*
          * # 전제조건
          * - 로그인이 되어 있다
@@ -264,7 +320,7 @@ public class TicTacToeTest {
      * - 게임 룸에 참가한다
      */
     @Test
-    public void testJoinGameRoom() {
+    public void testJoinGameRoom() throws Exception {
         /*
          * # 전제조건
          * - 참가할 게임 룸이 생성되어 있다
@@ -285,7 +341,7 @@ public class TicTacToeTest {
      * - 게임 룸의 게임 정보를 업데이트
      */
     @Test
-    public void testUpdateGameRoom() {
+    public void testUpdateGameRoom() throws Exception {
         /*
          * # 전제조건
          * - 진행중인 게임 룸 정보가 매핑된 게임 진행 페이지에
@@ -317,7 +373,7 @@ public class TicTacToeTest {
      * - 게임 정보를 조회한다
      */
     @Test
-    public void testViewGameRoom() {
+    public void testViewGameRoom() throws Exception {
         /*
          * # 전제조건
          * - 진행중인 게임 룸 정보가 매핑된 게임 진행 페이지에 접속되어 있다
@@ -334,7 +390,7 @@ public class TicTacToeTest {
      * - 게임 룸 리스트를 조회한다
      */
     @Test
-    public void testListGameRoom() {
+    public void testListGameRoom() throws Exception {
         /*
          * # 전제조건
          * - 게임 리스트 페이지에 접속해 있다

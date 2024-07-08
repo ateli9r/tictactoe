@@ -26,4 +26,9 @@
         WHERE u.`user_id` = #{userId}
     </select>
 
+    <insert id="signUp" parameterType="egovframework.ateli9r.tictactoe.typedef.domain.SignUpFormDto">
+        INSERT INTO `t_user` (`user_id`, `nickname`, `email`, `password`)
+        VALUES (#{userId}, #{nickname}, #{email}, #{password})
+    </insert>
+
 </mapper>

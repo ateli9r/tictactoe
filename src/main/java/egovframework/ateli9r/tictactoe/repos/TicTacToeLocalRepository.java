@@ -1,6 +1,7 @@
 package egovframework.ateli9r.tictactoe.repos;
 
 import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
+import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 
 public class TicTacToeLocalRepository implements TicTacToeRepository {
 
@@ -28,4 +29,14 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
         return null;
     }
 
+    @Override
+    public int signUp(SignUpFormDto request) {
+        int chk = 0;
+        if (request.getUserId().length() > 0) chk++;
+        if (request.getNickname().length() > 0) chk++;
+        if (request.getEmail().length() > 0) chk++;
+        if (request.getPassword().length() > 0) chk++;
+        if (chk == 4) return 1;
+        return 0;
+    }
 }

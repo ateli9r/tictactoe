@@ -1,14 +1,19 @@
-interface RankInfoDto {
+export interface RankInfoDto {
     total: number;
     wins: number;
     losses: number;
     draws: number;
 }
 
-interface UserInfoDto {
+export interface UserInfoDto {
     userId: string;
     nickname: string;
     rank: RankInfoDto;
 }
 
-export { UserInfoDto, RankInfoDto }
+export interface SignUpFormDto {
+    userId: string;
+    nickname: string;
+    email: string;
+    password: string;
+}

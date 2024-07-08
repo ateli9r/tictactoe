@@ -1,8 +1,10 @@
-import { LoginRequestDto, LoginResponseDto } from "../typedef/login_dto";
-import { UserInfoDto } from "../typedef/user_dto";
+import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto';
+import { SignUpFormDto, UserInfoDto } from '../typedef/user_dto';
+import { StatusResponseDto } from '../typedef/cmmn_dto'
 
 export default interface TicTacToeRepository {
     login(request: LoginRequestDto): Promise<LoginResponseDto | null>;
     logout(): Promise<boolean>;
     getUserInfo(): Promise<UserInfoDto | null>;
+    signUp(request: SignUpFormDto): Promise<StatusResponseDto | null>;
 }
