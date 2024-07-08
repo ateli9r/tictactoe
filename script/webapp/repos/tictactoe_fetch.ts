@@ -1,6 +1,6 @@
-import { LoginRequestDto, LoginResponseDto } from "../typedef/login_dto";
-import { UserInfoDto } from "../typedef/user_dto";
-import TicTacToeRepository from "./tictactoe_repos";
+import { LoginRequestDto, LoginResponseDto } from "../typedef/login_dto"
+import { UserInfoDto } from "../typedef/user_dto"
+import TicTacToeRepository from "./tictactoe_repos"
 
 export default class TicTacToeFetchRepository implements TicTacToeRepository {
     async login(request: LoginRequestDto): Promise<LoginResponseDto | null> {
@@ -13,32 +13,34 @@ export default class TicTacToeFetchRepository implements TicTacToeRepository {
             const response = await fetch(`${host}/api/login.do`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                credentials: 'include',
                 body: formBody.toString()
             });
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('Network response was not ok')
             }
             return await response.json() as LoginResponseDto
         } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+            console.error('There was a problem with the fetch operation:', error)
         }
         return null
     }
 
     async logout(): Promise<boolean> {
         try {
-            // const host = 'http://localhost:8080/tictactoe'
-            // const response = await fetch(`${host}/api/userInfo.do`, {
-            //     method: 'POST',
-            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            //     // body: formBody.toString()
-            // });
-            // if (!response.ok) {
-            //     throw new Error('Network response was not ok');
-            // }
+            const host = 'http://localhost:8080/tictactoe'
+            const response = await fetch(`${host}/api/logout.do`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                credentials: 'include',
+            })
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.text() == 'true'
             // return await response.json() as UserInfoDto
         } catch (error) {
-            // console.error('There was a problem with the fetch operation:', error);
+            console.error('There was a problem with the fetch operation:', error)
         }
         return false
     }
@@ -49,15 +51,14 @@ export default class TicTacToeFetchRepository implements TicTacToeRepository {
             const response = await fetch(`${host}/api/userInfo.do`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                // body: formBody.toString()
-            });
+                credentials: 'include',
+            })
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            console.log(response)
             return await response.json() as UserInfoDto
         } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+            console.error('There was a problem with the fetch operation:', error)
         }
         return null
     }

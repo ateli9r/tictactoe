@@ -71,16 +71,13 @@ export default class TicTacToeApp {
         }
 
         const callUserInfo = async () => {
-            console.log('!!! callUserInfo')
             setTimeout(async () => {
                 const user = await this.model.getUserInfo()
-                console.log(user)
-    
                 if (user != null) {
                     this.isLoggedIn.value = true
                 }
                 this.closeModal()
-            }, 1000)
+            }, 300)
         }
 
         const app = createApp({
@@ -186,11 +183,18 @@ export default class TicTacToeApp {
             console.log('onClickChangeUserPw')
         }
 
+        const onClickLogout = async () => {
+            await this.model.logout()
+            this.isLoggedIn.value = false;
+            this.closeModal()
+        }
+
         const app = createApp({
             setup() {
                 return {
                     onClickChangeName,
                     onClickChangeUserPw,
+                    onClickLogout,
                 }
             }
         })
