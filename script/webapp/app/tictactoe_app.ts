@@ -3,6 +3,7 @@ import CommonUtil from '../util/common'
 import TicTactoeModel from '../model/tictactoe_model'
 import TicTacToeFetchRepository from '../repos/tictactoe_fetch'
 import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto'
+import MessageFetchRepository from '../repos/message_fetch'
 
 /**
  * 틱택토 앱
@@ -14,13 +15,13 @@ export default class TicTacToeApp {
     private model: TicTactoeModel
 
     private isLoggedIn = ref(false)
-    // private isLoggedIn = ref(true)
     private isShowGame = ref(false)
     private isShowMenu = ref(true)
 
     constructor() {
-        const repos = new TicTacToeFetchRepository()
-        this.model = new TicTactoeModel(repos)
+        const tttRepos = new TicTacToeFetchRepository()
+        const msgRepos = new MessageFetchRepository()
+        this.model = new TicTactoeModel(tttRepos, msgRepos)
     }
 
     closeModal() {
@@ -100,7 +101,6 @@ export default class TicTacToeApp {
         const app = createApp({
             setup() {
                 return {
-                    // 
                     onClickSubmit,
                 }
             }

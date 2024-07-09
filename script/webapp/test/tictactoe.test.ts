@@ -2,7 +2,9 @@ import { describe, expect, test, beforeAll } from '@jest/globals'
 import { LoginRequestDto } from '../typedef/login_dto'
 import { SignUpFormDto } from '../typedef/user_dto'
 import { StatusResponseDto } from '../typedef/cmmn_dto'
+import { SendMailFormDto } from '../typedef/message_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
+import MessageLocalRepository from '../repos/message_local'
 import TicTacToeModel from '../model/tictactoe_model'
 
 
@@ -10,8 +12,9 @@ describe('TicTacToeModel 테스트', () => {
     let model: TicTacToeModel | null = null
 
     beforeAll(() => {
-        const repos = new TicTacToeLocalRepository()
-        model = new TicTacToeModel(repos)
+        const tttRepos = new TicTacToeLocalRepository()
+        const msgRepos = new MessageLocalRepository()
+        model = new TicTacToeModel(tttRepos, msgRepos)
     })
 
     test('signIn - fail', async () => {
@@ -92,10 +95,22 @@ describe('TicTacToeModel 테스트', () => {
         expect(resp.msg).toBe('')
     })
 
-    // test('sendVerifyEmail', () => {
-    //     //
-    //     expect(false).toBe(true)
-    // })
+    test('sendVerifyEmail', async () => {
+        // TODO: create verify code
+        // const verifyCode = await model?.createVerifyCode() as StstusResponseDto
+        const verifyCode = '#verifyCode'
+
+        const form = {
+            mailTo: 'test@test.com',
+            title: 'Verify Code',
+            content: `code: ${verifyCode}`,
+        } as SendMailFormDto
+
+        const resp = await model?.sendVerifyEmail(form) as StatusResponseDto
+        expect(resp != null).toBe(true)
+        expect(resp.success).toBe(true)
+        expect(resp.msg).toBe('')
+    })
 
     // test('checkVerifyNo', () => {
     //     //
