@@ -98,7 +98,7 @@ describe('TicTacToeModel 테스트', () => {
     test('sendVerifyEmail', async () => {
         // TODO: create verify code
         // const verifyCode = await model?.createVerifyCode() as StstusResponseDto
-        const verifyCode = '#verifyCode'
+        const verifyCode = '000000'
 
         const form = {
             mailTo: 'test@test.com',

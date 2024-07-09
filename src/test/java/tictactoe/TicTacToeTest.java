@@ -3,10 +3,13 @@ package tictactoe;
 import org.junit.jupiter.api.Test;
 
 import egovframework.ateli9r.tictactoe.model.TicTacToeModel;
+import egovframework.ateli9r.tictactoe.repos.MessageLocalRepository;
+import egovframework.ateli9r.tictactoe.repos.MessageRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeLocalRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
@@ -20,8 +23,9 @@ public class TicTacToeTest {
      * 생성자
      */
     public TicTacToeTest() {
-        TicTacToeRepository repos = new TicTacToeLocalRepository();
-        model = new TicTacToeModel(repos);
+        TicTacToeRepository tttRepos = new TicTacToeLocalRepository();
+        MessageRepository msgRepos = new MessageLocalRepository();
+        model = new TicTacToeModel(tttRepos, msgRepos);
     }
 
     /**
@@ -176,6 +180,32 @@ public class TicTacToeTest {
         assertNotNull(respDto5);
         assertEquals(respDto5.isSuccess(), true);
         assertEquals(respDto5.getMsg(), "");
+    }
+
+    @Test
+    public void testCreateVerifyCode() throws Exception {
+        StatusResponseDto respDto = model.createVerifyCode();
+        assertNotNull(respDto);
+        assertEquals(respDto.isSuccess(), true);
+        assertEquals(respDto.getMsg() != null, true);
+        assertEquals(respDto.getMsg().length() == 6, true);
+        assertEquals(respDto.getMsg().chars().allMatch(Character::isDigit), true);
+    }
+
+    @Test
+    public void testSendVerifyEmail() throws Exception {
+        String verifyCode = "000000";
+
+        SendMailFormDto reqDto = SendMailFormDto.builder()
+            .mailTo("test@test.com")
+            .title("Verify Code")
+            .content(String.format("code: %s", verifyCode))
+            .build();
+
+        StatusResponseDto respDto = model.sendVerifyEmail(reqDto);
+        assertNotNull(respDto);
+        assertEquals(respDto.isSuccess(), true);
+        assertEquals(respDto.getMsg(), "");
     }
 
     /**

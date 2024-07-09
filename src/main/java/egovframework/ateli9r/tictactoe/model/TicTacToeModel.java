@@ -9,9 +9,11 @@ import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
 
+import egovframework.ateli9r.tictactoe.repos.MessageRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
@@ -24,11 +26,15 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     @Resource(name = "ticTacToeRepository")
     private final TicTacToeRepository ticTacToeRepository;
 
+    
+    private final MessageRepository messageRepository;
+
     @Resource(name = "egovIdGnrService")
     private EgovIdGnrService egovIdGnrService;
 
-    public TicTacToeModel(TicTacToeRepository ticTacToeRepository) {
+    public TicTacToeModel(TicTacToeRepository ticTacToeRepository, MessageRepository messageRepository) {
         this.ticTacToeRepository = ticTacToeRepository;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -57,22 +63,22 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return 회원가입 응답
      */
     public StatusResponseDto signUp(SignUpFormDto request) throws Exception {
-        if (request.getUserId().length() == 0) {
+        if (request.getUserId().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("아이디를 입력해 주세요.")
                 .build();
-        } else if (request.getNickname().length() == 0) {
+        } else if (request.getNickname().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("닉네임을 입력해 주세요.")
                 .build();
-        } else if (request.getEmail().length() == 0) {
+        } else if (request.getEmail().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("이메일을 입력해 주세요.")
                 .build();
-        } else if (request.getPassword().length() == 0) {
+        } else if (request.getPassword().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("패스워드를 입력해 주세요.")
@@ -114,4 +120,61 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         return null;
     }
 
+    public StatusResponseDto createVerifyCode() {
+        String verifyCode = "000000";
+
+        return StatusResponseDto.builder()
+        .success(true).msg(verifyCode).build();
+    }
+
+    public StatusResponseDto sendVerifyEmail(SendMailFormDto request) {
+        if (request.getMailTo().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("수신자를 입력해 주세요.")
+                .build();
+        } else if (request.getTitle().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("제목을 입력해 주세요.")
+                .build();
+        } else if (request.getContent().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("내용을 입력해 주세요.")
+                .build();
+        }
+        /*
+        if (this.ticTacToeRepository.signUp(request) > 0) {
+            return StatusResponseDto.builder()
+            .success(true)
+            .msg("")
+            .build();
+        } else {
+            return StatusResponseDto.builder()
+            .success(false)
+            .msg("데이터 저장중 오류가 발생했습니다.")
+            .build();
+        }
+        */
+
+        // sendVerifyEmail(request: SendMailFormDto): Promise<StatusResponseDto | null>;
+
+        if (this.messageRepository.sendVerifyEmail(request)) {
+            return StatusResponseDto.builder()
+            .success(true)
+            .msg("")
+            .build();
+        } else {
+            return StatusResponseDto.builder()
+            .success(false)
+            .msg("이메일 발송중 오류가 발생했습니다.")
+            .build();
+        }
+
+        // return StatusResponseDto.builder()
+        //     .success(true)
+        //     .msg("")
+        //     .build();
+    }
 }
