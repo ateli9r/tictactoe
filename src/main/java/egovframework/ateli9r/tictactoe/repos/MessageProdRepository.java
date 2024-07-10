@@ -1,15 +1,16 @@
 package egovframework.ateli9r.tictactoe.repos;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
-import egovframework.example.sample.service.impl.EgovSampleServiceImpl;
+// import egovframework.example.sample.service.impl.EgovSampleServiceImpl;
 
-public class MessageLocalRepository implements MessageRepository {
+@Component("messageRepository")
+public class MessageProdRepository implements MessageRepository {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovSampleServiceImpl.class);
+	// private static final Logger LOGGER = LoggerFactory.getLogger(EgovSampleServiceImpl.class);
 
     @Override
     public boolean sendVerifyEmail(SendMailFormDto request) {
@@ -17,11 +18,10 @@ public class MessageLocalRepository implements MessageRepository {
         if (!request.getMailTo().isEmpty()) chk++;
         if (!request.getTitle().isEmpty()) chk++;
         if (!request.getContent().isEmpty()) chk++;
+        if (chk == 3) return false;
 
-        if (chk == 3) {
-            LOGGER.info(request.getContent());
-            return true;
-        }
+        // TODO: send email
+
         return false;
     }
     

@@ -2,7 +2,7 @@ import { StatusResponseDto } from "../typedef/cmmn_dto";
 import { SendMailFormDto } from "../typedef/message_dto";
 import MessageRepository from "./message_repos";
 
-export default class MessageFetchRepository implements MessageRepository {
+export default class MessageProdRepository implements MessageRepository {
     async sendVerifyEmail(request: SendMailFormDto): Promise<StatusResponseDto | null> {
         const formBody = new URLSearchParams();
         formBody.append('mailTo', request.mailTo)

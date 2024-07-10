@@ -1,9 +1,9 @@
 import { createApp, onMounted, ref } from 'vue'
 import CommonUtil from '../util/common'
 import TicTactoeModel from '../model/tictactoe_model'
-import TicTacToeFetchRepository from '../repos/tictactoe_fetch'
+import TicTacToeProdRepository from '../repos/tictactoe_prod'
 import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto'
-import MessageFetchRepository from '../repos/message_fetch'
+import MessageProdRepository from '../repos/message_prod'
 
 /**
  * 틱택토 앱
@@ -19,8 +19,8 @@ export default class TicTacToeApp {
     private isShowMenu = ref(true)
 
     constructor() {
-        const tttRepos = new TicTacToeFetchRepository()
-        const msgRepos = new MessageFetchRepository()
+        const tttRepos = new TicTacToeProdRepository()
+        const msgRepos = new MessageProdRepository()
         this.model = new TicTactoeModel(tttRepos, msgRepos)
     }
 

@@ -3,7 +3,7 @@ import { LoginRequestDto, LoginResponseDto } from "../typedef/login_dto"
 import { SignUpFormDto, UserInfoDto } from "../typedef/user_dto"
 import TicTacToeRepository from "./tictactoe_repos"
 
-export default class TicTacToeFetchRepository implements TicTacToeRepository {
+export default class TicTacToeProdRepository implements TicTacToeRepository {
     async login(request: LoginRequestDto): Promise<LoginResponseDto | null> {
         const formBody = new URLSearchParams();
         formBody.append('userId', request.userId)

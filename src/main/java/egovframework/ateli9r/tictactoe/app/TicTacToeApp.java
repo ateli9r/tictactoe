@@ -18,7 +18,6 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-// import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +25,6 @@ import org.springmodules.validation.commons.DefaultBeanValidator;
 
 
 @Controller
-// @CrossOrigin(originPatterns = "*")
 @RequestMapping(value = "tictactoe")
 public class TicTacToeApp {
 	@Resource(name = "ticTacToeModel")
@@ -94,5 +92,13 @@ public class TicTacToeApp {
 		}
 		return null;
 	}
+
+	// sendVerifyEmail
+	// checkVerifyNo
+	// signUp
+
+	// findIdRequest
+	// findPwRequest
+
 
 }

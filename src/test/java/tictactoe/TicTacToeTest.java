@@ -184,22 +184,16 @@ public class TicTacToeTest {
 
     @Test
     public void testCreateVerifyCode() throws Exception {
-        StatusResponseDto respDto = model.createVerifyCode();
-        assertNotNull(respDto);
-        assertEquals(respDto.isSuccess(), true);
-        assertEquals(respDto.getMsg() != null, true);
-        assertEquals(respDto.getMsg().length() == 6, true);
-        assertEquals(respDto.getMsg().chars().allMatch(Character::isDigit), true);
+        String verifyCode = model.createVerifyCode("test@test.com");
+        assertNotNull(verifyCode);
+        assertEquals(verifyCode.length() == 6, true);
+        assertEquals(verifyCode.chars().allMatch(Character::isDigit), true);
     }
 
     @Test
     public void testSendVerifyEmail() throws Exception {
-        String verifyCode = "000000";
-
         SendMailFormDto reqDto = SendMailFormDto.builder()
             .mailTo("test@test.com")
-            .title("Verify Code")
-            .content(String.format("code: %s", verifyCode))
             .build();
 
         StatusResponseDto respDto = model.sendVerifyEmail(reqDto);

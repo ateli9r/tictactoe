@@ -26,7 +26,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     @Resource(name = "ticTacToeRepository")
     private final TicTacToeRepository ticTacToeRepository;
 
-    
+    @Resource(name = "messageRepository")
     private final MessageRepository messageRepository;
 
     @Resource(name = "egovIdGnrService")
@@ -120,47 +120,35 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         return null;
     }
 
-    public StatusResponseDto createVerifyCode() {
-        String verifyCode = "000000";
-
-        return StatusResponseDto.builder()
-        .success(true).msg(verifyCode).build();
+    /**
+     * 인증코드 생성
+     * @return
+     */
+    public String createVerifyCode(String mailTo) {
+        // TODO: create verify code
+        return "000000";
     }
 
+    /**
+     * 인증 이메일 발송
+     * @param request 이메일 발송 요청
+     * @return 이메일 발송 결과
+     */
     public StatusResponseDto sendVerifyEmail(SendMailFormDto request) {
         if (request.getMailTo().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("수신자를 입력해 주세요.")
                 .build();
-        } else if (request.getTitle().isEmpty()) {
-            return StatusResponseDto.builder()
-                .success(false)
-                .msg("제목을 입력해 주세요.")
-                .build();
-        } else if (request.getContent().isEmpty()) {
-            return StatusResponseDto.builder()
-                .success(false)
-                .msg("내용을 입력해 주세요.")
-                .build();
         }
-        /*
-        if (this.ticTacToeRepository.signUp(request) > 0) {
-            return StatusResponseDto.builder()
-            .success(true)
-            .msg("")
-            .build();
-        } else {
-            return StatusResponseDto.builder()
-            .success(false)
-            .msg("데이터 저장중 오류가 발생했습니다.")
-            .build();
-        }
-        */
 
-        // sendVerifyEmail(request: SendMailFormDto): Promise<StatusResponseDto | null>;
+        SendMailFormDto mailForm = SendMailFormDto.builder()
+            .mailTo(request.getMailTo())
+            .title("Verify Code")
+            .content(String.format("code: %s", this.createVerifyCode(request.getMailTo())))
+            .build();
 
-        if (this.messageRepository.sendVerifyEmail(request)) {
+        if (this.messageRepository.sendVerifyEmail(mailForm)) {
             return StatusResponseDto.builder()
             .success(true)
             .msg("")
@@ -171,10 +159,5 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             .msg("이메일 발송중 오류가 발생했습니다.")
             .build();
         }
-
-        // return StatusResponseDto.builder()
-        //     .success(true)
-        //     .msg("")
-        //     .build();
     }
 }
