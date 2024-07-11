@@ -57,4 +57,34 @@ export default class CommonUtil {
         const YAML = require('yamljs');
         return YAML.parse(text)
     }
+
+    /**
+     * dto object를 urlencoded 통신에 적합한 형태로 포맷팅
+     * @param dto dto 오브젝트
+     * @returns 쿼리 문자열
+     */
+    static toForm(dto: any): string {
+        const formBody = new URLSearchParams()
+        Object.keys(dto).forEach((key) => {
+            formBody.append(key, dto[key])
+        })
+        return formBody.toString()
+    }
+
+    /**
+     * 백엔드로 HTTP 요청
+     * @param params 파라미터
+     * @returns HTTP 응답
+     */
+    static async request(params: any): Promise<Response | null> {
+        const baseUrl = 'http://localhost:8080/tictactoe'
+
+        return await fetch(`${baseUrl}${params.url}`, {
+            method: params.method,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            credentials: 'include',
+            body: params.body,
+        })
+    }
+
 }
