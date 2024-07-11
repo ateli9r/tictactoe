@@ -19,16 +19,20 @@
     </resultMap>
 
     <select id="getUserInfo" resultMap="UserInfoResultMap">
-        SELECT u.`user_id` AS userId, u.`nickname`,
-            r.`total`, r.`wins`, r.`losses`, r.`draws`
+        SELECT u.`user_id` userId,
+            u.`nickname`,
+            ifnull(r.`total`, 0) total,
+            ifnull(r.`wins`, 0) wins,
+            ifnull(r.`losses`, 0) losses,
+            ifnull(r.`draws`, 0) draws
         FROM `t_user` u
-        INNER JOIN `t_rank` r ON u.`user_id` = r.`user_id`
+        LEFT JOIN `t_rank` r ON u.`user_id` = r.`user_id`
         WHERE u.`user_id` = #{userId}
     </select>
 
     <insert id="signUp" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto">
-        INSERT INTO `t_user` (`user_id`, `nickname`, `email`, `password`)
-        VALUES (#{userId}, #{nickname}, #{email}, #{password})
+        INSERT INTO `t_user` (`user_id`, `user_pw`, `nickname`, `email`)
+        VALUES (#{userId}, #{userPw}, #{nickname}, #{email})
     </insert>
 
 </mapper>

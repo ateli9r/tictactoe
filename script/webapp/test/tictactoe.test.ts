@@ -56,9 +56,9 @@ describe('TicTacToeModel 테스트', () => {
     test('signUp', async () => {
         const form = {
             userId: '',
+            userPw: '',
             nickname: '',
             email: '',
-            password: '',
         } as SignUpFormDto
         
         let resp = await model?.signUp(form) as StatusResponseDto
@@ -87,7 +87,7 @@ describe('TicTacToeModel 테스트', () => {
         expect(resp.success).toBe(false)
         expect(resp.msg).toBe('패스워드를 입력해 주세요.')
 
-        form.password = 'test@test.com'
+        form.userPw = 'test@test.com'
 
         resp = await model?.signUp(form) as StatusResponseDto
         expect(resp != null).toBe(true)

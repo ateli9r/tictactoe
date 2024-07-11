@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class SignUpFormDto {
     private String userId;
+    private String userPw;
     private String nickname;
     private String email;
-    private String password;
 }

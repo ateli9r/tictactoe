@@ -43,7 +43,7 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
             return { success: false, msg: '닉네임을 입력해 주세요.' } as StatusResponseDto
         } else if (request.email.length == 0) {
             return { success: false, msg: '이메일을 입력해 주세요.' } as StatusResponseDto
-        } else if (request.password.length == 0) {
+        } else if (request.userPw.length == 0) {
             return { success: false, msg: '패스워드를 입력해 주세요.' } as StatusResponseDto
         }
         return { success: true, msg: '' } as StatusResponseDto

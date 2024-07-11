@@ -78,13 +78,22 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 .success(false)
                 .msg("이메일을 입력해 주세요.")
                 .build();
-        } else if (request.getPassword().isEmpty()) {
+        } else if (request.getUserPw().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("패스워드를 입력해 주세요.")
                 .build();
         }
-        if (this.ticTacToeRepository.signUp(request) > 0) {
+
+        // 패스워드를 SHA256 hash해서 dto 다시 생성
+        SignUpFormDto formDto = SignUpFormDto.builder()
+            .userId(request.getUserId())
+            .userPw(this.hash(request.getUserPw()))
+            .nickname(request.getNickname())
+            .email(request.getEmail())
+            .build();
+
+        if (this.ticTacToeRepository.signUp(formDto) > 0) {
             return StatusResponseDto.builder()
             .success(true)
             .msg("")

@@ -13,7 +13,7 @@
 
     <!-- 쿼리 조회 결과 로깅 X -->
     <logger name="java.sql.ResultSet">
-        <level value="OFF" />
+        <level value="ON" />
     </logger>
 
     <root level="DEBUG">

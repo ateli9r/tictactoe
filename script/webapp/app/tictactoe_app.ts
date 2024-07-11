@@ -4,6 +4,7 @@ import TicTactoeModel from '../model/tictactoe_model'
 import TicTacToeProdRepository from '../repos/tictactoe_prod'
 import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto'
 import MessageProdRepository from '../repos/message_prod'
+import { SignUpFormDto } from '../typedef/user_dto'
 
 /**
  * 틱택토 앱
@@ -94,11 +95,50 @@ export default class TicTacToeApp {
     }
 
     async renderSignUp(selector: string) {
-        const onClickSubmit = () => {
-            console.log('onClickSubmit')
+        const propsData = {
+            userId: '',
+            userPw: '',
+            userPwRe: '',
+            nickname: '',
+            email: '',
+            verifyNo: '',
+        }
+
+        const onClickSubmit = async () => {
+            const request = {
+                userId: propsData.userId,
+                userPw: propsData.userPw,
+                nickname: propsData.nickname,
+                email: propsData.email,
+            } as SignUpFormDto
+
+            if (propsData.userPw.length > 0) {
+                if (propsData.userPw != propsData.userPwRe) {
+                    alert('패스워드가 다릅니다.')
+                    return
+                }
+            }
+
+            const resp = await this.model.signUp(request)
+            if (resp == null) {
+                alert('error')
+                return
+            }
+            if (!resp.success) {
+                alert(resp.msg)
+                return
+            } else {
+                const msg = '회원가입 완료'
+                alert(msg)
+
+                this.closeModal()
+            }
         }
 
         const app = createApp({
+            data() {
+                return propsData
+            },
             setup() {
                 return {
                     onClickSubmit,

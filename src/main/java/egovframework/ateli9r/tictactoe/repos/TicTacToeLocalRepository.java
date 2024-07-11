@@ -35,7 +35,7 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
         if (request.getUserId().length() > 0) chk++;
         if (request.getNickname().length() > 0) chk++;
         if (request.getEmail().length() > 0) chk++;
-        if (request.getPassword().length() > 0) chk++;
+        if (request.getUserPw().length() > 0) chk++;
         if (chk == 4) return 1;
         return 0;
     }

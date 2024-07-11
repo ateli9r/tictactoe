@@ -66,9 +66,9 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
     async signUp(request: SignUpFormDto): Promise<StatusResponseDto | null> {
         const formBody = new URLSearchParams();
         formBody.append('userId', request.userId)
+        formBody.append('userPw', request.userPw)
         formBody.append('nickname', request.nickname)
         formBody.append('email', request.email)
-        formBody.append('password', request.password)
 
         try {
             const host = 'http://localhost:8080/tictactoe'

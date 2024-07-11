@@ -130,7 +130,7 @@ public class TicTacToeTest {
             .userId("")
             .nickname("")
             .email("")
-            .password("")
+            .userPw("")
             .build());
 
         assertNotNull(respDto1);
@@ -141,7 +141,7 @@ public class TicTacToeTest {
             .userId("test")
             .nickname("")
             .email("")
-            .password("")
+            .userPw("")
             .build());
 
         assertNotNull(respDto2);
@@ -152,7 +152,7 @@ public class TicTacToeTest {
             .userId("test")
             .nickname("test")
             .email("")
-            .password("")
+            .userPw("")
             .build());
 
         assertNotNull(respDto3);
@@ -163,7 +163,7 @@ public class TicTacToeTest {
             .userId("test")
             .nickname("test")
             .email("test@test.com")
-            .password("")
+            .userPw("")
             .build());
 
         assertNotNull(respDto4);
@@ -174,7 +174,7 @@ public class TicTacToeTest {
             .userId("test")
             .nickname("test")
             .email("test@test.com")
-            .password("test@test.com")
+            .userPw("test@test.com")
             .build());
 
         assertNotNull(respDto5);

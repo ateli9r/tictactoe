@@ -13,7 +13,7 @@ export interface UserInfoDto {
 
 export interface SignUpFormDto {
     userId: string;
+    userPw: string;
     nickname: string;
     email: string;
-    password: string;
 }

@@ -4,6 +4,9 @@ package egovframework.ateli9r.tictactoe.app;
 import egovframework.ateli9r.tictactoe.model.TicTacToeModel;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
 import egovframework.example.sample.service.impl.EgovSampleServiceImpl;
 
@@ -93,12 +96,34 @@ public class TicTacToeApp {
 		return null;
 	}
 
-	// sendVerifyEmail
-	// checkVerifyNo
-	// signUp
+	@ResponseBody
+	@RequestMapping(value = "/api/sendVerifyEmail.do", method = RequestMethod.POST)
+	public StatusResponseDto sendVerifyEmail(SendMailFormDto request) throws Exception {
+		return this.ticTacToeModel.sendVerifyEmail(request);
+	}
 
-	// findIdRequest
-	// findPwRequest
+	@ResponseBody
+	@RequestMapping(value = "/api/checkVerifyNo.do", method = RequestMethod.POST)
+	public StatusResponseDto checkVerifyNo() throws Exception {
+		return null;
+	}
 
+	@ResponseBody
+	@RequestMapping(value = "/api/signUp.do", method = RequestMethod.POST)
+	public StatusResponseDto signUp(SignUpFormDto request) throws Exception {
+		return this.ticTacToeModel.signUp(request);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/api/findIdRequest.do", method = RequestMethod.POST)
+	public StatusResponseDto findIdRequest() throws Exception {
+		return null;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/api/findPwRequest.do", method = RequestMethod.POST)
+	public StatusResponseDto findPwRequest() throws Exception {
+		return null;
+	}
 
 }
