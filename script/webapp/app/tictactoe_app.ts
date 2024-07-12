@@ -1,4 +1,4 @@
-import { createApp, onMounted, ref, watch } from 'vue'
+import { createApp, onMounted, ref } from 'vue'
 import CommonUtil from '../util/common'
 import TicTactoeModel from '../model/tictactoe_model'
 import TicTacToeProdRepository from '../repos/tictactoe_prod'
@@ -53,7 +53,6 @@ export default class TicTacToeApp {
             userId: '',
             userPw: '',
         }
-        const refForm = null
 
         const onClickLogin = async () => {
             if (props.userId.length == 0 || props.userPw.length == 0) {
@@ -98,6 +97,12 @@ export default class TicTacToeApp {
                 return props
             },
             setup() {
+                onMounted(() => {
+                    setTimeout(async () => {
+                        jQuery('#sign_in').find('input')[0].focus()
+                    }, 300)
+                })
+
                 return {
                     onClickLogin,
                 }
@@ -163,6 +168,12 @@ export default class TicTacToeApp {
                 return props
             },
             setup() {
+                onMounted(() => {
+                    setTimeout(async () => {
+                        jQuery('#sign_up').find('input')[0].focus()
+                    }, 300)
+                })
+
                 return {
                     onClickSubmit,
                 }
@@ -189,6 +200,12 @@ export default class TicTacToeApp {
 
         const app = createApp({
             setup() {
+                onMounted(() => {
+                    setTimeout(async () => {
+                        jQuery('#user_lost').find('input')[2].focus() // 이메일
+                    }, 300)
+                })
+
                 return {
                     status,
                     findMode,
