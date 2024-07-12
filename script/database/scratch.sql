@@ -229,9 +229,11 @@ INSERT INTO t_rank (user_id, total, wins, losses, draws) VALUES
 ('user100', FLOOR(RAND() * 100), FLOOR(RAND() * 50), FLOOR(RAND() * 30), FLOOR(RAND() * 20));
 
 
+SELECT COUNT(*) = 1 FROM `t_user` WHERE `user_id` = 'asdf' AND `user_pw` = 'f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b'
 
 
 select * from t_user;
+-- Parameters: asdf(String), f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b(String)
 
 select * from t_rank;
 
@@ -269,5 +271,18 @@ SELECT u.`user_id` AS userId, u.`nickname`, r.`total`, r.`wins`, r.`losses`, r.`
 
 
 
+SELECT u.`user_id` AS userId, u.`nickname`, r.`total`, r.`wins`, r.`losses`, r.`draws` FROM `t_user` u INNER JOIN `t_rank` r ON u.`user_id` = r.`user_id` WHERE u.`user_id` = ?
 
 
+
+SELECT u.`user_id` userId,
+	u.`nickname`,
+    ifnull(r.`total`, 0) total,
+    ifnull(r.`wins`, 0) wins,
+    ifnull(r.`losses`, 0) losses,
+    ifnull(r.`draws`, 0) draws
+FROM `t_user` u
+LEFT JOIN `t_rank` r ON u.`user_id` = r.`user_id`
+WHERE u.`user_id` = ${userId}
+;
+        

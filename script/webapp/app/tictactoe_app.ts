@@ -1,4 +1,4 @@
-import { createApp, onMounted, ref } from 'vue'
+import { createApp, onMounted, ref, watch } from 'vue'
 import CommonUtil from '../util/common'
 import TicTactoeModel from '../model/tictactoe_model'
 import TicTacToeProdRepository from '../repos/tictactoe_prod'
@@ -49,19 +49,22 @@ export default class TicTacToeApp {
     }
 
     async renderSignIn(selector: string) {
-        const dataUserId = ref('')
-        const dataUserPw = ref('')
+        const props = {
+            userId: '',
+            userPw: '',
+        }
+        const refForm = null
 
         const onClickLogin = async () => {
-            if (dataUserId.value.length == 0 || dataUserPw.value.length == 0) {
+            if (props.userId.length == 0 || props.userPw.length == 0) {
                 const msg = '아이디, 패스워드를 입력해주세요.'
                 alert(msg)
                 return
             }
 
             const resp = await this.model.login({
-                userId: dataUserId.value,
-                userPw: dataUserPw.value,
+                userId: props.userId,
+                userPw: props.userPw,
             } as LoginRequestDto) as LoginResponseDto
 
             if (!resp.success) {
@@ -72,21 +75,30 @@ export default class TicTacToeApp {
             callUserInfo()
         }
 
+        const clearForm = () => {
+            props.userId = ''
+            props.userPw = ''
+
+            jQuery('#sign_in').find('form')[0].reset()
+        }
+
         const callUserInfo = async () => {
             setTimeout(async () => {
                 const user = await this.model.getUserInfo()
                 if (user != null) {
                     this.isLoggedIn.value = true
                 }
+                clearForm()
                 this.closeModal()
             }, 300)
         }
 
         const app = createApp({
+            data() {
+                return props
+            },
             setup() {
                 return {
-                    dataUserId,
-                    dataUserPw,
                     onClickLogin,
                 }
             }
@@ -95,7 +107,7 @@ export default class TicTacToeApp {
     }
 
     async renderSignUp(selector: string) {
-        const propsData = {
+        const props = {
             userId: '',
             userPw: '',
             userPwRe: '',
@@ -104,16 +116,27 @@ export default class TicTacToeApp {
             verifyNo: '',
         }
 
+        const clearForm = () => {
+            props.userId = ''
+            props.userPw = ''
+            props.userPwRe = ''
+            props.nickname = ''
+            props.email = ''
+            props.verifyNo = ''
+
+            jQuery('#sign_up').find('form')[0].reset()
+        }
+
         const onClickSubmit = async () => {
             const request = {
-                userId: propsData.userId,
-                userPw: propsData.userPw,
-                nickname: propsData.nickname,
-                email: propsData.email,
+                userId: props.userId,
+                userPw: props.userPw,
+                nickname: props.nickname,
+                email: props.email,
             } as SignUpFormDto
 
-            if (propsData.userPw.length > 0) {
-                if (propsData.userPw != propsData.userPwRe) {
+            if (props.userPw.length > 0) {
+                if (props.userPw != props.userPwRe) {
                     alert('패스워드가 다릅니다.')
                     return
                 }
@@ -130,14 +153,14 @@ export default class TicTacToeApp {
             } else {
                 const msg = '회원가입 완료'
                 alert(msg)
-
+                clearForm()
                 this.closeModal()
             }
         }
 
         const app = createApp({
             data() {
-                return propsData
+                return props
             },
             setup() {
                 return {

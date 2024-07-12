@@ -87,7 +87,6 @@ public class TicTacToeTest {
     }
 
 
-
     /**
      * 로그아웃
      */

@@ -1,14 +1,14 @@
 <article id="sign_in">
     <h2 class="major">로그인</h2>
-    <form>
+    <form ref="signInForm">
         <div class="fields">
             <div class="field half">
-                <label for="userId">아이디</label>
-                <input type="text" v-model="dataUserId">
+                <label>아이디</label>
+                <input type="text" class="userId" v-model="userId">
             </div>
             <div class="field half">
-                <label for="userPw">패스워드</label>
-                <input type="password" v-model="dataUserPw">
+                <label>패스워드</label>
+                <input type="password" class="userPw" v-model="userPw">
             </div>
         </div>
         <ul class="actions">
