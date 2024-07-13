@@ -1,17 +1,17 @@
 import { StatusResponseDto } from "../typedef/cmmn_dto";
-import { LoginRequestDto, LoginResponseDto } from "../typedef/login_dto";
+import { LoginRequestDto } from "../typedef/login_dto";
 import { UserInfoDto, RankInfoDto, SignUpFormDto } from "../typedef/user_dto";
 import TicTacToeRepository from "./tictactoe_repos";
 
 export default class TicTacToeLocalRepository implements TicTacToeRepository {
     private isLoggedIn: boolean = false
 
-    async login(request: LoginRequestDto): Promise<LoginResponseDto | null> {
+    async login(request: LoginRequestDto): Promise<StatusResponseDto | null> {
         if (request.userId == 'test1' && request.userPw == 'test1') {
             this.isLoggedIn = true
-            return {success: true} as LoginResponseDto
+            return {success: true} as StatusResponseDto
         }
-        return {success: false} as LoginResponseDto
+        return {success: false} as StatusResponseDto
     }
 
     async logout(): Promise<boolean> {

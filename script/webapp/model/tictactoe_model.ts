@@ -1,6 +1,6 @@
 import TicTacToeRepository from '../repos/tictactoe_repos'
 import MessageRepository from '../repos/message_repos'
-import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto'
+import { LoginRequestDto } from '../typedef/login_dto'
 import { SignUpFormDto, UserInfoDto } from '../typedef/user_dto'
 import { StatusResponseDto } from '../typedef/cmmn_dto'
 import CommonUtil from '../util/common'
@@ -30,7 +30,7 @@ export default class TicTactoeModel {
      * @param request 로그인 요청
      * @returns 로그인 응답
      */
-    async login(request: LoginRequestDto): Promise<LoginResponseDto | null> {
+    async login(request: LoginRequestDto): Promise<StatusResponseDto | null> {
         return await this.tttRepos?.login(request) ?? null
     }
 

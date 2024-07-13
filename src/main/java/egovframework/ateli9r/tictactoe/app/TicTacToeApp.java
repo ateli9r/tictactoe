@@ -3,7 +3,6 @@ package egovframework.ateli9r.tictactoe.app;
 
 import egovframework.ateli9r.tictactoe.model.TicTacToeModel;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
-import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
@@ -49,8 +48,8 @@ public class TicTacToeApp {
 
 	@ResponseBody
 	@RequestMapping(value = "/api/login.do", method = RequestMethod.POST)
-	public LoginResponseDto login(LoginRequestDto reqDto, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LoginResponseDto respDto = ticTacToeModel.login(reqDto);
+	public StatusResponseDto login(LoginRequestDto reqDto, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		StatusResponseDto respDto = ticTacToeModel.login(reqDto);
 
 		if (respDto.isSuccess()) {
 			// 세션 속성 설정

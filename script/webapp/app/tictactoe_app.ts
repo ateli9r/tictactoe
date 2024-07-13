@@ -2,9 +2,10 @@ import { createApp, onMounted, ref } from 'vue'
 import CommonUtil from '../util/common'
 import TicTactoeModel from '../model/tictactoe_model'
 import TicTacToeProdRepository from '../repos/tictactoe_prod'
-import { LoginRequestDto, LoginResponseDto } from '../typedef/login_dto'
+import { LoginRequestDto } from '../typedef/login_dto'
 import MessageProdRepository from '../repos/message_prod'
 import { SignUpFormDto } from '../typedef/user_dto'
+import { StatusResponseDto } from '../typedef/cmmn_dto'
 
 /**
  * 틱택토 앱
@@ -64,7 +65,7 @@ export default class TicTacToeApp {
             const resp = await this.model.login({
                 userId: props.userId,
                 userPw: props.userPw,
-            } as LoginRequestDto) as LoginResponseDto
+            } as LoginRequestDto) as StatusResponseDto
 
             if (!resp.success) {
                 const msg = resp.msg

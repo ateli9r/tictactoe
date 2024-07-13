@@ -27,7 +27,7 @@ describe('TicTacToeModel 테스트', () => {
         } as LoginRequestDto)
 
         expect(resp != null).toBe(true)
-        expect(resp?.success).toBe(false)
+        expect(resp!.success).toBe(false)
         expect(await model?.getUserInfo() != null).toBe(false)
     })
 

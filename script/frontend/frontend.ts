@@ -184,23 +184,11 @@ class FrontendBuilder {
 
     chokidar.watch(this.watchPath).on('all', (event: any, path: any) => {
       if (!isWatchInitialied) return
-      if (!(event == 'add' || event == 'change')) return
-      let isApplied = false
-
-      if (path.indexOf('template/page/') > -1) {
-        try {
-          const page = path.replace(/template\/page\//, '')
-          this.build(page, false)
-          isApplied = true
-        } catch (e) { /* ignore */ }
-      }
-
-      if (!isApplied) {
-        this.build('', false)
-      }
+      this.build('', false)
     })
 
     console.log(`Watching for changes in ${this.watchPath}`)
+    this.build('', false)
   }
 }
 

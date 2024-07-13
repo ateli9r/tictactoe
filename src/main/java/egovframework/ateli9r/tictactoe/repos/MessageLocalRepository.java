@@ -2,7 +2,6 @@ package egovframework.ateli9r.tictactoe.repos;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.example.sample.service.impl.EgovSampleServiceImpl;

@@ -14,7 +14,6 @@ import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
-import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
@@ -44,10 +43,10 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param request 로그인 요청
      * @return 로그인 응답
      */
-    public LoginResponseDto login(LoginRequestDto request) throws Exception {
+    public StatusResponseDto login(LoginRequestDto request) throws Exception {
         boolean success = this.ticTacToeRepository.login(request.getUserId(), this.hash(request.getUserPw()));
         String msg = (!success) ? "로그인 실패" : "";
-        return LoginResponseDto.builder().success(success).msg(msg).build();
+        return StatusResponseDto.builder().success(success).msg(msg).build();
     }
 
     /**

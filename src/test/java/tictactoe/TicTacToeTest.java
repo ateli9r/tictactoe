@@ -10,7 +10,6 @@ import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
-import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
@@ -54,7 +53,7 @@ public class TicTacToeTest {
         assertEquals(req.getUserId(), "login_fail");
         assertEquals(model.hash(req.getUserPw()), "62aedc27a715c727542d1c9aff0f24202149a9858c09bae7c71b7fcd9f5d03dd");
 
-        LoginResponseDto resp = model.login(req);
+        StatusResponseDto resp = model.login(req);
         assertFalse(resp.isSuccess());
         assertEquals(resp.getMsg(), "로그인 실패");
     }
@@ -80,7 +79,7 @@ public class TicTacToeTest {
         assertEquals(req.getUserId(), "login_ok");
         assertEquals(model.hash(req.getUserPw()), "31e14f8175cb0980deb6ae418d94e9bcd25e3820a4a587ec1038f383faa525d4");
 
-        LoginResponseDto resp = model.login(req);
+        StatusResponseDto resp = model.login(req);
         assertTrue(resp.isSuccess());
         assertEquals(resp.getMsg(), "");
 

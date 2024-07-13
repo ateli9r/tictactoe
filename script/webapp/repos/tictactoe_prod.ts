@@ -1,5 +1,5 @@
 import { StatusResponseDto } from "../typedef/cmmn_dto";
-import { LoginRequestDto, LoginResponseDto } from "../typedef/login_dto"
+import { LoginRequestDto } from "../typedef/login_dto"
 import { SignUpFormDto, UserInfoDto } from "../typedef/user_dto"
 import TicTacToeRepository from "./tictactoe_repos"
 import CommonUtil from "../util/common";
@@ -10,13 +10,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @param request 로그인 요청
      * @returns 로그인 응답
      */
-    async login(request: LoginRequestDto): Promise<LoginResponseDto | null> {
+    async login(request: LoginRequestDto): Promise<StatusResponseDto | null> {
         const response = await CommonUtil.request({
             method: 'POST',
             url: '/api/login.do',
             body: CommonUtil.toForm(request),
         })
-        return await response?.json() as LoginResponseDto
+        return await response?.json() as StatusResponseDto
     }
 
     /**
