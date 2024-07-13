@@ -3,6 +3,7 @@ package egovframework.ateli9r.tictactoe.repos;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
+import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 
 import org.apache.ibatis.annotations.Param;
@@ -30,4 +31,12 @@ public interface TicTacToeRepository {
      * @return 영향 레코드 수
      */
     int signUp(SignUpFormDto request);
+
+
+    /**
+     * 게임방 만들기
+     * @param request 게임방 생성 요청
+     * @return 영향 레코드 수
+     */
+    int createGame(CreateGameDto request);
 }

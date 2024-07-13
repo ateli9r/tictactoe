@@ -7,6 +7,8 @@ import egovframework.ateli9r.tictactoe.repos.MessageLocalRepository;
 import egovframework.ateli9r.tictactoe.repos.MessageRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeLocalRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
+import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
@@ -219,7 +221,19 @@ public class TicTacToeTest {
         // 아이디 찾기	T-03-0001	코드 호출	인증코드 전송 클릭 시 임의의 코드가 alert창으로 출력 됨.	
         // 아이디 찾기	T-03-0002	아이디 찾기 실패	임의의 코드와 입력 된 코드가 동일하지 않다면 이를 안내하는 alert창이 출력 됨.	
         // 아이디 찾기	T-03-0003	아이디 찾기 성공	임의의 코드와 입력 된 코드가 동일하다면 아이디를 알려주는 페이지로 이동.	
-        
+
+        FindAccountDto reqDto = FindAccountDto.builder()
+            .findMode("findId")
+            .email("test@test.com")
+            .verifyCode("000000")
+            .build();
+
+        StatusResponseDto respDto = model.findAccount(reqDto);
+        assertTrue(respDto.isSuccess());
+        assertTrue(respDto.getMsg().length() > 0);
+
+        // TOOD: 아이디 조회 요청
+
     }
 
 
@@ -245,6 +259,20 @@ public class TicTacToeTest {
         // 비밀번호 변경	T-04-0005	비밀번호 변경 성공	입력 된 비밀번호와 비밀번호 확인이 동일하다면 비밀번호 변경 완료 안내와 함께 로그인 페이지로 이동한다.
         // 메인 - 설정	T-05-0009	비밀번호 변경 이동	메인 설정 창에서 비밀번호 변경 클릭 시, 비밀번호 변경페이지(T-04-0004)로 이동.	        
         
+
+        FindAccountDto reqDto = FindAccountDto.builder()
+            .findMode("findPw")
+            .userId("test")
+            .email("test@test.com")
+            .verifyCode("000000")
+            .build();
+
+        StatusResponseDto respDto = model.findAccount(reqDto);
+        assertTrue(respDto.isSuccess());
+        assertTrue(respDto.getMsg().length() > 0);
+
+        // TODO: 비밀번호 재설정 요청
+
     }
 
     /**
@@ -336,6 +364,22 @@ public class TicTacToeTest {
 
         //  메인 – 게임 방 접속	T-05-0013	게임 방 생성	게임 방 생성 버튼 클릭 시 게임 방 이름을 입력 할 수 있는 창이 출력 되며, 이름 입력 후 생성 버튼을 클릭하면 게임방이 생성 된다.	
 
+        StatusResponseDto respDto1 = model.createGame(CreateGameDto.builder().build());
+        assertFalse(respDto1.isSuccess());
+        assertEquals(respDto1.getMsg(), "제목을 입력 하세요.");
+        
+        StatusResponseDto respDto2 = model.createGame(CreateGameDto.builder()
+            .title("game title")
+            .build());
+        assertFalse(respDto2.isSuccess());
+        assertEquals(respDto2.getMsg(), "방장 아이디가 없습니다.");
+
+        StatusResponseDto respDto3 = model.createGame(CreateGameDto.builder()
+            .title("game title")
+            .ownerId("test")
+            .build());
+        assertTrue(respDto3.isSuccess());
+        assertEquals(respDto3.getMsg(), "");
     }
 
     /**

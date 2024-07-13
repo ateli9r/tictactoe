@@ -35,4 +35,10 @@
         VALUES (#{userId}, #{userPw}, #{nickname}, #{email})
     </insert>
 
+    <insert id="createGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto">
+    <!--
+        TODO: implement createGame
+    -->
+    </insert>
+
 </mapper>

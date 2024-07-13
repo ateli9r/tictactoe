@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ateli9r.tictactoe.repos.MessageRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
+import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
@@ -63,22 +65,22 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return 회원가입 응답
      */
     public StatusResponseDto signUp(SignUpFormDto request) throws Exception {
-        if (request.getUserId().isEmpty()) {
+        if (request.getUserId() == null || request.getUserId().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("아이디를 입력해 주세요.")
                 .build();
-        } else if (request.getNickname().isEmpty()) {
+        } else if (request.getNickname() == null || request.getNickname().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("닉네임을 입력해 주세요.")
                 .build();
-        } else if (request.getEmail().isEmpty()) {
+        } else if (request.getEmail() == null || request.getEmail().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("이메일을 입력해 주세요.")
                 .build();
-        } else if (request.getUserPw().isEmpty()) {
+        } else if (request.getUserPw() == null || request.getUserPw().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("패스워드를 입력해 주세요.")
@@ -144,7 +146,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return 이메일 발송 결과
      */
     public StatusResponseDto sendVerifyEmail(SendMailFormDto request) {
-        if (request.getMailTo().isEmpty()) {
+        if (request.getMailTo() == null || request.getMailTo().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("수신자를 입력해 주세요.")
@@ -169,4 +171,94 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             .build();
         }
     }
+
+    /**
+     * 계정정보 찾기
+     * @param request
+     * @return
+     */
+    public StatusResponseDto findAccount(FindAccountDto request) {
+        if (request.getFindMode() == null || request.getFindMode().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("계정찾기 구분이 지정되지 않았습니다.")
+                .build();
+        } else if (request.getFindMode().equals("findPw")) {
+            if (request.getUserId() == null || request.getUserId().isEmpty()) {
+                return StatusResponseDto.builder()
+                    .success(false)
+                    .msg("아이디를 입력 해주세요.")
+                    .build();
+            }
+        }
+        if (request.getEmail() == null || request.getEmail().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("이메일을 입력 해주세요.")
+                .build();
+        } else if (request.getVerifyCode() == null || request.getVerifyCode().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("인증번호를 입력 해주세요.")
+                .build();
+        }
+
+        if (request.getFindMode().equals("findId")) {
+            // TODO: 작업 토큰 등록하기
+            String acceptToken = "find_user_id_accept_token";
+
+            // tokenList.append(FindAccountTicket.builder()
+            //     .findMode("findId")
+            //     .acceptToken(acceptToken)
+            //     .build());
+
+            return StatusResponseDto.builder()
+                .success(true)
+                .msg(String.format("token: %s", acceptToken))
+                .build();
+
+        } else if (request.getFindMode().equals("findPw")) {
+            // TODO: 작업 토큰 등록하기
+            String acceptToken = "change_user_pw_accept_token";
+
+            // tokenList.append(FindAccountTicket.builder()
+            //     .findMode("findPw")
+            //     .acceptToken(acceptToken)
+            //     .build());
+
+            return StatusResponseDto.builder()
+                .success(true)
+                .msg(String.format("token: %s", acceptToken))
+                .build();
+        }
+
+        return null;
+    }
+
+    public StatusResponseDto createGame(CreateGameDto request) {
+        if (request.getTitle() == null || request.getTitle().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("제목을 입력 하세요.")
+                .build();
+        } else if (request.getOwnerId() == null || request.getOwnerId().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("방장 아이디가 없습니다.")
+                .build();
+        }
+        if (this.ticTacToeRepository.createGame(request) > 0) {
+            return StatusResponseDto.builder()
+                .success(true)
+                .msg("")
+                .build();
+        } else {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("게임방을 만드는 중 오류가 발생했습니다.")
+                .build();
+        }
+    }
+
+
 }

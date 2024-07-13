@@ -1,6 +1,7 @@
 package egovframework.ateli9r.tictactoe.repos;
 
 import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
+import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 
 public class TicTacToeLocalRepository implements TicTacToeRepository {
@@ -32,11 +33,20 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
     @Override
     public int signUp(SignUpFormDto request) {
         int chk = 0;
-        if (request.getUserId().length() > 0) chk++;
-        if (request.getNickname().length() > 0) chk++;
-        if (request.getEmail().length() > 0) chk++;
-        if (request.getUserPw().length() > 0) chk++;
+        if (request.getUserId() != null && request.getUserId().length() > 0) chk++;
+        if (request.getNickname() != null && request.getNickname().length() > 0) chk++;
+        if (request.getEmail() != null && request.getEmail().length() > 0) chk++;
+        if (request.getUserPw() != null && request.getUserPw().length() > 0) chk++;
         if (chk == 4) return 1;
+        return 0;
+    }
+
+    @Override
+    public int createGame(CreateGameDto request) {
+        int chk = 0;
+        if (request.getTitle() != null && !request.getTitle().isEmpty()) chk++;
+        if (request.getOwnerId() != null && !request.getOwnerId().isEmpty()) chk++;
+        if (chk == 2) return 1;
         return 0;
     }
 }
