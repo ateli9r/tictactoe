@@ -1,5 +1,9 @@
 package egovframework.ateli9r.tictactoe.repos;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord;
 import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
@@ -48,5 +52,17 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
         if (request.getOwnerId() != null && !request.getOwnerId().isEmpty()) chk++;
         if (chk == 2) return 1;
         return 0;
+    }
+
+    @Override
+    public List<GameRoomRecord> listGameRoom() {
+        List<GameRoomRecord> ret = new ArrayList<>();
+        ret.add(GameRoomRecord.builder()
+            .ownerId("owner")
+            .chngrId("chngr")
+            .status("status")
+            .board("000000000")
+            .build());
+        return ret;
     }
 }

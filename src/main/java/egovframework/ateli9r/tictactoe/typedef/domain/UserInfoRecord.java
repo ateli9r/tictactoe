@@ -4,6 +4,9 @@ import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * 사용자정보 레코드
+ */
 @Getter
 @Builder
 public class UserInfoRecord {

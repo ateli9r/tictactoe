@@ -1,7 +1,9 @@
 package egovframework.ateli9r.tictactoe.model;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -13,8 +15,10 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ateli9r.tictactoe.repos.MessageRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
+import egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.GameRoomDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
@@ -241,6 +245,11 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         return null;
     }
 
+    /**
+     * 게임방 만들기
+     * @param request 게임방 생성 요청
+     * @return 게인방 생성 응답
+     */
     public StatusResponseDto createGame(CreateGameDto request) {
         if (request.getTitle() == null || request.getTitle().isEmpty()) {
             return StatusResponseDto.builder()
@@ -266,5 +275,18 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         }
     }
 
+    /**
+     * 게임방 목록
+     * @return 게임방 목록
+     */
+    public List<GameRoomDto> listGameRoom() throws Exception {
+        List<GameRoomDto> ret = new ArrayList<GameRoomDto>();
+        List<GameRoomRecord> listGame = this.ticTacToeRepository.listGameRoom();
+        
+        for (GameRoomRecord item : listGame) {
+            ret.add(item.toDto());
+        }
+        return ret;
+    }
 
 }
