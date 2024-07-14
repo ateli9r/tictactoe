@@ -42,32 +42,39 @@ public class TicTacToeApp {
 
 
 	@RequestMapping(value = "app.do")
-	public String app() throws Exception {
+	public String app() {
 		return "tictactoe/app";
     }
 
 	@ResponseBody
 	@RequestMapping(value = "/api/login.do", method = RequestMethod.POST)
-	public StatusResponseDto login(LoginRequestDto reqDto, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		StatusResponseDto respDto = ticTacToeModel.login(reqDto);
-
-		if (respDto.isSuccess()) {
-			// 세션 속성 설정
-			HttpSession session = request.getSession(true);
-			session.setAttribute("userId", reqDto.getUserId());
-
-			// 세션 쿠키 설정
-			Cookie cookie = new Cookie("JSESSIONID", session.getId());
-			cookie.setHttpOnly(true);
-			cookie.setPath("/");
-			response.addCookie(cookie);
+	public StatusResponseDto login(LoginRequestDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+		StatusResponseDto respDto = null;
+		try {
+			respDto = ticTacToeModel.login(reqDto);
+			if (respDto.isSuccess()) {
+				// 세션 속성 설정
+				HttpSession session = request.getSession(true);
+				session.setAttribute("userId", reqDto.getUserId());
+	
+				// 세션 쿠키 설정
+				Cookie cookie = new Cookie("JSESSIONID", session.getId());
+				cookie.setHttpOnly(true);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+			}
+		} catch (Exception ex) {
+			respDto = StatusResponseDto.builder()
+				.msg("요청중 오류가 발생했습니다.")
+				.build();
+			LOGGER.debug(ex.getMessage());
 		}
 		return respDto;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/api/logout.do", method = RequestMethod.POST)
-	public boolean logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public boolean logout(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate(); // 세션 제거
@@ -85,43 +92,52 @@ public class TicTacToeApp {
 
 	@ResponseBody
 	@RequestMapping(value = "/api/userInfo.do", method = RequestMethod.POST)
-	public UserInfoDto userInfo(HttpServletRequest request) throws Exception {
-		HttpSession session = request.getSession(false);
-		if (session != null && session.getAttribute("userId") != null) {
-			String userId = (String) session.getAttribute("userId");
-			UserInfoDto respDto = ticTacToeModel.getUserInfo(userId);
-			return respDto;
+	public UserInfoDto userInfo(HttpServletRequest request) {
+		try {
+			HttpSession session = request.getSession(false);
+			if (session != null && session.getAttribute("userId") != null) {
+				String userId = (String) session.getAttribute("userId");
+				UserInfoDto respDto = ticTacToeModel.getUserInfo(userId);
+				return respDto;
+			}
+		} catch (Exception ex) {
+			LOGGER.debug(ex.getMessage());
 		}
 		return null;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/api/sendVerifyEmail.do", method = RequestMethod.POST)
-	public StatusResponseDto sendVerifyEmail(SendMailFormDto request) throws Exception {
+	public StatusResponseDto sendVerifyEmail(SendMailFormDto request) {
 		return this.ticTacToeModel.sendVerifyEmail(request);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/api/checkVerifyNo.do", method = RequestMethod.POST)
-	public StatusResponseDto checkVerifyNo() throws Exception {
+	public StatusResponseDto checkVerifyNo() {
 		return null;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/api/signUp.do", method = RequestMethod.POST)
-	public StatusResponseDto signUp(SignUpFormDto request) throws Exception {
-		return this.ticTacToeModel.signUp(request);
+	public StatusResponseDto signUp(SignUpFormDto request) {
+		try {
+			return this.ticTacToeModel.signUp(request);
+		} catch (Exception ex) {
+			LOGGER.debug(ex.getMessage());
+		}
+		return null;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/api/findIdRequest.do", method = RequestMethod.POST)
-	public StatusResponseDto findIdRequest() throws Exception {
+	public StatusResponseDto findIdRequest() {
 		return null;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/api/findPwRequest.do", method = RequestMethod.POST)
-	public StatusResponseDto findPwRequest() throws Exception {
+	public StatusResponseDto findPwRequest() {
 		return null;
 	}
 

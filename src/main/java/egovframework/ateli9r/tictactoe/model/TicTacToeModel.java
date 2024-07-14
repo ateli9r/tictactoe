@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import egovframework.ateli9r.tictactoe.repos.MessageRepository;
@@ -18,6 +20,7 @@ import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.StatusResponseDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
+import egovframework.example.sample.service.impl.EgovSampleServiceImpl;
 
 /**
  * 틱택토 모델
@@ -33,6 +36,8 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     @Resource(name = "egovIdGnrService")
     private EgovIdGnrService egovIdGnrService;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(EgovSampleServiceImpl.class);
+
     public TicTacToeModel(TicTacToeRepository ticTacToeRepository, MessageRepository messageRepository) {
         this.ticTacToeRepository = ticTacToeRepository;
         this.messageRepository = messageRepository;
@@ -44,6 +49,8 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return 로그인 응답
      */
     public StatusResponseDto login(LoginRequestDto request) throws Exception {
+        LOGGER.debug(String.format("id:%s / pw:%s", request.getUserId(), this.hash(request.getUserPw())));
+        
         boolean success = this.ticTacToeRepository.login(request.getUserId(), this.hash(request.getUserPw()));
         String msg = (!success) ? "로그인 실패" : "";
         return StatusResponseDto.builder().success(success).msg(msg).build();

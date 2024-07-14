@@ -17,13 +17,15 @@ import egovframework.ateli9r.tictactoe.typedef.dto.UserInfoDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TicTacToeTest {
+import java.util.List;
+
+public class TicTacToeModelTest {
     private final TicTacToeModel model;
 
     /**
      * 생성자
      */
-    public TicTacToeTest() {
+    public TicTacToeModelTest() {
         TicTacToeRepository tttRepos = new TicTacToeLocalRepository();
         MessageRepository msgRepos = new MessageLocalRepository();
         model = new TicTacToeModel(tttRepos, msgRepos);
@@ -289,7 +291,7 @@ public class TicTacToeTest {
          */
 
         //  메인	T-05-0002	유저 정보 출력	T-01-0001, 로그인에 성공하면 메인 페이지에 접속 되면서 해당 유저의 정보가 메인 상단에 출력 된다. (유저 닉네임, 승률, 프로필 이미지)        
-        //  메인	T-05-0003	랭킹 정보 출력	유저들의 승률을 비교하여 상위 1~5위의 유저가 메인 우측 하단에 출력 된다.        
+        //  메인	T-05-0003	랭킹 정보 출력	유저들의 승률을 비교하여 상위 1~5위의 유저가 메인 우측 하단에 출력 된다.       
     }
 
     /**
@@ -468,6 +470,9 @@ public class TicTacToeTest {
         //  메인	T-05-0004	게임 방 리스트 출력	가장 최근에 만들어진 방부터 순서대로 게임방의 리스트가 메인 좌측 하단에 출력 된다.	
         //  메인	T-05-0005	게임 방 리스트 페이징	최근에 만들어진 방을 3개씩 묶어서 출력하며, 보이지 않는 방들은 페이징 처리한다.	
         // 메인 – 게임 방 접속	T-05-0012	게임 방 리스트 새로고침	게임 방 리스트에서 새로고침 클릭 시, 게임 방 리스트 정보가 갱신 된다.         
+
+        // List<GameRoomDto> listGame = null;
+        
         
     }
     
