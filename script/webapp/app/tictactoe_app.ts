@@ -26,6 +26,10 @@ export default class TicTacToeApp {
         this.model = new TicTactoeModel(tttRepos, msgRepos)
     }
 
+    getModel() {
+        return this.model
+    }
+
     closeModal() {
         location.hash = ''
     }

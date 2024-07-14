@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "jest",
+    "test:prod": "PROD_TEST=true jest",
     "dist": "webpack",
     "watch": "webpack --watch",
     "product": "webpack --mode=production"
@@ -31,6 +32,7 @@
   "dependencies": {
     "marked": "^13.0.1",
     "vue": "^3.4.30",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "yargs": "^17.7.2"
   }
 }
