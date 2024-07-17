@@ -20,6 +20,8 @@ export default class TicTacToeApp {
     private isShowGame = ref(false)
     private isShowMenu = ref(true)
 
+    private vueApp: any = {}
+
     constructor() {
         const tttRepos = new TicTacToeProdRepository()
         const msgRepos = new MessageProdRepository()
@@ -51,6 +53,7 @@ export default class TicTacToeApp {
             }
         })
         app.mount(selector)
+        this.vueApp.header = app
     }
 
     async renderSignIn(selector: string) {
@@ -114,6 +117,7 @@ export default class TicTacToeApp {
             }
         })
         app.mount(selector)
+        this.vueApp.signIn = app
     }
 
     async renderSignUp(selector: string) {
@@ -168,6 +172,14 @@ export default class TicTacToeApp {
             }
         }
 
+        const onClickSendEmail = async () => {
+            console.log('onClickSendEmail')
+        }
+
+        const onClickCheckVerify = async () => {
+            console.log('onClickCheckVerify')
+        }
+
         const app = createApp({
             data() {
                 return props
@@ -181,10 +193,13 @@ export default class TicTacToeApp {
 
                 return {
                     onClickSubmit,
+                    onClickSendEmail,
+                    onClickCheckVerify,
                 }
             }
         })
         app.mount(selector)
+        this.vueApp.signUp = app
     }
 
     async renderUserLost(selector: string) {
@@ -221,6 +236,7 @@ export default class TicTacToeApp {
             }
         })
         app.mount(selector)
+        this.vueApp.userLost = app
     }
 
     async renderNewGame(selector: string) {
@@ -246,17 +262,28 @@ export default class TicTacToeApp {
             }
         })
         app.mount(selector)
+        this.vueApp.newGame = app
     }
 
     async renderJoinGame(selector: string) {
+        const onRefresh = async () => {
+            console.log('onRefresh - renderJoinGame')
+        }
+
         const app = createApp({
             setup() {
                 return {
-                    // 
+                    onRefresh,
                 }
             }
         })
         app.mount(selector)
+
+        setTimeout(() => {
+            console.log('!!!', (app as any).onRefresh)
+        }, 1000)
+
+        this.vueApp.joinGame = app
     }
 
     async renderMyPage(selector: string) {
@@ -284,6 +311,7 @@ export default class TicTacToeApp {
             }
         })
         app.mount(selector)
+        this.vueApp.myPage = app
     }
 
     async renderRanking(selector: string) {
@@ -295,6 +323,7 @@ export default class TicTacToeApp {
             }
         })
         app.mount(selector)
+        this.vueApp.ranking = app
     }
 
     async renderGame(selector: string) {
@@ -326,6 +355,7 @@ export default class TicTacToeApp {
             }
         })
         app.mount(selector)
+        this.vueApp.game = app
     }
 
 }

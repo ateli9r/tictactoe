@@ -20,6 +20,7 @@ export default class App {
     private appRoute: any = {
         'counter': new CounterApp(),
         'hello': new HelloApp(),
+        'tictactoe': null,
     }
 
     /**
@@ -58,6 +59,8 @@ export default class App {
         ttt.renderMyPage('#my_page')
         ttt.renderRanking('#ranking')
         ttt.renderGame('#game')
+
+        this.appRoute.tictactoe = ttt
     }
 
     /**
