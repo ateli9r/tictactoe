@@ -19,6 +19,7 @@ import egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.GameRoomDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
@@ -271,6 +272,24 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("게임방을 만드는 중 오류가 발생했습니다.")
+                .build();
+        }
+    }
+
+    /**
+     * 게임방 참여
+     * @param request 게임방 참여 요청
+     * @return 게임방 참여 응답
+     */
+    public StatusResponseDto joinGame(JoinGameDto request) {
+        if (this.ticTacToeRepository.joinGame(request) > 0) {
+            return StatusResponseDto.builder()
+                .success(true)
+                .msg("")
+                .build();
+        } else {
+            return StatusResponseDto.builder()
+                .msg("게임방 참여중 오류가 발생했습니다.")
                 .build();
         }
     }

@@ -74,6 +74,11 @@
 
 				var $article = $main_articles.filter('#' + id);
 
+				var $onShowClick = $article.find('.onShowClick');
+				if ($onShowClick.length > 0) {
+					$onShowClick.click();
+				}
+
 				// No such article? Bail.
 					if ($article.length == 0)
 						return;
@@ -200,6 +205,11 @@
 			$main._hide = function(addState) {
 
 				var $article = $main_articles.filter('.active');
+
+				var $onHideClick = $article.find('.onHideClick');
+				if ($onHideClick.length > 0) {
+					$onHideClick.click();
+				}
 
 				// Article not visible? Bail.
 					if (!$body.hasClass('is-article-visible'))

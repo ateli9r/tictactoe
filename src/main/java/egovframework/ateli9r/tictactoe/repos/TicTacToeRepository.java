@@ -5,6 +5,7 @@ import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord;
 import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 
 import java.util.List;
@@ -41,6 +42,13 @@ public interface TicTacToeRepository {
      * @return 영향 레코드 수
      */
     int createGame(CreateGameDto request);
+
+    /**
+     * 게임방 참여하기
+     * @param request 게임방 참여 요청
+     * @return 영향 레코드 수
+     */
+    int joinGame(JoinGameDto request);
 
     /**
      * 게임방 목록

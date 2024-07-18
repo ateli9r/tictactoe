@@ -279,14 +279,14 @@ export default class TicTacToeApp {
         })
         app.mount(selector)
 
-        setTimeout(() => {
-            console.log('!!!', (app as any).onRefresh)
-        }, 1000)
-
         this.vueApp.joinGame = app
     }
 
     async renderMyPage(selector: string) {
+        const onRefresh = async () => {
+            console.log('onRefresh - renderMyPage')
+        }
+
         const onClickChangeName = () => {
             console.log('onClickChangeName')
         }
@@ -307,6 +307,7 @@ export default class TicTacToeApp {
                     onClickChangeName,
                     onClickChangeUserPw,
                     onClickLogout,
+                    onRefresh,
                 }
             }
         })
@@ -315,10 +316,14 @@ export default class TicTacToeApp {
     }
 
     async renderRanking(selector: string) {
+        const onRefresh = async () => {
+            console.log('onRefresh - renderRanking')
+        }
+
         const app = createApp({
             setup() {
                 return {
-                    // 
+                    onRefresh,
                 }
             }
         })

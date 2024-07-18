@@ -1,5 +1,6 @@
 package tictactoe;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import egovframework.ateli9r.tictactoe.model.TicTacToeModel;
@@ -10,6 +11,7 @@ import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.GameRoomDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
@@ -20,22 +22,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-public class TicTacToeModelTest {
-    private final TicTacToeModel model;
+public class TicTacToeLocalTest implements TicTacToeTest {
+    private TicTacToeModel model;
 
     /**
-     * 생성자
+     * 테스트 객체 초기화
      */
-    public TicTacToeModelTest() {
+    @BeforeEach
+    public void setup() {
         TicTacToeRepository tttRepos = new TicTacToeLocalRepository();
         MessageRepository msgRepos = new MessageLocalRepository();
         model = new TicTacToeModel(tttRepos, msgRepos);
     }
 
     /**
-     * 로그인
+     * 로그인 실패
      */
     @Test
+    @Override
     public void testLoginFail() throws Exception {
         LoginRequestDto req = LoginRequestDto.builder()
             .userId("login_fail").userPw("login_fail").build();
@@ -48,7 +52,11 @@ public class TicTacToeModelTest {
         assertEquals(resp.getMsg(), "로그인 실패");
     }
 
+    /**
+     * 로그인 성공
+     */
     @Test
+    @Override
     public void testLoginSuccess() throws Exception {
         LoginRequestDto req = LoginRequestDto.builder()
             .userId("login_ok").userPw("login_ok").build();
@@ -68,6 +76,7 @@ public class TicTacToeModelTest {
      * 회원가입
      */
     @Test
+    @Override
     public void testCreateUser() throws Exception {
         StatusResponseDto respDto1 = model.signUp(SignUpFormDto.builder()
             .userId("")
@@ -131,6 +140,7 @@ public class TicTacToeModelTest {
      * 인증번호 생성
      */
     @Test
+    @Override
     public void testCreateVerifyCode() throws Exception {
         String verifyCode = model.createVerifyCode("test@test.com");
         assertNotNull(verifyCode);
@@ -142,6 +152,7 @@ public class TicTacToeModelTest {
      * 인증 이메일 발송
      */
     @Test
+    @Override
     public void testSendVerifyEmail() throws Exception {
         SendMailFormDto reqDto = SendMailFormDto.builder()
             .mailTo("test@test.com")
@@ -157,6 +168,7 @@ public class TicTacToeModelTest {
      * 아이디 찾기
      */
     @Test
+    @Override
     public void testFindUserId() throws Exception {
         FindAccountDto reqDto = FindAccountDto.builder()
             .findMode("findId")
@@ -172,11 +184,11 @@ public class TicTacToeModelTest {
 
     }
 
-
     /**
      * 비밀번호 찾기
      */
     @Test
+    @Override
     public void testFindUserPw() throws Exception {
         FindAccountDto reqDto = FindAccountDto.builder()
             .findMode("findPw")
@@ -197,6 +209,7 @@ public class TicTacToeModelTest {
      * 게임 전적 조회
      */
     @Test
+    @Override
     public void testViewGameRank() throws Exception {
         // 
     }
@@ -205,6 +218,7 @@ public class TicTacToeModelTest {
      * 게임 전적 변경
      */
     @Test
+    @Override
     public void testChangeGameRank() throws Exception {
         // TODO: 전적 리셋
     }
@@ -213,6 +227,7 @@ public class TicTacToeModelTest {
      * 유저 정보 변경
      */
     @Test
+    @Override
     public void testChangeUserInfo() throws Exception {
         // TODO: 유저 프로필 사진 변경
         // TODO: 유저 닉네임 변경
@@ -220,9 +235,9 @@ public class TicTacToeModelTest {
 
     /**
      * 유저 정보 삭제
-     * - 사용자의 정보를 삭제한다
      */
     @Test
+    @Override
     public void testDeleteUserInfo() throws Exception {
         /*
          * # 전제조건
@@ -236,12 +251,11 @@ public class TicTacToeModelTest {
         
     }
 
-
     /**
      * 게임 생성
-     * - 게임 룸을 생성한다
      */
     @Test
+    @Override
     public void testCreateGameRoom() throws Exception {
         StatusResponseDto respDto1 = model.createGame(CreateGameDto.builder().build());
         assertFalse(respDto1.isSuccess());
@@ -265,14 +279,33 @@ public class TicTacToeModelTest {
      * 게임 참가
      */
     @Test
+    @Override
     public void testJoinGameRoom() throws Exception {
-        // 
+        StatusResponseDto respDto1 = model.joinGame(JoinGameDto.builder().build());
+        assertFalse(respDto1.isSuccess());
+        assertEquals(respDto1.getMsg(), "게임방 참여중 오류가 발생했습니다.");
+        
+        StatusResponseDto respDto2 = model.joinGame(JoinGameDto.builder()
+            .gameId(1).build());
+        assertFalse(respDto2.isSuccess());
+        assertEquals(respDto2.getMsg(), "게임방 참여중 오류가 발생했습니다.");
+
+        StatusResponseDto respDto3 = model.joinGame(JoinGameDto.builder()
+            .chngrId("test").build());
+        assertFalse(respDto3.isSuccess());
+        assertEquals(respDto3.getMsg(), "게임방 참여중 오류가 발생했습니다.");
+            
+        StatusResponseDto respDto4 = model.joinGame(JoinGameDto.builder()
+            .gameId(1).chngrId("test").build());
+        assertTrue(respDto4.isSuccess());
+        assertEquals(respDto4.getMsg(), "");
     }
 
     /**
      * 게임 진행
      */
     @Test
+    @Override
     public void testUpdateGameRoom() throws Exception {
         //  게임진행	T-06-0003	차례 변경	차례가 변경 될 때 마다 차례인 유저를 표시하여 준다.
         // 게임진행	T-06-0004	실시간 게임 진행	틱택토 게임을 통신으로 진행한다.	
@@ -295,15 +328,16 @@ public class TicTacToeModelTest {
      * 게임 정보 조회
      */
     @Test
+    @Override
     public void testViewGameRoom() throws Exception {
         // 게임진행	T-06-0008	퇴장 후 유저, 게임 방 정보 갱신	유저가 게임을 끝마치고 게임방에서 퇴장하면 유저의 승률정보, 랭킹정보가 갱신 된다.	        
     }
 
     /**
      * 게임 리스트 조회
-     * - 게임 룸 리스트를 조회한다
      */
     @Test
+    @Override
     @SuppressWarnings("null")
     public void testListGameRoom() throws Exception {
         List<GameRoomDto> listGame = model.listGameRoom();

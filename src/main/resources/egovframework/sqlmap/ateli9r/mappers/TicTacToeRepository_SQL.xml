@@ -41,4 +41,10 @@
     -->
     </insert>
 
+    <insert id="joinGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto">
+    <!--
+        TODO: implement joinGame
+    -->
+    </insert>
+
 </mapper>

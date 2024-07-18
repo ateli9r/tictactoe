@@ -6,6 +6,7 @@ import java.util.List;
 import egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord;
 import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto;
 
 public class TicTacToeLocalRepository implements TicTacToeRepository {
@@ -64,5 +65,14 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
             .board("000000000")
             .build());
         return ret;
+    }
+
+    @Override
+    public int joinGame(JoinGameDto request) {
+        int chk = 0;
+        if (request.getGameId() > 0) chk++;
+        if (request.getChngrId() != null && request.getChngrId().length() > 0) chk++;
+        if (chk == 2) return 1;
+        return 0;
     }
 }
