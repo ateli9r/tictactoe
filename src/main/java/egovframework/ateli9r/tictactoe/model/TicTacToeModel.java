@@ -6,6 +6,7 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -354,53 +355,129 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return 게임 진행 응답
      */
     public StatusResponseDto updateGame(GameUpdateDto gameUpdateDto) {
+        // 게임방 아이디 검사
+        if (gameUpdateDto.getGameId() == 0) {
+            return StatusResponseDto.builder().msg("게임방 아이디가 없습니다.").build();
+        }
+
+        // 플레이어 아이디 검사
+        if (gameUpdateDto.getPlayerId() == null || gameUpdateDto.getPlayerId().isEmpty()) {
+            return StatusResponseDto.builder().msg("플레이어 아이디가 없습니다.").build();
+        }
+
+        // 메시지 검사
+        if (gameUpdateDto.getMsg() == null || gameUpdateDto.getMsg().isEmpty()) {
+            return StatusResponseDto.builder().msg("메시지가 없습니다.").build();
+        }
+
+        // 게임방 정보 가져오기
         GameRoomRecord gameRoom = this.ticTacToeRepository.getGameRoom(gameUpdateDto.getGameId());
 
-        /*
-            StatusResponseDto respDto1 = model.updateGame(GameUpdateDto.builder()
-                .gameId(gameId).playerId("test2").msg("B4").build());
-            assertTrue(respDto1 != null);
-            assertFalse(respDto1.isSuccess());
-            assertEquals(respDto1.getMsg(), "해당 플레이어 차례가 아닙니다.");
+        // 게임판 상태
+        String rStatus = gameRoom.getStatus();
+        String rBoard = gameRoom.getBoard();
 
-            StatusResponseDto respDto2 = model.updateGame(GameUpdateDto.builder()
-                .gameId(gameId).playerId("test1").msg("B4").build());
-            assertTrue(respDto2 != null);
-            assertFalse(respDto2.isSuccess());
-            assertEquals(respDto2.getMsg(), "해당 위치에 놓을 수 없습니다.");
+        // 턴에 해당하는 플레이어 아이디
+        boolean isCmdJoin = false;
+        boolean isCmdSwitch = false;
+        String turnPlayer = null;
 
-            StatusResponseDto respDto3 = model.updateGame(GameUpdateDto.builder().build());
-            assertTrue(respDto3 != null);
-            assertFalse(respDto3.isSuccess());
-            assertEquals(respDto3.getMsg(), "게임방 아이디가 없습니다.");
+        switch (rStatus) {
+            case "IN": // JOIN
+                turnPlayer = gameUpdateDto.getPlayerId();
+                isCmdJoin = true;
+                break;
+            case "P1": // TURN-PLAYER1
+                turnPlayer = gameRoom.getOwnerId();
+                isCmdSwitch = true;
+                break;
+            case "P2": // TURN-PLAYER2
+                turnPlayer = gameRoom.getChngrId();
+                isCmdSwitch = true;
+                break;
+            default:
+                String msg = "게임이 종료된 게임방 입니다.";
+                return StatusResponseDto.builder().msg(msg).build();
+        }
 
-            StatusResponseDto respDto4 = model.updateGame(GameUpdateDto.builder()
-                .gameId(gameId).msg("B4").build());
-            assertTrue(respDto4 != null);
-            assertFalse(respDto4.isSuccess());
-            assertEquals(respDto4.getMsg(), "플레이어 아이디가 없습니다.");
+        // 게임 진행중일때
+        if (isCmdSwitch && turnPlayer != null) {
+            if (!turnPlayer.equals(gameUpdateDto.getPlayerId())) {
+                return StatusResponseDto.builder().msg("해당 플레이어 차례가 아닙니다.").build();
+            }
+        }
 
-            StatusResponseDto respDto5 = model.updateGame(GameUpdateDto.builder()
-                .gameId(gameId).playerId("test1").msg("B123").build());
-            assertTrue(respDto5 != null);
-            assertFalse(respDto5.isSuccess());
-            assertEquals(respDto5.getMsg(), "게임판 범위를 벗어납니다.");
+        // 메시지 형식 검사
+        Optional<Integer> boardPos = Optional.empty();
+        if (rStatus.equals("P1") || rStatus.equals("P2")) {
+            // 게임 진행중일때 메시지의 첫글자는 'B'이고 나머지는 0~8사이의 숫자여야 함
+            if (gameUpdateDto.getMsg().charAt(0) == 'B') {
+                String boardPosStr = gameUpdateDto.getMsg().substring(1);
+                try {
+                    int pos = Integer.parseInt(boardPosStr);
+                    boardPos = Optional.of(pos);
+                } catch (Exception ex) { /* ignore */ }
 
-            StatusResponseDto respDto6 = model.updateGame(GameUpdateDto.builder()
-                .gameId(gameId).playerId("test1").msg("dummy_message").build());
-            assertTrue(respDto6 != null);
-            assertFalse(respDto6.isSuccess());
-            assertEquals(respDto6.getMsg(), "지원되지 않는 메시지 형식입니다.");
+                // boardPos가 제공되지 않으면 잘못된 메시지
+                if (!boardPos.isPresent()) {
+                    return StatusResponseDto.builder().msg("지원되지 않는 메시지 형식입니다.").build();
+                }
+            } else {
+                return StatusResponseDto.builder().msg("지원되지 않는 메시지 형식입니다.").build();
+            }
+        } else {
+            // 그 외에는 메시지는 공백이 아니면 지원하지 않음
+            if (!gameUpdateDto.getMsg().equals("")) {
+                return StatusResponseDto.builder().msg("지원되지 않는 메시지 형식입니다.").build();
+            }
+        }
 
-            StatusResponseDto respDto8 = model.updateGame(GameUpdateDto.builder()
-                .gameId(gameId).playerId("test1").msg("B1").build());
-            assertTrue(respDto8 != null);
-            assertTrue(respDto8.isSuccess());
-            assertEquals(respDto8.getMsg(), "");        
-        */
+        // 지정 위치 예외 검사
+        if (boardPos.isPresent()) {
+            if (boardPos.get() > 8) {
+                return StatusResponseDto.builder().msg("게임판 범위를 벗어납니다.").build();
+            }
+            if (rBoard.charAt(boardPos.get()) != '.') {
+                return StatusResponseDto.builder().msg("해당 위치에 놓을 수 없습니다.").build();
+            }
+        }
 
-        // int affected = this.ticTacToeRepository.updateGame()
-        return null;
+        // 게임방 업데이트 정보
+        GameRoomRecord updateGameRoom = null;
+
+        // 게임방 참여
+        if (isCmdJoin) {
+            updateGameRoom = GameRoomRecord.builder()
+                .ownerId(gameRoom.getOwnerId())
+                .chngrId(turnPlayer)
+                .status("P1")
+                .board(gameRoom.getBoard())
+                .build();
+        }
+
+        // 턴 전환
+        if (isCmdSwitch && boardPos.isPresent()) {
+            char mark = rStatus.equals("P2") ? 'X' : 'O';
+            String status = rStatus.equals("P2") ? "P1" : "P2";
+            StringBuffer sbBoard = new StringBuffer(rBoard);
+            sbBoard.setCharAt(boardPos.get(), mark);
+
+            updateGameRoom = GameRoomRecord.builder()
+                .ownerId(gameRoom.getOwnerId())
+                .chngrId(gameRoom.getChngrId())
+                .status(status)
+                .board(sbBoard.toString())
+                .build();
+        }
+
+        // 게임판 업데이트
+        if (updateGameRoom != null && this.ticTacToeRepository.updateGame(updateGameRoom) > 0) {
+            return StatusResponseDto.builder()
+                .success(true).msg("")
+                .build();
+        } else {
+            return StatusResponseDto.builder().msg("게임판 업데이트 중 오류가 발생 했습니다.").build();
+        }
     }
 
     /**

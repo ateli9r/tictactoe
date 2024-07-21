@@ -68,4 +68,11 @@ public interface TicTacToeRepository {
      * @return
      */
     List<UserInfoRecord> listGameRank();
+
+    /**
+     * 게임 진행
+     * @param updateGameRoom 게임방 정보
+     * @return 영향 레코드 수
+     */
+    int updateGame(GameRoomRecord updateGameRoom);
 }

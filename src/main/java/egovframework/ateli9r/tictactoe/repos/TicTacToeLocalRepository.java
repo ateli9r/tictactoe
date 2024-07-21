@@ -100,4 +100,10 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
             .build());
         return ret;
     }
+
+    @Override
+    public int updateGame(GameRoomRecord updateGameRoom) {
+        // return 0;
+        return 1;
+    }
 }
