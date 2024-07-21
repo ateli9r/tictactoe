@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GameRoomDto {
+    private int gameId;
     private String ownerId;
     private String chngrId;
     private String status;

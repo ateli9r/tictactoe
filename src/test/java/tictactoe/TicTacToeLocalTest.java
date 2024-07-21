@@ -10,7 +10,9 @@ import egovframework.ateli9r.tictactoe.repos.TicTacToeLocalRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.FindApplyDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.GameRoomDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.GameUpdateDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
@@ -123,17 +125,26 @@ public class TicTacToeLocalTest implements TicTacToeTest {
         assertEquals(respDto4.getMsg(), "패스워드를 입력해 주세요.");
 
         StatusResponseDto respDto5 = model.signUp(SignUpFormDto.builder()
+            .userId("exists_user")
+            .nickname("exists_user")
+            .email("exists_user@exists_user.com")
+            .userPw("exists_user@exists_user.com")
+            .build());
+
+        assertNotNull(respDto5);
+        assertEquals(respDto5.isSuccess(), false);
+        assertEquals(respDto5.getMsg(), "이미 가입되어 있는 아이디입니다.");
+
+        StatusResponseDto respDto6 = model.signUp(SignUpFormDto.builder()
             .userId("test")
             .nickname("test")
             .email("test@test.com")
             .userPw("test@test.com")
             .build());
 
-        assertNotNull(respDto5);
-        assertEquals(respDto5.isSuccess(), true);
-        assertEquals(respDto5.getMsg(), "");
-
-        // TODO: 생성하고자 하는 아이디로 기생성된 계정이 없어야 한다.
+        assertNotNull(respDto6);
+        assertTrue(respDto6.isSuccess());
+        assertEquals(respDto6.getMsg(), "");
     }
 
     /**
@@ -144,8 +155,8 @@ public class TicTacToeLocalTest implements TicTacToeTest {
     public void testCreateVerifyCode() throws Exception {
         String verifyCode = model.createVerifyCode("test@test.com");
         assertNotNull(verifyCode);
-        assertEquals(verifyCode.length() == 6, true);
-        assertEquals(verifyCode.chars().allMatch(Character::isDigit), true);
+        assertTrue(verifyCode.length() == 6);
+        assertTrue(verifyCode.chars().allMatch(Character::isDigit));
     }
 
     /**
@@ -160,7 +171,7 @@ public class TicTacToeLocalTest implements TicTacToeTest {
 
         StatusResponseDto respDto = model.sendVerifyEmail(reqDto);
         assertNotNull(respDto);
-        assertEquals(respDto.isSuccess(), true);
+        assertTrue(respDto.isSuccess());
         assertEquals(respDto.getMsg(), "");
     }
 
@@ -176,12 +187,19 @@ public class TicTacToeLocalTest implements TicTacToeTest {
             .verifyCode("000000")
             .build();
 
-        StatusResponseDto respDto = model.findAccount(reqDto);
-        assertTrue(respDto.isSuccess());
-        assertTrue(respDto.getMsg().length() > 0);
+        StatusResponseDto respDto1 = model.findAccount(reqDto);
+        assertTrue(respDto1.isSuccess());
+        assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
-        // TOOD: 아이디 조회 요청
-
+        FindApplyDto applyDto = FindApplyDto.builder()
+            .findMode("findId")
+            .email("test@test.com")
+            .token("token")
+            .build();
+        
+        StatusResponseDto respDto2 = model.findApply(applyDto);
+        assertTrue(respDto2.isSuccess());
+        assertTrue(respDto2.getMsg().length() > 0); // userId
     }
 
     /**
@@ -197,58 +215,38 @@ public class TicTacToeLocalTest implements TicTacToeTest {
             .verifyCode("000000")
             .build();
 
-        StatusResponseDto respDto = model.findAccount(reqDto);
-        assertTrue(respDto.isSuccess());
-        assertTrue(respDto.getMsg().length() > 0);
+        StatusResponseDto respDto1 = model.findAccount(reqDto);
+        assertTrue(respDto1.isSuccess());
+        assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
-        // TODO: 비밀번호 재설정 요청
+        FindApplyDto applyDto = FindApplyDto.builder()
+            .findMode("findPw")
+            .email("test@test.com")
+            .token("token")
+            .message("password=password")
+            .build();
 
+        StatusResponseDto respDto2 = model.findApply(applyDto);
+        assertTrue(respDto2.isSuccess());
+        assertEquals(respDto2.getMsg(), "");
     }
 
     /**
-     * 게임 전적 조회
+     * 게임 전적 목록
      */
     @Test
     @Override
-    public void testViewGameRank() throws Exception {
-        // 
-    }
+    public void testListGameRank() throws Exception {
+        List<UserInfoDto> listUser = model.listGameRank();
+        assertTrue(listUser != null);
+        assertTrue(listUser.size() > 0);
 
-    /**
-     * 게임 전적 변경
-     */
-    @Test
-    @Override
-    public void testChangeGameRank() throws Exception {
-        // TODO: 전적 리셋
-    }
+        UserInfoDto userDto = listUser.get(0);
+        assertTrue(userDto.getUserId() != null && !userDto.getUserId().isEmpty());
+        assertTrue(userDto.getNickname() != null && !userDto.getNickname().isEmpty());
 
-    /**
-     * 유저 정보 변경
-     */
-    @Test
-    @Override
-    public void testChangeUserInfo() throws Exception {
-        // TODO: 유저 프로필 사진 변경
-        // TODO: 유저 닉네임 변경
-    }
-
-    /**
-     * 유저 정보 삭제
-     */
-    @Test
-    @Override
-    public void testDeleteUserInfo() throws Exception {
-        /*
-         * # 전제조건
-         * - 세션에 저장된 아이디에 매핑된 계정이 있어야 한다
-         * 
-         * # 종료조건
-         * - 계정 정보가 데이터베이스에서 삭제되어야 한다
-         */
-
-        //  메인 - 설정	T-05-0011	회원탈퇴	메인 설정 창에서 회원탈퇴 클릭 시, 회원 정보가 삭제 되며 게임 입장 페이지로 이동한다.	
-        
+        int expTotal = userDto.getWins() + userDto.getLosses() + userDto.getDraws();
+        assertEquals(userDto.getTotal(), expTotal);
     }
 
     /**
@@ -322,6 +320,50 @@ public class TicTacToeLocalTest implements TicTacToeTest {
         // 게임진행 - 로직	T-07-0008	무승부 처리	무승부가 된 게임은 플레이어 모두에게 무승부안내 팝업이 출력된다.
         // 게임진행 - 로직	T-07-0009	승률 갱신	승리, 무승부, 패배 처리에 맞게 승률 정보가 수정된다.
 
+        int gameId = 1;
+        // status: P1
+        // board: O...O...X
+
+        StatusResponseDto respDto1 = model.updateGame(GameUpdateDto.builder()
+            .gameId(gameId).playerId("test2").msg("B4").build());
+        assertTrue(respDto1 != null);
+        assertFalse(respDto1.isSuccess());
+        assertEquals(respDto1.getMsg(), "해당 플레이어 차례가 아닙니다.");
+
+        StatusResponseDto respDto2 = model.updateGame(GameUpdateDto.builder()
+            .gameId(gameId).playerId("test1").msg("B4").build());
+        assertTrue(respDto2 != null);
+        assertFalse(respDto2.isSuccess());
+        assertEquals(respDto2.getMsg(), "해당 위치에 놓을 수 없습니다.");
+
+        StatusResponseDto respDto3 = model.updateGame(GameUpdateDto.builder().build());
+        assertTrue(respDto3 != null);
+        assertFalse(respDto3.isSuccess());
+        assertEquals(respDto3.getMsg(), "게임방 아이디가 없습니다.");
+
+        StatusResponseDto respDto4 = model.updateGame(GameUpdateDto.builder()
+            .gameId(gameId).msg("B4").build());
+        assertTrue(respDto4 != null);
+        assertFalse(respDto4.isSuccess());
+        assertEquals(respDto4.getMsg(), "플레이어 아이디가 없습니다.");
+
+        StatusResponseDto respDto5 = model.updateGame(GameUpdateDto.builder()
+            .gameId(gameId).playerId("test1").msg("B123").build());
+        assertTrue(respDto5 != null);
+        assertFalse(respDto5.isSuccess());
+        assertEquals(respDto5.getMsg(), "게임판 범위를 벗어납니다.");
+
+        StatusResponseDto respDto6 = model.updateGame(GameUpdateDto.builder()
+            .gameId(gameId).playerId("test1").msg("dummy_message").build());
+        assertTrue(respDto6 != null);
+        assertFalse(respDto6.isSuccess());
+        assertEquals(respDto6.getMsg(), "지원되지 않는 메시지 형식입니다.");
+
+        StatusResponseDto respDto8 = model.updateGame(GameUpdateDto.builder()
+            .gameId(gameId).playerId("test1").msg("B1").build());
+        assertTrue(respDto8 != null);
+        assertTrue(respDto8.isSuccess());
+        assertEquals(respDto8.getMsg(), "");
     }
 
     /**
@@ -330,7 +372,14 @@ public class TicTacToeLocalTest implements TicTacToeTest {
     @Test
     @Override
     public void testViewGameRoom() throws Exception {
-        // 게임진행	T-06-0008	퇴장 후 유저, 게임 방 정보 갱신	유저가 게임을 끝마치고 게임방에서 퇴장하면 유저의 승률정보, 랭킹정보가 갱신 된다.	        
+        int gameId = 1;
+        GameRoomDto gameDto = model.getGameRoom(gameId);
+
+        assertTrue(gameDto != null);
+        assertTrue(gameDto.getOwnerId() != null && !gameDto.getOwnerId().isEmpty());
+        assertTrue(gameDto.getChngrId() != null && !gameDto.getChngrId().isEmpty());
+        assertTrue(gameDto.getStatus() != null && !gameDto.getStatus().isEmpty());
+        assertTrue(gameDto.getBoard() != null && !gameDto.getBoard().isEmpty());
     }
 
     /**
@@ -338,16 +387,16 @@ public class TicTacToeLocalTest implements TicTacToeTest {
      */
     @Test
     @Override
-    @SuppressWarnings("null")
     public void testListGameRoom() throws Exception {
         List<GameRoomDto> listGame = model.listGameRoom();
-        assertEquals(listGame != null, true);
-        assertEquals(listGame.size() > 0, true);
+        assertTrue(listGame != null);
+        assertTrue(listGame.size() > 0);
 
         GameRoomDto gameDto = listGame.get(0);
-        assertEquals(gameDto.getOwnerId() != null && !gameDto.getOwnerId().isEmpty(), true);
-        assertEquals(gameDto.getChngrId() != null && !gameDto.getChngrId().isEmpty(), true);
-        assertEquals(gameDto.getStatus() != null && !gameDto.getStatus().isEmpty(), true);
-        assertEquals(gameDto.getBoard() != null && !gameDto.getBoard().isEmpty(), true);
+        assertTrue(gameDto.getOwnerId() != null && !gameDto.getOwnerId().isEmpty());
+        assertTrue(gameDto.getChngrId() != null && !gameDto.getChngrId().isEmpty());
+        assertTrue(gameDto.getStatus() != null && !gameDto.getStatus().isEmpty());
+        assertTrue(gameDto.getBoard() != null && !gameDto.getBoard().isEmpty());
     }
+
 }

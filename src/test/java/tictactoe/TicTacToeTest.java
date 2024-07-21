@@ -37,24 +37,9 @@ public interface TicTacToeTest {
     public void testFindUserPw() throws Exception;
 
     /**
-     * 게임 전적 조회
+     * 게임 전적 목록
      */
-    public void testViewGameRank() throws Exception;
-
-    /**
-     * 게임 전적 변경
-     */
-    public void testChangeGameRank() throws Exception;
-
-    /**
-     * 유저 정보 변경
-     */
-    public void testChangeUserInfo() throws Exception;
-
-    /**
-     * 유저 정보 삭제
-     */
-    public void testDeleteUserInfo() throws Exception;
+    public void testListGameRank() throws Exception;
 
     /**
      * 게임 생성

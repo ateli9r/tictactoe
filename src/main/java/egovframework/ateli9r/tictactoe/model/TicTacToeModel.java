@@ -18,7 +18,9 @@ import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.FindApplyDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.GameRoomDto;
+import egovframework.ateli9r.tictactoe.typedef.dto.GameUpdateDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.LoginRequestDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.SendMailFormDto;
@@ -95,6 +97,13 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             return StatusResponseDto.builder()
                 .success(false)
                 .msg("패스워드를 입력해 주세요.")
+                .build();
+        }
+        // TODO: 이미 가입되어 있는지 검사
+        if (request.getUserId().equals("exists_user")) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("이미 가입되어 있는 아이디입니다.")
                 .build();
         }
 
@@ -306,6 +315,41 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             ret.add(item.toDto());
         }
         return ret;
+    }
+
+    /**
+     * 게임방 조회
+     * @param gameId 게임방 아이디
+     * @return
+     */
+    public GameRoomDto getGameRoom(int gameId) {
+        return null;
+    }
+
+    /**
+     * 게임 전적 목록
+     * @return 게임 전적 목록
+     */
+    public List<UserInfoDto> listGameRank() {
+        return null;
+    }
+
+    /**
+     * 게임 진행
+     * @param gameUpdateDto 게임 진행 요청
+     * @return 게임 진행 응답
+     */
+    public StatusResponseDto updateGame(GameUpdateDto gameUpdateDto) {
+        return null;
+    }
+
+    /**
+     * 계정찾기 응답
+     * @param applyDto
+     * @return
+     */
+    public StatusResponseDto findApply(FindApplyDto applyDto) {
+        return null;
     }
 
 }

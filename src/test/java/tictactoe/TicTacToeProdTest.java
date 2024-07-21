@@ -129,38 +129,11 @@ public class TicTacToeProdTest implements TicTacToeTest {
     }
 
     /**
-     * 게임 전적 조회
+     * 게임 전적 목록
      */
     @Test
     @Override
-    public void testViewGameRank() throws Exception {
-        // 
-    }
-
-    /**
-     * 게임 전적 변경
-     */
-    @Test
-    @Override
-    public void testChangeGameRank() throws Exception {
-        // 
-    }
-
-    /**
-     * 유저 정보 변경
-     */
-    @Test
-    @Override
-    public void testChangeUserInfo() throws Exception {
-        // 
-    }
-
-    /**
-     * 유저 정보 삭제
-     */
-    @Test
-    @Override
-    public void testDeleteUserInfo() throws Exception {
+    public void testListGameRank() throws Exception {
         // 
     }
 
@@ -208,5 +181,5 @@ public class TicTacToeProdTest implements TicTacToeTest {
     public void testListGameRoom() throws Exception {
         // 
     }
-    
+
 }
