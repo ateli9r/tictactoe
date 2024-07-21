@@ -75,4 +75,29 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
         if (chk == 2) return 1;
         return 0;
     }
+
+    @Override
+    public GameRoomRecord getGameRoom(int gameId) {
+        if (gameId != 1) return null;
+        return GameRoomRecord.builder()
+            .ownerId("test1")
+            .chngrId("test2")
+            .status("P1")
+            .board("O...O...X")
+            .build();
+    }
+
+    @Override
+    public List<UserInfoRecord> listGameRank() {
+        List<UserInfoRecord> ret = new ArrayList<>();
+        ret.add(UserInfoRecord.builder()
+            .userId("test")
+            .nickname("test")
+            .total(123)
+            .wins(100)
+            .losses(20)
+            .draws(3)
+            .build());
+        return ret;
+    }
 }

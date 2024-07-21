@@ -191,10 +191,13 @@ public class TicTacToeLocalTest implements TicTacToeTest {
         assertTrue(respDto1.isSuccess());
         assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
+        // TODO: 작업 토큰 생성하기 (UUID)
+        String accessToken = "accessToken";
+
         FindApplyDto applyDto = FindApplyDto.builder()
             .findMode("findId")
             .email("test@test.com")
-            .token("token")
+            .token(accessToken)
             .build();
         
         StatusResponseDto respDto2 = model.findApply(applyDto);
@@ -219,10 +222,13 @@ public class TicTacToeLocalTest implements TicTacToeTest {
         assertTrue(respDto1.isSuccess());
         assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
+        // TODO: 작업 토큰 생성하기 (UUID)
+        String accessToken = "accessToken";
+
         FindApplyDto applyDto = FindApplyDto.builder()
             .findMode("findPw")
             .email("test@test.com")
-            .token("token")
+            .token(accessToken)
             .message("password=password")
             .build();
 

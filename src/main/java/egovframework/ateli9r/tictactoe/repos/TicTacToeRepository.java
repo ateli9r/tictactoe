@@ -55,4 +55,17 @@ public interface TicTacToeRepository {
      * @return 게임방 목록
      */
     List<GameRoomRecord> listGameRoom();
+
+    /**
+     * 
+     * @param gameId
+     * @return
+     */
+    GameRoomRecord getGameRoom(int gameId);
+
+    /**
+     * 
+     * @return
+     */
+    List<UserInfoRecord> listGameRank();
 }

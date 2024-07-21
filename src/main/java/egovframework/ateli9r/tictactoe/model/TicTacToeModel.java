@@ -3,7 +3,9 @@ package egovframework.ateli9r.tictactoe.model;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ateli9r.tictactoe.repos.MessageRepository;
 import egovframework.ateli9r.tictactoe.repos.TicTacToeRepository;
 import egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord;
+import egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord;
 import egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindAccountDto;
 import egovframework.ateli9r.tictactoe.typedef.dto.FindApplyDto;
@@ -43,11 +46,27 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     @Resource(name = "egovIdGnrService")
     private EgovIdGnrService egovIdGnrService;
 
+
+    /**
+     * 아이디 찾기 토큰 맵
+     */
+    private Map<String, String> findIdTokenMap;
+
+    /**
+     * 패스워드 찾기 토큰 맵
+     */
+    private Map<String, String> findPwTokenMap;
+
+
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovSampleServiceImpl.class);
 
     public TicTacToeModel(TicTacToeRepository ticTacToeRepository, MessageRepository messageRepository) {
         this.ticTacToeRepository = ticTacToeRepository;
         this.messageRepository = messageRepository;
+
+        this.findIdTokenMap = new HashMap<>();
+        this.findPwTokenMap = new HashMap<>();
     }
 
     /**
@@ -223,36 +242,27 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 .build();
         }
 
+        // TODO: 작업 토큰 생성하기 (UUID)
+        String accessToken = "accessToken";
+
         if (request.getFindMode().equals("findId")) {
-            // TODO: 작업 토큰 등록하기
-            String acceptToken = "find_user_id_accept_token";
-
-            // tokenList.append(FindAccountTicket.builder()
-            //     .findMode("findId")
-            //     .acceptToken(acceptToken)
-            //     .build());
-
+            findIdTokenMap.put(request.getEmail(), accessToken);
             return StatusResponseDto.builder()
                 .success(true)
-                .msg(String.format("token: %s", acceptToken))
-                .build();
-
-        } else if (request.getFindMode().equals("findPw")) {
-            // TODO: 작업 토큰 등록하기
-            String acceptToken = "change_user_pw_accept_token";
-
-            // tokenList.append(FindAccountTicket.builder()
-            //     .findMode("findPw")
-            //     .acceptToken(acceptToken)
-            //     .build());
-
-            return StatusResponseDto.builder()
-                .success(true)
-                .msg(String.format("token: %s", acceptToken))
+                .msg(String.format("token: %s", accessToken))
                 .build();
         }
-
-        return null;
+        if (request.getFindMode().equals("findPw")) {
+            findPwTokenMap.put(request.getEmail(), accessToken);
+            return StatusResponseDto.builder()
+                .success(true)
+                .msg(String.format("token: %s", accessToken))
+                .build();
+        }
+        return StatusResponseDto.builder()
+            .success(false)
+            .msg("잘못된 요청 입니다.")
+            .build();
     }
 
     /**
@@ -322,16 +332,20 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param gameId 게임방 아이디
      * @return
      */
-    public GameRoomDto getGameRoom(int gameId) {
-        return null;
+    public GameRoomDto getGameRoom(int gameId) throws Exception {
+        return this.ticTacToeRepository.getGameRoom(gameId).toDto();
     }
 
     /**
      * 게임 전적 목록
      * @return 게임 전적 목록
      */
-    public List<UserInfoDto> listGameRank() {
-        return null;
+    public List<UserInfoDto> listGameRank() throws Exception {
+        List<UserInfoDto> ret = new ArrayList<>();
+        for (UserInfoRecord userInfo : this.ticTacToeRepository.listGameRank()) {
+            ret.add(userInfo.toDto());
+        }
+        return ret;
     }
 
     /**
@@ -340,6 +354,52 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return 게임 진행 응답
      */
     public StatusResponseDto updateGame(GameUpdateDto gameUpdateDto) {
+        GameRoomRecord gameRoom = this.ticTacToeRepository.getGameRoom(gameUpdateDto.getGameId());
+
+        /*
+            StatusResponseDto respDto1 = model.updateGame(GameUpdateDto.builder()
+                .gameId(gameId).playerId("test2").msg("B4").build());
+            assertTrue(respDto1 != null);
+            assertFalse(respDto1.isSuccess());
+            assertEquals(respDto1.getMsg(), "해당 플레이어 차례가 아닙니다.");
+
+            StatusResponseDto respDto2 = model.updateGame(GameUpdateDto.builder()
+                .gameId(gameId).playerId("test1").msg("B4").build());
+            assertTrue(respDto2 != null);
+            assertFalse(respDto2.isSuccess());
+            assertEquals(respDto2.getMsg(), "해당 위치에 놓을 수 없습니다.");
+
+            StatusResponseDto respDto3 = model.updateGame(GameUpdateDto.builder().build());
+            assertTrue(respDto3 != null);
+            assertFalse(respDto3.isSuccess());
+            assertEquals(respDto3.getMsg(), "게임방 아이디가 없습니다.");
+
+            StatusResponseDto respDto4 = model.updateGame(GameUpdateDto.builder()
+                .gameId(gameId).msg("B4").build());
+            assertTrue(respDto4 != null);
+            assertFalse(respDto4.isSuccess());
+            assertEquals(respDto4.getMsg(), "플레이어 아이디가 없습니다.");
+
+            StatusResponseDto respDto5 = model.updateGame(GameUpdateDto.builder()
+                .gameId(gameId).playerId("test1").msg("B123").build());
+            assertTrue(respDto5 != null);
+            assertFalse(respDto5.isSuccess());
+            assertEquals(respDto5.getMsg(), "게임판 범위를 벗어납니다.");
+
+            StatusResponseDto respDto6 = model.updateGame(GameUpdateDto.builder()
+                .gameId(gameId).playerId("test1").msg("dummy_message").build());
+            assertTrue(respDto6 != null);
+            assertFalse(respDto6.isSuccess());
+            assertEquals(respDto6.getMsg(), "지원되지 않는 메시지 형식입니다.");
+
+            StatusResponseDto respDto8 = model.updateGame(GameUpdateDto.builder()
+                .gameId(gameId).playerId("test1").msg("B1").build());
+            assertTrue(respDto8 != null);
+            assertTrue(respDto8.isSuccess());
+            assertEquals(respDto8.getMsg(), "");        
+        */
+
+        // int affected = this.ticTacToeRepository.updateGame()
         return null;
     }
 
@@ -349,7 +409,33 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return
      */
     public StatusResponseDto findApply(FindApplyDto applyDto) {
-        return null;
+        if (applyDto.getFindMode().equals("findId")) {
+            if (this.findIdTokenMap.containsKey(applyDto.getEmail())) {
+                if (this.findIdTokenMap.get(applyDto.getEmail()).equals(applyDto.getToken())) {
+                    return StatusResponseDto.builder()
+                        .success(true)
+                        .msg("successful_find_id")
+                        .build();
+                }
+                this.findIdTokenMap.remove(applyDto.getEmail());
+            }
+        } else if (applyDto.getFindMode().equals("findPw")) {
+            if (this.findPwTokenMap.containsKey(applyDto.getEmail())) {
+                if (this.findPwTokenMap.get(applyDto.getEmail()).equals(applyDto.getToken())) {
+                    // TODO: 사용자 패스워드 변경
+                    if (true) {
+                        return StatusResponseDto.builder()
+                        .success(true)
+                        .msg("")
+                        .build();
+                    }
+                }
+                this.findPwTokenMap.remove(applyDto.getEmail());
+            }
+        }
+        return StatusResponseDto.builder()
+            .success(false)
+            .msg("잘못된 요청 입니다.")
+            .build();
     }
-
 }
