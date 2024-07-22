@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GameRoomRecord {
+    private Long gameId;
     private String ownerId;
     private String chngrId;
     private String status;
@@ -17,6 +18,7 @@ public class GameRoomRecord {
 
     public GameRoomDto toDto() throws Exception {
         return GameRoomDto.builder()
+            .gameId(gameId)
             .ownerId(ownerId)
             .chngrId(chngrId)
             .status(status)

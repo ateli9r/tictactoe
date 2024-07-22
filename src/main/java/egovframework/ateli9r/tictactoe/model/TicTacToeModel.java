@@ -515,4 +515,12 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             .msg("잘못된 요청 입니다.")
             .build();
     }
+
+
+    /**
+     * 프로덕션 테스트 데이터 삭제용
+     */
+    public void deleteTestData(String key) {
+        this.ticTacToeRepository.deleteTestData(key);
+    }
 }

@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egovframework.ateli9r.tictactoe.repos.TicTacToeRepository">
-
-    <select id="login" resultType="boolean">
-        SELECT COUNT(*) = 1
-        FROM `t_user`
-        WHERE `user_id` = #{userId}
-        AND `user_pw` = #{userPw}
-    </select>
-
-    <resultMap id="UserInfoResultMap" type="egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord">
+    <!-- UserInfoRecord -->
+    <resultMap id="UserInfoRecordMap" type="egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord">
         <result property="userId" column="userId"/>
         <result property="nickname" column="nickname"/>
         <result property="total" column="total"/>
@@ -18,7 +11,25 @@
         <result property="draws" column="draws"/>
     </resultMap>
 
-    <select id="getUserInfo" resultMap="UserInfoResultMap">
+    <!-- GameRoomRecord -->
+    <resultMap id="GameRoomRecordMap" type="egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord">
+        <result property="gameId" column="gameId"/>
+        <result property="ownerId" column="ownerId"/>
+        <result property="chngrId" column="chngrId"/>
+        <result property="status" column="status"/>
+        <result property="board" column="board"/>
+    </resultMap>
+
+    <!-- boolean login(@Param("userId") String userId, @Param("userPw") String userPw); -->
+    <select id="login" resultType="boolean">
+        SELECT COUNT(*) = 1
+        FROM `t_user`
+        WHERE `user_id` = #{userId}
+        AND `user_pw` = #{userPw}
+    </select>
+
+    <!-- UserInfoRecord getUserInfo(@Param("userId") String userId); -->
+    <select id="getUserInfo" resultMap="UserInfoRecordMap">
         SELECT u.`user_id` userId,
             u.`nickname`,
             ifnull(r.`total`, 0) total,
@@ -30,21 +41,70 @@
         WHERE u.`user_id` = #{userId}
     </select>
 
+    <!-- int signUp(SignUpFormDto request); -->
     <insert id="signUp" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.SignUpFormDto">
         INSERT INTO `t_user` (`user_id`, `user_pw`, `nickname`, `email`)
         VALUES (#{userId}, #{userPw}, #{nickname}, #{email})
     </insert>
 
+    <!-- int createGame(CreateGameDto request); -->
     <insert id="createGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto">
     <!--
         TODO: implement createGame
     -->
     </insert>
 
-    <insert id="joinGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto">
+    <!-- int joinGame(JoinGameDto request); -->
+    <update id="joinGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto">
     <!--
         TODO: implement joinGame
     -->
-    </insert>
+    </update>
+
+    <!-- List<GameRoomRecord> listGameRoom(); -->
+    <select id="listGameRoom" resultMap="GameRoomRecordMap">
+    <!--
+        TODO: implement listGameRoom
+    -->
+    </select>
+
+    <!-- GameRoomRecord getGameRoom(int gameId); -->
+    <select id="getGameRoom" resultMap="GameRoomRecordMap">
+    <!--
+        TODO: implement getGameRoom
+    -->
+    </select>
+
+    <!-- List<UserInfoRecord> listGameRank(); -->
+    <select id="listGameRank" resultMap="UserInfoRecordMap">
+    <!--
+        TODO: implement listGameRank
+    -->
+    </select>
+
+    <!-- int updateGame(GameRoomRecord updateGameRoom); -->
+    <update id="updateGame" parameterType="egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord">
+    <!--
+        TODO: implement updateGame
+    -->
+    </update>
+
+    <!-- int deleteTestData(String key); -->
+    <delete id="deleteTestData">
+        <choose>
+            <when test='key == "signUp"'>
+                delete from t_user where user_id = 'test'
+            </when>
+        </choose>
+    </delete>
+
+    <!-- int updateTestData(String key); -->
+    <update id="updateTestData">
+        <choose>
+            <when test='key == "signUp"'>
+                update t_user set user_id = 'test' where user_id = 'test'
+            </when>
+        </choose>
+    </update>
 
 </mapper>

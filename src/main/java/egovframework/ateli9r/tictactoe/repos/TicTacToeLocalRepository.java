@@ -106,4 +106,20 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
         // return 0;
         return 1;
     }
+
+    /**
+     * 테스트 데이터 삭제
+     */
+    @Override
+    public int deleteTestData(String key) {
+        return 0;
+    }
+
+    /**
+     * 테스트 데이터 초기화
+     */
+    @Override
+    public int updateTestData(String key) {
+        return 0;
+    }
 }

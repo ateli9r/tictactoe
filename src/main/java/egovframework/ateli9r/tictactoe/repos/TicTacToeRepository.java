@@ -75,4 +75,19 @@ public interface TicTacToeRepository {
      * @return 영향 레코드 수
      */
     int updateGame(GameRoomRecord updateGameRoom);
+
+
+    /**
+     * 테스트 데이터 삭제
+     * @param key 쿼리 구분
+     * @return 영향 레코드 수
+     */
+    int deleteTestData(String key);
+
+    /**
+     * 테스트 데이터 수정
+     * @param key 쿼리 구분
+     * @return 영향 레코드 수
+     */
+    int updateTestData(String key);
 }
