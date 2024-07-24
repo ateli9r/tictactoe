@@ -46,7 +46,7 @@ public class TicTacToeProdTest implements TicTacToeTest {
    
     private TicTacToeModel model;
 
-
+    
     /**
      * 테스트 객체 초기화
      */
@@ -189,7 +189,7 @@ public class TicTacToeProdTest implements TicTacToeTest {
     @Override
     public void testSendVerifyEmail() throws Exception {
         SendMailFormDto reqDto = SendMailFormDto.builder()
-            .mailTo("test@test.com")
+            .mailTo("htlee@iseeya.co.kr")
             .build();
 
         StatusResponseDto respDto = model.sendVerifyEmail(reqDto);

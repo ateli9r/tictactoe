@@ -90,4 +90,11 @@ public interface TicTacToeRepository {
      * @return 영향 레코드 수
      */
     int updateTestData(String key);
+
+    /**
+     * 테스트 데이터 등록
+     * @param key 쿼리 구분
+     * @return 영향 레코드 수
+     */
+    int insertTestData(String key);
 }

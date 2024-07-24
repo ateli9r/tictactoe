@@ -107,4 +107,13 @@
         </choose>
     </update>
 
+    <!-- int insertTestData(String key); -->
+    <insert id="insertTestData">
+        <choose>
+            <when test='key == "signUp"'>
+                insert into t_user values()
+            </when>
+        </choose>
+    </insert>
+
 </mapper>

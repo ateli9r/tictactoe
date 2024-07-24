@@ -116,10 +116,18 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
     }
 
     /**
-     * 테스트 데이터 초기화
+     * 테스트 데이터 수정
      */
     @Override
     public int updateTestData(String key) {
+        return 0;
+    }
+
+    /**
+     * 테스트 데이터 등록
+     */
+    @Override
+    public int insertTestData(String key) {
         return 0;
     }
 }
