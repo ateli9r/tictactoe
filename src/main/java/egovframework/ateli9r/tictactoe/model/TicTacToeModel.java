@@ -137,7 +137,10 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return 사용자 정보
      */
     public UserInfoDto getUserInfo(String userId) throws Exception {
-        return this.ticTacToeRepository.getUserInfo(userId).toDto();
+        try {
+            return this.ticTacToeRepository.getUserInfo(userId).toDto();
+        } catch(Exception ex) { /** ignore */}
+        return null;
     }
 
     /**
@@ -285,6 +288,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                     .build();
             }
         }
+        this.verifyCodeMap.remove(request.getEmail());
 
         // 작업 토큰 생성
         String accessToken = UUID.randomUUID().toString();
@@ -405,7 +409,10 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @return
      */
     public GameRoomDto getGameRoom(int gameId) throws Exception {
-        return this.ticTacToeRepository.getGameRoom(gameId).toDto();
+        try {
+            return this.ticTacToeRepository.getGameRoom(gameId).toDto();
+        } catch(Exception ex) { /** ignore */}
+        return null;
     }
 
     /**
@@ -560,29 +567,40 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param applyDto
      * @return
      */
-    public StatusResponseDto findApply(FindApplyDto applyDto) {
+    public StatusResponseDto findApply(FindApplyDto applyDto) throws Exception {
         if (applyDto.getFindMode().equals("findId")) {
             if (this.findIdTokenMap.containsKey(applyDto.getEmail())) {
                 if (this.findIdTokenMap.get(applyDto.getEmail()).equals(applyDto.getToken())) {
+                    // 토근 제거
+                    this.findIdTokenMap.remove(applyDto.getEmail());
+                    
                     return StatusResponseDto.builder()
                         .success(true)
                         .msg("successful_find_id")
                         .build();
                 }
-                this.findIdTokenMap.remove(applyDto.getEmail());
             }
         } else if (applyDto.getFindMode().equals("findPw")) {
             if (this.findPwTokenMap.containsKey(applyDto.getEmail())) {
                 if (this.findPwTokenMap.get(applyDto.getEmail()).equals(applyDto.getToken())) {
-                    // TODO: 사용자 패스워드 변경
-                    if (true) {
-                        return StatusResponseDto.builder()
-                        .success(true)
-                        .msg("")
-                        .build();
+                    // 토근 제거
+                    this.findPwTokenMap.remove(applyDto.getEmail());
+
+                    UserInfoDto userInfo = getUserInfoByEmail(applyDto.getEmail());
+                    if (applyDto.getMessage() != null && applyDto.getMessage().indexOf("password=") == 0) {
+                        String userPw = applyDto.getMessage().substring(9);
+                        if (this.changePassword(userInfo.getUserId(), userPw)) {
+                            return StatusResponseDto.builder()
+                                .success(true)
+                                .msg("")
+                                .build();
+                        }
                     }
+                    return StatusResponseDto.builder()
+                        .success(false)
+                        .msg("패스워드 변경중 오류가 발생했습니다.")
+                        .build();
                 }
-                this.findPwTokenMap.remove(applyDto.getEmail());
             }
         }
         return StatusResponseDto.builder()
@@ -638,6 +656,28 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             return findPwTokenMap.get("test@test.com");
         }
         return null;
+    }
+
+    /**
+     * 이메일로 사용자 정보 가져오기
+     * @param email 이메일
+     * @return 사용자 정보
+     */
+    public UserInfoDto getUserInfoByEmail(String email) throws Exception {
+        try {
+            return this.ticTacToeRepository.getUserInfoRecordByEmail(email).toDto();
+        } catch(Exception ex) { /** ignore */}
+        return null;
+    }
+
+    /**
+     * 사용자 패스워드 변경
+     * @param userId 사용자 아이디
+     * @param password 사용자 패스워드
+     * @return 성공 여부
+     */
+    public boolean changePassword(String userId, String userPw) {
+        return this.ticTacToeRepository.changePassword(userId, this.hash(userPw)) == 1;
     }
 
 }

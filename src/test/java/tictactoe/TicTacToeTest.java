@@ -65,4 +65,14 @@ public interface TicTacToeTest {
      * 게임 리스트 조회
      */
     public void testListGameRoom() throws Exception;
+
+    /**
+     * 이메일로 사용자 정보 가져오기
+     */
+    public void testUserInfoByEmail() throws Exception;
+
+    /**
+     * 사용자 패스워드 변경
+     */
+    public void testChangePassword() throws Exception;
 }

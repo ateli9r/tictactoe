@@ -394,4 +394,30 @@ public class TicTacToeLocalTest implements TicTacToeTest {
         assertTrue(gameDto.getBoard() != null && !gameDto.getBoard().isEmpty());
     }
 
+    /**
+     * 이메일로 사용자 정보 가져오기
+     */
+    @Test
+    @Override
+    public void testUserInfoByEmail() throws Exception {
+        UserInfoDto userInfo1 = model.getUserInfoByEmail("dummy@email.com");
+        assertNull(userInfo1);
+
+        UserInfoDto userInfo2 = model.getUserInfoByEmail("test@test.com");
+        assertNotNull(userInfo2);
+        assertEquals(userInfo2.getUserId(), "test");
+    }
+
+    /**
+     * 사용자 패스워드 변경
+     */
+    @Test
+    @Override
+    public void testChangePassword() throws Exception {
+        boolean isOk1 = model.changePassword("dummy", "password");
+        assertFalse(isOk1);
+
+        boolean isOk2 = model.changePassword("test", "password");
+        assertTrue(isOk2);
+    }
 }

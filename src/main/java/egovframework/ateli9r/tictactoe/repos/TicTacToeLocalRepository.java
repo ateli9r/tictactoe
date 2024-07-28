@@ -167,4 +167,26 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
     public int insertTestData(String key) {
         return 0;
     }
+
+    /**
+     * 이메일로 사용자 정보 가져오기
+     */
+    @Override
+    public UserInfoRecord getUserInfoRecordByEmail(String email) {
+        if (email.equals("test@test.com")) {
+            return this.getUserInfo("test");
+        }
+        return null;
+    }
+
+    /**
+     * 사용자 패스워드 변경
+     */
+    @Override
+    public int changePassword(String userId, String userPw) {
+        if (userId.equals("test")) {
+            return 1;
+        }
+        return 0;
+    }
 }

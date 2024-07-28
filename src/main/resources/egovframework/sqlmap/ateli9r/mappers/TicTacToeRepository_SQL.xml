@@ -119,6 +119,11 @@
                     `board` = '....O....'
                 WHERE `game_id` = 1
             </when>
+            <when test='key == "changePassword"'>
+                UPDATE `t_user`
+                SET user_pw = 'f660ab912ec121d1b1e928a0bb4bc61b15f5ad44d5efdc4e1c92a25e99b8e44a'
+                WHERE user_id = 'test'
+            </when>
         </choose>
     </update>
 
@@ -130,5 +135,26 @@
             </when>
         </choose>
     </insert>
+
+    <!-- UserInfoRecord getUserInfoRecordByEmail(String email); -->
+    <select id="getUserInfoRecordByEmail" resultMap="UserInfoRecordMap">
+        SELECT u.`user_id` userId,
+            u.`nickname`,
+            u.`email`,
+            ifnull(r.`total`, 0) total,
+            ifnull(r.`wins`, 0) wins,
+            ifnull(r.`losses`, 0) losses,
+            ifnull(r.`draws`, 0) draws
+        FROM `t_user` u
+        LEFT JOIN `t_rank` r ON u.`user_id` = r.`user_id`
+        WHERE u.`email` = #{email}
+    </select>
+
+    <!-- int changePassword(String userId, String userPw); -->
+    <update id="changePassword">
+        UPDATE `t_user`
+        SET user_pw = #{userPw}
+        WHERE user_id = #{userId}
+    </update>
 
 </mapper>

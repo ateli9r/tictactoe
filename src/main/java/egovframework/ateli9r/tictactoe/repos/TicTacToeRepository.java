@@ -57,9 +57,9 @@ public interface TicTacToeRepository {
     List<GameRoomRecord> listGameRoom();
 
     /**
-     * 
-     * @param gameId
-     * @return
+     * 게임방 정보
+     * @param gameId 게임방 아이디
+     * @return 게임방 정보
      */
     GameRoomRecord getGameRoom(int gameId);
 
@@ -97,4 +97,19 @@ public interface TicTacToeRepository {
      * @return 영향 레코드 수
      */
     int insertTestData(String key);
+
+    /**
+     * 이메일로 사용자 정보 가져오기
+     * @param email 이메일
+     * @return 사용자 정보
+     */
+    UserInfoRecord getUserInfoRecordByEmail(String email);
+
+    /**
+     * 사용자 패스워드 변경
+     * @param userId 사용자 아이디
+     * @param userPw 사용자 패스워드
+     * @return 영향 레코드 수
+     */
+    int changePassword(@Param("userId") String userId, @Param("userPw") String userPw);
 }
