@@ -253,13 +253,6 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 .success(false)
                 .msg("계정찾기 구분이 지정되지 않았습니다.")
                 .build();
-        } else if (request.getFindMode().equals("findPw")) {
-            if (request.getUserId() == null || request.getUserId().isEmpty()) {
-                return StatusResponseDto.builder()
-                    .success(false)
-                    .msg("아이디를 입력 해주세요.")
-                    .build();
-            }
         }
         if (request.getEmail() == null || request.getEmail().isEmpty()) {
             return StatusResponseDto.builder()
@@ -530,7 +523,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         if (isCmdJoin) {
             updateGameRoom = GameRoomRecord.builder()
                 .ownerId(gameRoom.getOwnerId())
-                .chngrId(turnPlayer)
+                .chngrId(gameRoom.getChngrId())
                 .status("P1")
                 .board(gameRoom.getBoard())
                 .build();
@@ -564,15 +557,34 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
 
     /**
      * 계정찾기 적용
-     * @param applyDto 계정찾기 적용 요청
+     * @param request 계정찾기 적용 요청
      * @return 계정찾기 적용 응답
      */
-    public StatusResponseDto findApply(FindApplyDto applyDto) throws Exception {
-        if (applyDto.getFindMode().equals("findId")) {
-            if (this.findIdTokenMap.containsKey(applyDto.getEmail())) {
-                if (this.findIdTokenMap.get(applyDto.getEmail()).equals(applyDto.getToken())) {
-                    // 토근 제거
-                    this.findIdTokenMap.remove(applyDto.getEmail());
+    public StatusResponseDto findApply(FindApplyDto request) throws Exception {
+        if (request.getFindMode() == null || request.getFindMode().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("계정찾기 구분이 지정되지 않았습니다.")
+                .build();
+        }
+        if (request.getEmail() == null || request.getEmail().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("이메일을 입력 해주세요.")
+                .build();
+        }
+        if (request.getToken() == null || request.getToken().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("인증 토큰이 없습니더.")
+                .build();
+        }
+
+        if (request.getFindMode().equals("findId")) {
+            if (this.findIdTokenMap.containsKey(request.getEmail())) {
+                if (this.findIdTokenMap.get(request.getEmail()).equals(request.getToken())) {
+                    // 토큰 제거
+                    this.findIdTokenMap.remove(request.getEmail());
                     
                     return StatusResponseDto.builder()
                         .success(true)
@@ -580,15 +592,15 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                         .build();
                 }
             }
-        } else if (applyDto.getFindMode().equals("findPw")) {
-            if (this.findPwTokenMap.containsKey(applyDto.getEmail())) {
-                if (this.findPwTokenMap.get(applyDto.getEmail()).equals(applyDto.getToken())) {
-                    // 토근 제거
-                    this.findPwTokenMap.remove(applyDto.getEmail());
+        } else if (request.getFindMode().equals("findPw")) {
+            if (this.findPwTokenMap.containsKey(request.getEmail())) {
+                if (this.findPwTokenMap.get(request.getEmail()).equals(request.getToken())) {
+                    // 토큰 제거
+                    this.findPwTokenMap.remove(request.getEmail());
 
-                    UserInfoDto userInfo = getUserInfoByEmail(applyDto.getEmail());
-                    if (applyDto.getMessage() != null && applyDto.getMessage().indexOf("password=") == 0) {
-                        String userPw = applyDto.getMessage().substring(9);
+                    UserInfoDto userInfo = getUserInfoByEmail(request.getEmail());
+                    if (request.getMessage() != null && request.getMessage().indexOf("password=") == 0) {
+                        String userPw = request.getMessage().substring(9);
                         if (this.changePassword(userInfo.getUserId(), userPw)) {
                             return StatusResponseDto.builder()
                                 .success(true)

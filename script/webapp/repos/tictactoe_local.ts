@@ -53,15 +53,6 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 회원가입 응답
      */
     async signUp(request: SignUpFormDto): Promise<StatusResponseDto | null> {
-        if (request.userId.length == 0) {
-            return { success: false, msg: '아이디를 입력해 주세요.' } as StatusResponseDto
-        } else if (request.nickname.length == 0) {
-            return { success: false, msg: '닉네임을 입력해 주세요.' } as StatusResponseDto
-        } else if (request.email.length == 0) {
-            return { success: false, msg: '이메일을 입력해 주세요.' } as StatusResponseDto
-        } else if (request.userPw.length == 0) {
-            return { success: false, msg: '패스워드를 입력해 주세요.' } as StatusResponseDto
-        }
         return { success: true, msg: '' } as StatusResponseDto
     }
 
@@ -121,12 +112,6 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 게임 생성 응답
      */
     async createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
-        if (request.title == null || request.title.length == 0) {
-            return { success: false, msg: '제목을 입력 하세요.' } as StatusResponseDto
-        }
-        if (request.ownerId == null || request.ownerId.length == 0) {
-            return { success: false, msg: '방장 아이디가 없습니다.' } as StatusResponseDto
-        }
         return { success: true, msg: '' } as StatusResponseDto
     }
 
@@ -136,6 +121,13 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 게임 참가 응답
      */
     async joinGame(request: JoinGameDto): Promise<StatusResponseDto | null> {
+        let chk = 0
+        if (request.gameId > 0) chk += 1
+        if (request.chngrId != null && request.chngrId.length > 0) chk += 1
+
+        if (chk == 2) {
+            return { success: true, msg: '' } as StatusResponseDto
+        }
         return null
     }
 
@@ -145,7 +137,7 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 게임 진행 응답
      */
     async updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
-        return null
+        return { success: true, msg: '' } as StatusResponseDto
     }
 
     /**
@@ -154,6 +146,22 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 게임방 정보
      */
     async getGameRoom(gameId: number): Promise<GameRoomDto | null> {
+        if (gameId == 1) {
+            return {
+                gameId: 1,
+                ownerId: 'test',
+                status: 'W',
+                board: '.........',
+            } as GameRoomDto
+        } else if (gameId == 2) {
+            return {
+                gameId: 2,
+                ownerId: 'test1',
+                chngrId: 'test2',
+                status: 'P1',
+                board: 'O...O...X',
+            } as GameRoomDto
+        }
         return null
     }
 
@@ -162,6 +170,13 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 게임 리스트
      */
     async listGameRoom(): Promise<GameRoomDto[] | null> {
-        return null
+        const ret: GameRoomDto[] = []
+        ret.push({
+            ownerId: 'owner',
+            chngrId: 'chngr',
+            status: 'status',
+            board: '.........',
+        } as GameRoomDto)
+        return ret
     }
 }

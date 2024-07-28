@@ -10,5 +10,4 @@ public class FindAccountDto {
     private String findMode;
     private String email;
     private String verifyCode;
-    private String userId;
 }

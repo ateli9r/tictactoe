@@ -241,7 +241,6 @@ public class TicTacToeProdTest implements TicTacToeTest {
     public void testFindUserPw() throws Exception {
         FindAccountDto reqDto = FindAccountDto.builder()
             .findMode("findPw")
-            .userId("test")
             .email("test@test.com")
             .verifyCode("000000")
             .build();
@@ -365,32 +364,30 @@ public class TicTacToeProdTest implements TicTacToeTest {
         model.updateTestData("updateGame");
 
         int gameId = 1;
-        // status: P1
-        // board: O...O...X
 
-        StatusResponseDto respDto1 = model.updateGame(GameUpdateDto.builder()
-            .gameId(gameId).playerId("test2").msg("B4").build());
+        StatusResponseDto respDto1 = model.updateGame(GameUpdateDto.builder().build());
         assertTrue(respDto1 != null);
         assertFalse(respDto1.isSuccess());
-        assertEquals(respDto1.getMsg(), "해당 플레이어 차례가 아닙니다.");
+        assertEquals(respDto1.getMsg(), "게임방 아이디가 없습니다.");
 
         StatusResponseDto respDto2 = model.updateGame(GameUpdateDto.builder()
-            .gameId(gameId).playerId("test").msg("B4").build());
+            .gameId(gameId).msg("B4").build());
         assertTrue(respDto2 != null);
         assertFalse(respDto2.isSuccess());
-        assertEquals(respDto2.getMsg(), "해당 위치에 놓을 수 없습니다.");
+        assertEquals(respDto2.getMsg(), "플레이어 아이디가 없습니다.");
 
-        StatusResponseDto respDto3 = model.updateGame(GameUpdateDto.builder().build());
+        StatusResponseDto respDto3 = model.updateGame(GameUpdateDto.builder()
+            .gameId(gameId).playerId("test2").msg("B4").build());
         assertTrue(respDto3 != null);
         assertFalse(respDto3.isSuccess());
-        assertEquals(respDto3.getMsg(), "게임방 아이디가 없습니다.");
+        assertEquals(respDto3.getMsg(), "해당 플레이어 차례가 아닙니다.");
 
         StatusResponseDto respDto4 = model.updateGame(GameUpdateDto.builder()
-            .gameId(gameId).msg("B4").build());
+            .gameId(gameId).playerId("test").msg("B4").build());
         assertTrue(respDto4 != null);
         assertFalse(respDto4.isSuccess());
-        assertEquals(respDto4.getMsg(), "플레이어 아이디가 없습니다.");
-
+        assertEquals(respDto4.getMsg(), "해당 위치에 놓을 수 없습니다.");
+        
         StatusResponseDto respDto5 = model.updateGame(GameUpdateDto.builder()
             .gameId(gameId).playerId("test").msg("B123").build());
         assertTrue(respDto5 != null);

@@ -83,7 +83,7 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
             .ownerId("owner")
             .chngrId("chngr")
             .status("status")
-            .board("000000000")
+            .board(".........")
             .build());
         return ret;
     }
@@ -107,10 +107,11 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
             .build();
         } else if (gameId == 2) {
             return GameRoomRecord.builder()
-            .ownerId("test1")
-            .chngrId("test2")
+            .ownerId("test")
+            .chngrId("user46")
             .status("P1")
-            .board("O...O...X")
+            // .board("O...O...X")
+            .board("....O....")
             .build();
         }
         return null;
@@ -140,7 +141,6 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
 
     @Override
     public int updateGame(GameRoomRecord updateGameRoom) {
-        // return 0;
         return 1;
     }
 

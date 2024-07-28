@@ -28,6 +28,7 @@ export interface FindAccountDto {
     findMode: string;
     email: string;
     verifyCode: string;
+    // userId: string;
 }
 
 /**

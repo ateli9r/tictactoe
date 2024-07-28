@@ -162,6 +162,7 @@ describe('TicTacToeModel 테스트', () => {
         } as FindAccountDto
 
         const resp = await model?.findAccount(form)
+        console.log(resp)
         expect(resp != null).toBe(true)
         expect(resp!.success).toBe(true)
         expect(resp!.msg.length > 0).toBe(true) // accessToken
@@ -228,95 +229,79 @@ describe('TicTacToeModel 테스트', () => {
      * 게임 참가
      */
     test('joinGameRoom', async () => {
-        // const resp = await model?.joinGame(
-        //     {gameId: 1, chngrId: 'user1'} as JoinGameDto
-        // )
-        // expect(resp != null).toBe(true)
-        // expect(resp!.success).toBe(true)
-        // expect(resp!.msg).toBe('')
+        const resp = await model?.joinGame(
+            {gameId: 1, chngrId: 'user1'} as JoinGameDto
+        )
+        expect(resp != null).toBe(true)
+        expect(resp!.success).toBe(true)
+        expect(resp!.msg).toBe('')
     })
 
     /**
      * 게임 진행
      */
     test('updateGameRoom', async () => {
-        // const gameId = 2
+        const gameId = 2
+        const resp1 = await model?.updateGame({} as GameUpdateDto)
+        expect(resp1 != null).toBe(true)
+        expect(resp1!.success).toBe(false)
+        expect(resp1!.msg).toBe('게임방 아이디가 없습니다.')
 
-        // const resp1 = await model?.updateGame(
-        //     {gameId: gameId, playerId: 'test2', msg: 'B4'} as GameUpdateDto
-        // )
-        // expect(resp1 != null).toBe(true)
-        // expect(resp1!.success).toBe(false)
-        // expect(resp1!.msg).toBe('해당 플레이어 차례가 아닙니다.')
+        const resp2 = await model?.updateGame(
+            {gameId: gameId, msg: 'B4'} as GameUpdateDto
+        )
+        expect(resp2 != null).toBe(true)
+        expect(resp2!.success).toBe(false)
+        expect(resp2!.msg).toBe('플레이어 아이디가 없습니다.')
 
-        // const resp2 = await model?.updateGame(
-        //     {gameId: gameId, playerId: 'test1', msg: 'B4'} as GameUpdateDto
-        // )
-        // expect(resp2 != null).toBe(true)
-        // expect(resp2!.success).toBe(false)
-        // expect(resp2!.msg).toBe('해당 위치에 놓을 수 없습니다.')
+        const resp3 = await model?.updateGame(
+            {gameId: gameId, playerId: 'test1', msg: 'B123'} as GameUpdateDto
+        )
+        expect(resp3 != null).toBe(true)
+        expect(resp3!.success).toBe(false)
+        expect(resp3!.msg).toBe('게임판 범위를 벗어납니다.')
 
-        // const resp3 = await model?.updateGame({} as GameUpdateDto)
-        // expect(resp3 != null).toBe(true)
-        // expect(resp3!.success).toBe(false)
-        // expect(resp3!.msg).toBe('게임방 아이디가 없습니다.')
+        const resp4 = await model?.updateGame(
+            {gameId: gameId, playerId: 'test1', msg: 'dummy_message'} as GameUpdateDto
+        )
+        expect(resp4 != null).toBe(true)
+        expect(resp4!.success).toBe(false)
+        expect(resp4!.msg).toBe('지원되지 않는 메시지 형식입니다.')
 
-        // const resp4 = await model?.updateGame(
-        //     {gameId: gameId, msg: 'B4'} as GameUpdateDto
-        // )
-        // expect(resp4 != null).toBe(true)
-        // expect(resp4!.success).toBe(false)
-        // expect(resp4!.msg).toBe('플레이어 아이디가 없습니다.')
-
-        // const resp5 = await model?.updateGame(
-        //     {gameId: gameId, playerId: 'test1', msg: 'B123'} as GameUpdateDto
-        // )
-        // expect(resp5 != null).toBe(true)
-        // expect(resp5!.success).toBe(false)
-        // expect(resp5!.msg).toBe('게임판 범위를 벗어납니다.')
-
-        // const resp6 = await model?.updateGame(
-        //     {gameId: gameId, playerId: 'test1', msg: 'dummy_message'} as GameUpdateDto
-        // )
-        // expect(resp6 != null).toBe(true)
-        // expect(resp6!.success).toBe(false)
-        // expect(resp6!.msg).toBe('지원되지 않는 메시지 형식입니다.')
-
-        // const resp7 = await model?.updateGame(
-        //     {gameId: gameId, playerId: 'test1', msg: 'B1'} as GameUpdateDto
-        // )
-        // expect(resp7 != null).toBe(true)
-        // expect(resp7!.success).toBe(true)
-        // expect(resp7!.msg).toBe('')
+        const resp5 = await model?.updateGame(
+            {gameId: gameId, playerId: 'test1', msg: 'B1'} as GameUpdateDto
+        )
+        expect(resp5 != null).toBe(true)
+        expect(resp5!.success).toBe(true)
+        expect(resp5!.msg).toBe('')
     })
 
     /**
      * 게임 정보 조회
      */
     test('viewGameRoom', async () => {
-        // const gameId = 2
-
-        // const resp = await model?.getGameRoom(gameId) as GameRoomDto
-        // expect(resp != null).toBe(true)
-        // expect(resp.ownerId != null && resp.ownerId.length > 0).toBe(true)
-        // expect(resp.chngrId != null && resp.chngrId.length > 0).toBe(true)
-        // expect(resp.status != null && resp.status.length > 0).toBe(true)
-        // expect(resp.board != null && resp.board.length > 0).toBe(true)
+        const gameId = 2
+        const resp = await model?.getGameRoom(gameId) as GameRoomDto
+        expect(resp != null).toBe(true)
+        expect(resp.ownerId != null && resp.ownerId.length > 0).toBe(true)
+        expect(resp.chngrId != null && resp.chngrId.length > 0).toBe(true)
+        expect(resp.status != null && resp.status.length > 0).toBe(true)
+        expect(resp.board != null && resp.board.length > 0).toBe(true)
     })
 
     /**
      * 게임 리스트 조회
      */
     test('listGameRoom', async () => {
-        // const listGame = await model?.listGameRoom() as GameRoomDto[]
-        // expect(listGame != null).toBe(true)
-        // expect(listGame.length > 0)
+        const listGame = await model?.listGameRoom() as GameRoomDto[]
+        expect(listGame != null).toBe(true)
+        expect(listGame.length > 0)
 
-        // const game = listGame[0]
-        // expect(game != null).toBe(true)
-        // expect(game.ownerId != null && game.ownerId.length > 0).toBe(true)
-        // expect(game.chngrId != null && game.chngrId.length > 0).toBe(true)
-        // expect(game.status != null && game.status.length > 0).toBe(true)
-        // expect(game.board != null && game.board.length > 0).toBe(true)
+        const game = listGame[0]
+        expect(game != null).toBe(true)
+        expect(game.ownerId != null && game.ownerId.length > 0).toBe(true)
+        expect(game.chngrId != null && game.chngrId.length > 0).toBe(true)
+        expect(game.status != null && game.status.length > 0).toBe(true)
+        expect(game.board != null && game.board.length > 0).toBe(true)
     })
 })
