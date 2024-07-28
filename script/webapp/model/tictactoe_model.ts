@@ -1,10 +1,10 @@
 import TicTacToeRepository from '../repos/tictactoe_repos'
 import MessageRepository from '../repos/message_repos'
 import { LoginRequestDto } from '../typedef/login_dto'
-import { SignUpFormDto, UserInfoDto } from '../typedef/user_dto'
+import { FindAccountDto, FindApplyDto, SignUpFormDto, UserInfoDto } from '../typedef/user_dto'
 import { StatusResponseDto } from '../typedef/cmmn_dto'
-import CommonUtil from '../util/common'
 import { SendMailFormDto } from '../typedef/message_dto'
+import CommonUtil from '../util/common'
 
 /**
  * 틱택토 모델
@@ -59,7 +59,6 @@ export default class TicTactoeModel {
         return await this.tttRepos?.signUp(request) ?? null
     }
 
-
     /**
      * 인증메일 보내기
      * @param request 인증메일 요청
@@ -67,6 +66,24 @@ export default class TicTactoeModel {
      */
     async sendVerifyEmail(request: SendMailFormDto): Promise<StatusResponseDto | null> {
         return await this.msgRepos?.sendVerifyEmail(request) ?? null
+    }
+
+    /**
+     * 아이디 찾기
+     * @param request 아이디 찾기 요청
+     * @return 아이디 찾기 응답
+     */
+    async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
+        return await this.tttRepos?.findAccount(request) ?? null
+    }
+
+    /**
+     * 
+     * @param request 
+     * @returns 
+     */
+    async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
+        return await this.tttRepos?.findApply(request) ?? null
     }
 
 }

@@ -17,3 +17,16 @@ export interface SignUpFormDto {
     nickname: string;
     email: string;
 }
+
+export interface FindAccountDto {
+    findMode: string;
+    email: string;
+    verifyCode: string;
+}
+
+export interface FindApplyDto {
+    findMode: string;
+    email: string;
+    token: string;
+    message: string;
+}

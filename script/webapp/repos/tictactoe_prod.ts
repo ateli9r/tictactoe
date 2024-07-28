@@ -1,6 +1,6 @@
 import { StatusResponseDto } from "../typedef/cmmn_dto";
 import { LoginRequestDto } from "../typedef/login_dto"
-import { SignUpFormDto, UserInfoDto } from "../typedef/user_dto"
+import { FindAccountDto, FindApplyDto, SignUpFormDto, UserInfoDto } from "../typedef/user_dto"
 import TicTacToeRepository from "./tictactoe_repos"
 import CommonUtil from "../util/common";
 
@@ -55,5 +55,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
             body: CommonUtil.toForm(request),
         })
         return await response?.json() as StatusResponseDto
+    }
+
+    async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
+        throw new Error("Method not implemented.");
+    }
+
+    async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
+        throw new Error("Method not implemented.");
     }
 }

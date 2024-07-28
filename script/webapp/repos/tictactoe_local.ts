@@ -1,6 +1,6 @@
 import { StatusResponseDto } from "../typedef/cmmn_dto";
 import { LoginRequestDto } from "../typedef/login_dto";
-import { UserInfoDto, RankInfoDto, SignUpFormDto } from "../typedef/user_dto";
+import { UserInfoDto, RankInfoDto, SignUpFormDto, FindAccountDto, FindApplyDto } from "../typedef/user_dto";
 import TicTacToeRepository from "./tictactoe_repos";
 
 export default class TicTacToeLocalRepository implements TicTacToeRepository {
@@ -48,5 +48,33 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
         }
         return { success: true, msg: '' } as StatusResponseDto
     }
+
+    async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
+        return { success: true, msg: 'accessToken' } as StatusResponseDto
+    }
+
+    async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
+        if (request.findMode == 'findId') {
+            return { success: true, msg: 'userId' } as StatusResponseDto
+        } else if (request.findMode == 'findPw') {
+            return { success: true, msg: '' } as StatusResponseDto
+        }
+        return null
+    }
+
+
+
+    // #pw
+
+    // StatusResponseDto respDto1 = model.findAccount(reqDto);
+    // assertTrue(respDto1.isSuccess());
+    // assertTrue(respDto1.getMsg().length() > 0); // accessToken
+
+    // StatusResponseDto respDto2 = model.findApply(applyDto);
+    // assertTrue(respDto2.isSuccess());
+    // assertEquals(respDto2.getMsg(), "");
+
+    
+
 
 }
