@@ -244,8 +244,8 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
 
     /**
      * 계정정보 찾기
-     * @param request
-     * @return
+     * @param request 계정정보 찾기 요청
+     * @return 계정정보 찾기 응답
      */
     public StatusResponseDto findAccount(FindAccountDto request) {
         if (request.getFindMode() == null || request.getFindMode().isEmpty()) {
@@ -406,7 +406,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     /**
      * 게임방 조회
      * @param gameId 게임방 아이디
-     * @return
+     * @return 게임방 정보
      */
     public GameRoomDto getGameRoom(int gameId) throws Exception {
         try {
@@ -563,9 +563,9 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     }
 
     /**
-     * 계정찾기 응답
-     * @param applyDto
-     * @return
+     * 계정찾기 적용
+     * @param applyDto 계정찾기 적용 요청
+     * @return 계정찾기 적용 응답
      */
     public StatusResponseDto findApply(FindApplyDto applyDto) throws Exception {
         if (applyDto.getFindMode().equals("findId")) {

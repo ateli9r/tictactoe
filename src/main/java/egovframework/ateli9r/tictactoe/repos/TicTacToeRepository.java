@@ -64,8 +64,8 @@ public interface TicTacToeRepository {
     GameRoomRecord getGameRoom(int gameId);
 
     /**
-     * 
-     * @return
+     * 게임 전적 목록
+     * @return 게임 전적 목록
      */
     List<UserInfoRecord> listGameRank();
 

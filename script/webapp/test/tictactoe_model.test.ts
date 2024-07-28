@@ -1,8 +1,9 @@
 import { describe, expect, test, beforeAll } from '@jest/globals'
 import { LoginRequestDto } from '../typedef/login_dto'
-import { SignUpFormDto, FindAccountDto, FindApplyDto } from '../typedef/user_dto'
+import { SignUpFormDto, FindAccountDto, FindApplyDto, UserInfoDto } from '../typedef/user_dto'
 import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
+import { CreateGameDto } from '../typedef/game_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
 import MessageLocalRepository from '../repos/message_local'
 import TicTacToeModel from '../model/tictactoe_model'
@@ -53,10 +54,10 @@ describe('TicTacToeModel 테스트', () => {
         expect(user != null).toBe(true)
         expect(user?.userId).toBe('test1')
         expect(user?.nickname).toBe('테스트')
-        expect(user?.rank.total).toBeGreaterThan(1)
-        expect(user?.rank.wins).toBeGreaterThan(1)
-        expect(user?.rank.losses).toBeGreaterThan(1)
-        expect(user?.rank.draws).toBeGreaterThan(1)
+        expect(user?.total).toBeGreaterThan(1)
+        expect(user?.wins).toBeGreaterThan(1)
+        expect(user?.losses).toBeGreaterThan(1)
+        expect(user?.draws).toBeGreaterThan(1)
     })
 
     /**
@@ -186,51 +187,47 @@ describe('TicTacToeModel 테스트', () => {
     /**
      * 게임 전적 목록
      */
-    test('listGameRank', () => {
-        // TODO: 테스트 구현 - listGameRank
+    test('listGameRank', async () => {
+        const listUser = await model?.listGameRank() as UserInfoDto[]
+        expect(listUser != null).toBe(true)
+        expect(listUser.length > 0).toBe(true)
 
-        // List<UserInfoDto> listUser = model.listGameRank();
-        // assertTrue(listUser != null);
-        // assertTrue(listUser.size() > 0);
-
-        // UserInfoDto userDto = listUser.get(0);
-        // assertTrue(userDto.getUserId() != null && !userDto.getUserId().isEmpty());
-        // assertTrue(userDto.getNickname() != null && !userDto.getNickname().isEmpty());
-
-        // int expTotal = userDto.getWins() + userDto.getLosses() + userDto.getDraws();
-        // assertEquals(userDto.getTotal(), expTotal);
-
+        const userInfo = listUser[0]
+        expect(userInfo.userId != null && userInfo.userId.length > 0).toBe(true)
+        expect(userInfo.nickname != null && userInfo.nickname.length > 0).toBe(true)
+        
+        const expTotal = userInfo.wins + userInfo.losses + userInfo.draws
+        expect(userInfo.total).toBe(expTotal)
     })
 
     /**
      * 게임 생성
      */
-    test('createGameRoom', () => {
-        // TODO: 테스트 구현 - createGameRoom
+    test('createGameRoom', async () => {
+        const resp1 = await model?.createGame({} as CreateGameDto)
+        expect(resp1 != null).toBe(true)
+        expect(resp1!.success).toBe(false)
+        expect(resp1!.msg).toBe('제목을 입력 하세요.')
 
-        // StatusResponseDto respDto1 = model.createGame(CreateGameDto.builder().build());
-        // assertFalse(respDto1.isSuccess());
-        // assertEquals(respDto1.getMsg(), "제목을 입력 하세요.");
-        
-        // StatusResponseDto respDto2 = model.createGame(CreateGameDto.builder()
-        //     .title("game title")
-        //     .build());
-        // assertFalse(respDto2.isSuccess());
-        // assertEquals(respDto2.getMsg(), "방장 아이디가 없습니다.");
+        const resp2 = await model?.createGame(
+            {title: 'game title'} as CreateGameDto
+        )
+        expect(resp2 != null).toBe(true)
+        expect(resp2!.success).toBe(false)
+        expect(resp2!.msg).toBe('방장 아이디가 없습니다.')
 
-        // StatusResponseDto respDto3 = model.createGame(CreateGameDto.builder()
-        //     .title("game title")
-        //     .ownerId("test")
-        //     .build());
-        // assertTrue(respDto3.isSuccess());
-        // assertEquals(respDto3.getMsg(), "");
-
+        const resp3 = await model?.createGame(
+            {title: 'game title', ownerId: 'test'} as CreateGameDto
+        )
+        expect(resp3 != null).toBe(true)
+        expect(resp3!.success).toBe(true)
+        expect(resp3!.msg).toBe('')
     })
 
     /**
      * 게임 참가
      */
-    test('joinGameRoom', () => {
+    test('joinGameRoom', async () => {
         // TODO: 테스트 구현 - joinGameRoom
 
         // StatusResponseDto respDto1 = model.joinGame(JoinGameDto.builder().build());
@@ -257,7 +254,7 @@ describe('TicTacToeModel 테스트', () => {
     /**
      * 게임 진행
      */
-    test('updateGameRoom', () => {
+    test('updateGameRoom', async () => {
         // TODO: 테스트 구현 - updateGameRoom
 
         // int gameId = 2;
@@ -308,7 +305,7 @@ describe('TicTacToeModel 테스트', () => {
     /**
      * 게임 정보 조회
      */
-    test('viewGameRoom', () => {
+    test('viewGameRoom', async () => {
         // TODO: 테스트 구현 - viewGameRoom
 
         // int gameId = 2;
@@ -325,7 +322,7 @@ describe('TicTacToeModel 테스트', () => {
     /**
      * 게임 리스트 조회
      */
-    test('listGameRoom', () => {
+    test('listGameRoom', async () => {
         // TODO: 테스트 구현 - listGameRoom
 
         // List<GameRoomDto> listGame = model.listGameRoom();
@@ -343,7 +340,7 @@ describe('TicTacToeModel 테스트', () => {
     /**
      * 사용자 패스워드 변경
      */
-    test('changePassword', () => {
+    test('changePassword', async () => {
         // TODO: 테스트 구현 - changePassword
 
         // boolean isOk1 = model.changePassword("dummy", "password");

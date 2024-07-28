@@ -5,6 +5,7 @@ import { FindAccountDto, FindApplyDto, SignUpFormDto, UserInfoDto } from '../typ
 import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
 import CommonUtil from '../util/common'
+import { CreateGameDto } from '../typedef/game_dto'
 
 /**
  * 틱택토 모델
@@ -78,12 +79,29 @@ export default class TicTactoeModel {
     }
 
     /**
-     * 
-     * @param request 
-     * @returns 
+     * 계정정보 찾기
+     * @param request 계정정보 찾기 요청
+     * @returns 계정정보 찾기 응답
      */
     async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
         return await this.tttRepos?.findApply(request) ?? null
+    }
+
+    /**
+     * 게임 전적 목록
+     * @returns 게임 전적 목록
+     */
+    async listGameRank(): Promise<UserInfoDto[] | null> {
+        return await this.tttRepos?.listGameRank() ?? null
+    }
+
+    /**
+     * 게임 생성
+     * @param request 게임 생성 요청
+     * @returns 게임 생성 응답
+     */
+    async createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
+        return await this.tttRepos?.createGame(request) ?? null
     }
 
 }

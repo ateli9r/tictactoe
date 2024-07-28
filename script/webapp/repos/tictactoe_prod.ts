@@ -3,6 +3,7 @@ import { LoginRequestDto } from "../typedef/login_dto"
 import { FindAccountDto, FindApplyDto, SignUpFormDto, UserInfoDto } from "../typedef/user_dto"
 import TicTacToeRepository from "./tictactoe_repos"
 import CommonUtil from "../util/common";
+import { CreateGameDto } from "../typedef/game_dto";
 
 export default class TicTacToeProdRepository implements TicTacToeRepository {
     /**
@@ -57,11 +58,35 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
         return await response?.json() as StatusResponseDto
     }
 
+    /**
+     * 
+     * @param request 
+     */
     async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
         throw new Error("Method not implemented.");
     }
 
+    /**
+     * 
+     * @param request 
+     */
     async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
         throw new Error("Method not implemented.");
     }
+
+    /**
+     * 
+     */
+    async listGameRank(): Promise<UserInfoDto[] | null> {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * 
+     * @param request 
+     */
+    createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
+        throw new Error("Method not implemented.");
+    }
+
 }
