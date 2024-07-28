@@ -153,7 +153,7 @@ public class TicTacToeLocalTest implements TicTacToeTest {
     @Test
     @Override
     public void testCreateVerifyCode() throws Exception {
-        String verifyCode = model.createVerifyCode("test@test.com");
+        String verifyCode = model.createVerifyCode();
         assertNotNull(verifyCode);
         assertTrue(verifyCode.length() == 6);
         assertTrue(verifyCode.chars().allMatch(Character::isDigit));
@@ -186,13 +186,16 @@ public class TicTacToeLocalTest implements TicTacToeTest {
             .email("test@test.com")
             .verifyCode("000000")
             .build();
+        
+        // 테스트 상태 설정
+        model.setTestStatus("testVerifyCode");
 
         StatusResponseDto respDto1 = model.findAccount(reqDto);
         assertTrue(respDto1.isSuccess());
         assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
-        // TODO: 작업 토큰 생성하기 (UUID)
-        String accessToken = "accessToken";
+        // 작업 토큰 가져오기
+        String accessToken = (String) model.getTestStatus("testFindUserId > accessToken");
 
         FindApplyDto applyDto = FindApplyDto.builder()
             .findMode("findId")
@@ -218,12 +221,15 @@ public class TicTacToeLocalTest implements TicTacToeTest {
             .verifyCode("000000")
             .build();
 
+        // 테스트 상태 설정
+        model.setTestStatus("testVerifyCode");
+
         StatusResponseDto respDto1 = model.findAccount(reqDto);
         assertTrue(respDto1.isSuccess());
         assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
-        // TODO: 작업 토큰 생성하기 (UUID)
-        String accessToken = "accessToken";
+        // 작업 토큰 가져오기
+        String accessToken = (String) model.getTestStatus("testFindUserPw > accessToken");
 
         FindApplyDto applyDto = FindApplyDto.builder()
             .findMode("findPw")
@@ -298,9 +304,9 @@ public class TicTacToeLocalTest implements TicTacToeTest {
             .chngrId("test").build());
         assertFalse(respDto3.isSuccess());
         assertEquals(respDto3.getMsg(), "게임방 참여중 오류가 발생했습니다.");
-            
+
         StatusResponseDto respDto4 = model.joinGame(JoinGameDto.builder()
-            .gameId(1).chngrId("test").build());
+            .gameId(1).chngrId("user1").build());
         assertTrue(respDto4.isSuccess());
         assertEquals(respDto4.getMsg(), "");
     }
@@ -311,24 +317,7 @@ public class TicTacToeLocalTest implements TicTacToeTest {
     @Test
     @Override
     public void testUpdateGameRoom() throws Exception {
-        //  게임진행	T-06-0003	차례 변경	차례가 변경 될 때 마다 차례인 유저를 표시하여 준다.
-        // 게임진행	T-06-0004	실시간 게임 진행	틱택토 게임을 통신으로 진행한다.	
-        // 게임진행	T-06-0005	게임 결과 출력	게임이 완료 되면 각 유저에게 결과 창이 출력 되며, 갱신된 승률 정보가 표시된다.	
-        // 게임진행	T-06-0006	게임 다시시작	게임 완료 후, 다시시작 버튼을 누르면 게임대기 상태로 돌아간다. 상대역시 다시시작 버튼을 누르면 게임이 시작 된다.      
-        // 게임진행	T-06-0007	게임 나가기	게임 완료 후, 나가기 버튼을 누르면 메인 페이지로 이동한다.                  
-        // 게임진행 - 로직	T-07-0001	예외처리-1	매칭이 완료 된 게임 방에서는 다른 플레이어가 입장 할 수 없다. (JOIN GAME버튼을 없애기 / 입장 불가 안내 창 띄우기 등.)
-        // 게임진행 - 로직	T-07-0002	예외처리-2	자신의 차례가 아닌 사용자는 게임 판에 영향을 줄 수 없다.
-        // 게임진행 - 로직	T-07-0003	예외처리-3	이미 마크 된 셀에는 영향을 줄 수 없다.
-        // 게임진행 - 로직	T-07-0004	(O)승리조건 – 수평	플레이어(O)가 수평, 수직, 대각선을 채울 때 플레이어(O)가 우승 처리된다.
-        // 게임진행 - 로직	T-07-0005	(X)승리조건 – 수평	플레이어(X)가 수평, 수직, 대각선을 채울 때 플레이어(X)가 우승 처리된다.
-        // 게임진행 - 로직	T-07-0006	승리/패배 처리	우승 처리가 진행 된 후, 우승 한 플레이어는 승리안내 팝업을, 우승하지 못한 플레이어에게는 패배안내 팝업이 출력된다.
-        // 게임진행 - 로직	T-07-0007	무승부 조건	9개의 셀이 모두 채워 졌을 때, 플레이어(O), 플레이어(X) 모두가 승리조건을 채우지 못했을 경우, 무승부 처리된다.
-        // 게임진행 - 로직	T-07-0008	무승부 처리	무승부가 된 게임은 플레이어 모두에게 무승부안내 팝업이 출력된다.
-        // 게임진행 - 로직	T-07-0009	승률 갱신	승리, 무승부, 패배 처리에 맞게 승률 정보가 수정된다.
-
-        int gameId = 1;
-        // status: P1
-        // board: O...O...X
+        int gameId = 2;
 
         StatusResponseDto respDto1 = model.updateGame(GameUpdateDto.builder()
             .gameId(gameId).playerId("test2").msg("B4").build());
@@ -378,7 +367,7 @@ public class TicTacToeLocalTest implements TicTacToeTest {
     @Test
     @Override
     public void testViewGameRoom() throws Exception {
-        int gameId = 1;
+        int gameId = 2;
         GameRoomDto gameDto = model.getGameRoom(gameId);
 
         assertTrue(gameDto != null);

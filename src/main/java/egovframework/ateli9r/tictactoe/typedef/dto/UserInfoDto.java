@@ -8,6 +8,7 @@ import lombok.Getter;
 public class UserInfoDto {
     private String userId;
     private String nickname;
+    private String email;
     private int total;
     private int wins;
     private int losses;

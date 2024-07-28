@@ -31,7 +31,28 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
                 .losses(50)
                 .draws(23)
                 .build();
+        } else if (userId.equals("test")) {
+            return UserInfoRecord.builder()
+                .userId("test")
+                .nickname("test")
+                .email("test@test.com")
+                .total(123)
+                .wins(50)
+                .losses(50)
+                .draws(23)
+                .build();
+        } else if (userId.equals("user1")) {
+            return UserInfoRecord.builder()
+                .userId("user1")
+                .nickname("nickname1")
+                .email("user1@example.com")
+                .total(78)
+                .wins(41)
+                .losses(24)
+                .draws(13)
+                .build();
         }
+
         return null;
     }
 
@@ -78,13 +99,21 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
 
     @Override
     public GameRoomRecord getGameRoom(int gameId) {
-        if (gameId != 1) return null;
-        return GameRoomRecord.builder()
+        if (gameId == 1) {
+            return GameRoomRecord.builder()
+            .ownerId("test")
+            .status("W")
+            .board(".........")
+            .build();
+        } else if (gameId == 2) {
+            return GameRoomRecord.builder()
             .ownerId("test1")
             .chngrId("test2")
             .status("P1")
             .board("O...O...X")
             .build();
+        }
+        return null;
     }
 
     @Override
@@ -97,6 +126,14 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
             .wins(100)
             .losses(20)
             .draws(3)
+            .build());
+        ret.add(UserInfoRecord.builder()
+            .userId("user1")
+            .nickname("nickname1")
+            .total(78)
+            .wins(41)
+            .losses(24)
+            .draws(13)
             .build());
         return ret;
     }

@@ -12,6 +12,7 @@ import lombok.Getter;
 public class UserInfoRecord {
     private String userId;
     private String nickname;
+    private String email;
 
     private int total;
     private int wins;
@@ -22,6 +23,7 @@ public class UserInfoRecord {
         return UserInfoDto.builder()
             .userId(userId)
             .nickname(nickname)
+            .email(email)
             .total(total)
             .wins(wins)
             .losses(losses)

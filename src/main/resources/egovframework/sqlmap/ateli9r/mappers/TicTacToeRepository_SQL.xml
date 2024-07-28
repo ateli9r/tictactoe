@@ -5,6 +5,7 @@
     <resultMap id="UserInfoRecordMap" type="egovframework.ateli9r.tictactoe.typedef.domain.UserInfoRecord">
         <result property="userId" column="userId"/>
         <result property="nickname" column="nickname"/>
+        <result property="email" column="email"/>
         <result property="total" column="total"/>
         <result property="wins" column="wins"/>
         <result property="losses" column="losses"/>
@@ -32,6 +33,7 @@
     <select id="getUserInfo" resultMap="UserInfoRecordMap">
         SELECT u.`user_id` userId,
             u.`nickname`,
+            u.`email`,
             ifnull(r.`total`, 0) total,
             ifnull(r.`wins`, 0) wins,
             ifnull(r.`losses`, 0) losses,
@@ -49,51 +51,55 @@
 
     <!-- int createGame(CreateGameDto request); -->
     <insert id="createGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto">
-    <!--
-        TODO: implement createGame
-    -->
+        INSERT INTO `t_game_room` (`owner_id`, `status`, `board`)
+        VALUES (#{ownerId}, 'W', '.........')
     </insert>
 
     <!-- int joinGame(JoinGameDto request); -->
     <update id="joinGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto">
-    <!--
-        TODO: implement joinGame
-    -->
+        UPDATE `t_game_room`
+        SET `chngr_id` = #{chngrId}, `status` = 'P1'
+        WHERE `game_id` = #{gameId} AND `status` = 'W'
     </update>
 
     <!-- List<GameRoomRecord> listGameRoom(); -->
     <select id="listGameRoom" resultMap="GameRoomRecordMap">
-    <!--
-        TODO: implement listGameRoom
-    -->
+        SELECT `game_id`, `owner_id`, `chngr_id`, `status`, `board`
+        FROM `t_game_room`
     </select>
 
     <!-- GameRoomRecord getGameRoom(int gameId); -->
     <select id="getGameRoom" resultMap="GameRoomRecordMap">
-    <!--
-        TODO: implement getGameRoom
-    -->
+        SELECT `game_id`, `owner_id`, `chngr_id`, `status`, `board`
+        FROM `t_game_room`
+        WHERE `game_id` = #{gameId}
     </select>
 
     <!-- List<UserInfoRecord> listGameRank(); -->
     <select id="listGameRank" resultMap="UserInfoRecordMap">
-    <!--
-        TODO: implement listGameRank
-    -->
+        SELECT
+            u.`user_id`, u.`nickname`, u.`email`,
+            ifnull(r.`total`, 0) total, ifnull(r.`wins`, 0) wins, ifnull(r.`losses`, 0) losses, ifnull(r.`draws`, 0) draws
+        FROM `t_user` u
+        LEFT JOIN `t_rank` r ON u.`user_id` = r.`user_id`
+        ORDER BY r.`wins` DESC, r.`losses` ASC, r.`total` DESC
     </select>
 
     <!-- int updateGame(GameRoomRecord updateGameRoom); -->
     <update id="updateGame" parameterType="egovframework.ateli9r.tictactoe.typedef.domain.GameRoomRecord">
-    <!--
-        TODO: implement updateGame
-    -->
+        UPDATE `t_game_room`
+        SET `owner_id` = #{ownerId},
+            `chngr_id` = #{chngrId},
+            `status` = #{status},
+            `board` = #{board}
+        WHERE `game_id` = #{gameId}
     </update>
 
     <!-- int deleteTestData(String key); -->
     <delete id="deleteTestData">
         <choose>
             <when test='key == "signUp"'>
-                delete from t_user where user_id = 'test'
+                delete from `t_user` where `user_id` = 'new_user'
             </when>
         </choose>
     </delete>
@@ -101,8 +107,17 @@
     <!-- int updateTestData(String key); -->
     <update id="updateTestData">
         <choose>
-            <when test='key == "signUp"'>
-                update t_user set user_id = 'test' where user_id = 'test'
+            <when test='key == "joinGame"'>
+                UPDATE `t_game_room` SET
+                    `chngr_id` = NULL,
+                    `status` = 'W'
+                WHERE `game_id` = 1
+            </when>
+            <when test='key == "updateGame"'>
+                UPDATE `t_game_room` SET
+                    `status` = 'P1',
+                    `board` = '....O....'
+                WHERE `game_id` = 1
             </when>
         </choose>
     </update>
@@ -110,8 +125,8 @@
     <!-- int insertTestData(String key); -->
     <insert id="insertTestData">
         <choose>
-            <when test='key == "signUp"'>
-                insert into t_user values()
+            <when test='key == "foobar"'>
+                insert into ...
             </when>
         </choose>
     </insert>

@@ -115,7 +115,7 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto1.getMsg(), "아이디를 입력해 주세요.");
 
         StatusResponseDto respDto2 = model.signUp(SignUpFormDto.builder()
-            .userId("test")
+            .userId("new_user")
             .nickname("")
             .email("")
             .userPw("")
@@ -126,8 +126,8 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto2.getMsg(), "닉네임을 입력해 주세요.");
 
         StatusResponseDto respDto3 = model.signUp(SignUpFormDto.builder()
-            .userId("test")
-            .nickname("test")
+            .userId("new_user")
+            .nickname("new_user")
             .email("")
             .userPw("")
             .build());
@@ -137,9 +137,9 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto3.getMsg(), "이메일을 입력해 주세요.");
 
         StatusResponseDto respDto4 = model.signUp(SignUpFormDto.builder()
-            .userId("test")
-            .nickname("test")
-            .email("test@test.com")
+            .userId("new_user")
+            .nickname("new_user")
+            .email("new_user@new_user.com")
             .userPw("")
             .build());
 
@@ -159,10 +159,10 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto5.getMsg(), "이미 가입되어 있는 아이디입니다.");
 
         StatusResponseDto respDto6 = model.signUp(SignUpFormDto.builder()
-            .userId("test")
-            .nickname("test")
-            .email("test@test.com")
-            .userPw("test@test.com")
+            .userId("new_user")
+            .nickname("new_user")
+            .email("new_user@new_user.com")
+            .userPw("new_user@new_user.com")
             .build());
 
         assertNotNull(respDto6);
@@ -176,7 +176,8 @@ public class TicTacToeProdTest implements TicTacToeTest {
     @Test
     @Override
     public void testCreateVerifyCode() throws Exception {
-        String verifyCode = model.createVerifyCode("test@test.com");
+        // String verifyCode = model.createVerifyCode("test@test.com");
+        String verifyCode = model.createVerifyCode();
         assertNotNull(verifyCode);
         assertTrue(verifyCode.length() == 6);
         assertTrue(verifyCode.chars().allMatch(Character::isDigit));
@@ -210,12 +211,15 @@ public class TicTacToeProdTest implements TicTacToeTest {
             .verifyCode("000000")
             .build();
 
+        // 테스트 상태 설정
+        model.setTestStatus("testVerifyCode");
+
         StatusResponseDto respDto1 = model.findAccount(reqDto);
         assertTrue(respDto1.isSuccess());
         assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
-        // TODO: 작업 토큰 생성하기 (UUID)
-        String accessToken = "accessToken";
+        // 작업 토큰 가져오기
+        String accessToken = (String) model.getTestStatus("testFindUserId > accessToken");
 
         FindApplyDto applyDto = FindApplyDto.builder()
             .findMode("findId")
@@ -241,12 +245,15 @@ public class TicTacToeProdTest implements TicTacToeTest {
             .verifyCode("000000")
             .build();
 
+        // 테스트 상태 설정
+        model.setTestStatus("testVerifyCode");
+
         StatusResponseDto respDto1 = model.findAccount(reqDto);
         assertTrue(respDto1.isSuccess());
         assertTrue(respDto1.getMsg().length() > 0); // accessToken
 
-        // TODO: 작업 토큰 생성하기 (UUID)
-        String accessToken = "accessToken";
+        // 작업 토큰 가져오기
+        String accessToken = (String) model.getTestStatus("testFindUserPw > accessToken");
 
         FindApplyDto applyDto = FindApplyDto.builder()
             .findMode("findPw")
@@ -308,6 +315,12 @@ public class TicTacToeProdTest implements TicTacToeTest {
     @Test
     @Override
     public void testJoinGameRoom() throws Exception {
+        model.updateTestData("joinGame");
+
+        List<GameRoomDto> listGame = model.listGameRoom();
+        assertTrue(listGame != null && listGame.size() > 0);
+        GameRoomDto gameRoom = listGame.get(0);
+
         StatusResponseDto respDto1 = model.joinGame(JoinGameDto.builder().build());
         assertFalse(respDto1.isSuccess());
         assertEquals(respDto1.getMsg(), "게임방 참여중 오류가 발생했습니다.");
@@ -318,14 +331,28 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto2.getMsg(), "게임방 참여중 오류가 발생했습니다.");
 
         StatusResponseDto respDto3 = model.joinGame(JoinGameDto.builder()
-            .chngrId("test").build());
+            .chngrId("").build());
         assertFalse(respDto3.isSuccess());
         assertEquals(respDto3.getMsg(), "게임방 참여중 오류가 발생했습니다.");
-            
+
         StatusResponseDto respDto4 = model.joinGame(JoinGameDto.builder()
-            .gameId(1).chngrId("test").build());
-        assertTrue(respDto4.isSuccess());
-        assertEquals(respDto4.getMsg(), "");
+            .gameId(gameRoom.getGameId().intValue()).chngrId(gameRoom.getOwnerId()).build());
+        assertFalse(respDto4.isSuccess());
+        assertEquals(respDto4.getMsg(), "참여자가 방장과 같은 아이디입니다.");
+
+        String chngrId = null;
+        for (UserInfoDto userInfoDto : model.listGameRank()) {
+            if (!gameRoom.getOwnerId().equals(userInfoDto.getUserId())) {
+                chngrId = userInfoDto.getUserId();
+                break;
+            }
+        }
+        assertTrue(chngrId != null);
+            
+        StatusResponseDto respDto5 = model.joinGame(JoinGameDto.builder()
+            .gameId(1).chngrId(chngrId).build());
+        assertTrue(respDto5.isSuccess());
+        assertEquals(respDto5.getMsg(), "");
     }
 
     /**
@@ -334,6 +361,8 @@ public class TicTacToeProdTest implements TicTacToeTest {
     @Test
     @Override
     public void testUpdateGameRoom() throws Exception {
+        model.updateTestData("updateGame");
+
         int gameId = 1;
         // status: P1
         // board: O...O...X
@@ -345,7 +374,7 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto1.getMsg(), "해당 플레이어 차례가 아닙니다.");
 
         StatusResponseDto respDto2 = model.updateGame(GameUpdateDto.builder()
-            .gameId(gameId).playerId("test1").msg("B4").build());
+            .gameId(gameId).playerId("test").msg("B4").build());
         assertTrue(respDto2 != null);
         assertFalse(respDto2.isSuccess());
         assertEquals(respDto2.getMsg(), "해당 위치에 놓을 수 없습니다.");
@@ -362,19 +391,19 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto4.getMsg(), "플레이어 아이디가 없습니다.");
 
         StatusResponseDto respDto5 = model.updateGame(GameUpdateDto.builder()
-            .gameId(gameId).playerId("test1").msg("B123").build());
+            .gameId(gameId).playerId("test").msg("B123").build());
         assertTrue(respDto5 != null);
         assertFalse(respDto5.isSuccess());
         assertEquals(respDto5.getMsg(), "게임판 범위를 벗어납니다.");
 
         StatusResponseDto respDto6 = model.updateGame(GameUpdateDto.builder()
-            .gameId(gameId).playerId("test1").msg("dummy_message").build());
+            .gameId(gameId).playerId("test").msg("dummy_message").build());
         assertTrue(respDto6 != null);
         assertFalse(respDto6.isSuccess());
         assertEquals(respDto6.getMsg(), "지원되지 않는 메시지 형식입니다.");
 
         StatusResponseDto respDto8 = model.updateGame(GameUpdateDto.builder()
-            .gameId(gameId).playerId("test1").msg("B1").build());
+            .gameId(gameId).playerId("test").msg("B1").build());
         assertTrue(respDto8 != null);
         assertTrue(respDto8.isSuccess());
         assertEquals(respDto8.getMsg(), "");

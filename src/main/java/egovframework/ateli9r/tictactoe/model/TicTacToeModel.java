@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -49,6 +51,11 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
 
 
     /**
+     * 인증코드 맵
+     */
+    private Map<String, String> verifyCodeMap;
+
+    /**
      * 아이디 찾기 토큰 맵
      */
     private Map<String, String> findIdTokenMap;
@@ -66,8 +73,49 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         this.ticTacToeRepository = ticTacToeRepository;
         this.messageRepository = messageRepository;
 
+        this.verifyCodeMap = new HashMap<>();
         this.findIdTokenMap = new HashMap<>();
         this.findPwTokenMap = new HashMap<>();
+    }
+
+    /**
+     * SHA256 해시
+     * @param input 원본 텍스트
+     * @return 해시된 텍스트
+     */
+    public String hash(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(input.getBytes("UTF-8"));
+
+            // bytes를 hexadecimal 문자열로 변환
+            Formatter formatter = new Formatter();
+            for (byte b : hash) {
+                formatter.format("%02x", b);
+            }
+            String hexHash = formatter.toString();
+            formatter.close();
+
+            return hexHash;
+        } catch (Exception ex) { /* ignore */}
+        return null;
+    }
+
+    /**
+     * 숫자 랜덤코드 만들기
+     * @param length 랜덤코드 길이
+     * @return 랜덤코드
+     */
+    public String createRandomCode(int length) {
+        Random random = new Random();
+        StringBuilder code = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int digit = random.nextInt(10); // 0부터 9까지의 랜덤 숫자 생성
+            code.append(digit);
+        }
+
+        return code.toString();
     }
 
     /**
@@ -119,7 +167,6 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 .msg("패스워드를 입력해 주세요.")
                 .build();
         }
-        // TODO: 이미 가입되어 있는지 검사
         if (request.getUserId().equals("exists_user")) {
             return StatusResponseDto.builder()
                 .success(false)
@@ -149,35 +196,11 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     }
 
     /**
-     * SHA256 해시
-     * @param input 원본 텍스트
-     * @return 해시된 텍스트
-     */
-    public String hash(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(input.getBytes("UTF-8"));
-
-            // bytes를 hexadecimal 문자열로 변환
-            Formatter formatter = new Formatter();
-            for (byte b : hash) {
-                formatter.format("%02x", b);
-            }
-            String hexHash = formatter.toString();
-            formatter.close();
-
-            return hexHash;
-        } catch (Exception ex) { /* ignore */}
-        return null;
-    }
-
-    /**
      * 인증코드 생성
      * @return
      */
-    public String createVerifyCode(String mailTo) {
-        // TODO: create verify code
-        return "000000";
+    public String createVerifyCode() {
+        return createRandomCode(6);
     }
 
     /**
@@ -193,10 +216,14 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 .build();
         }
 
+        // 인증코드 생성 및 등록
+        String verifyCode = this.createVerifyCode();
+        verifyCodeMap.put(request.getMailTo(), verifyCode);
+
         SendMailFormDto mailForm = SendMailFormDto.builder()
             .mailTo(request.getMailTo())
             .title("Verify Code")
-            .content(String.format("code: %s", this.createVerifyCode(request.getMailTo())))
+            .content(String.format("code: %s", verifyCode))
             .build();
 
         if (this.messageRepository.sendVerifyEmail(mailForm)) {
@@ -243,8 +270,24 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 .build();
         }
 
-        // TODO: 작업 토큰 생성하기 (UUID)
-        String accessToken = "accessToken";
+        // 인증코드 검사
+        if (!verifyCodeMap.containsKey(request.getEmail())) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("인증번호가 틀립니다.")
+                .build();
+        } else {
+            String verifyCode = verifyCodeMap.get(request.getEmail());
+            if (!verifyCode.equals(request.getVerifyCode())) {
+                return StatusResponseDto.builder()
+                    .success(false)
+                    .msg("인증번호가 틀립니다.")
+                    .build();
+            }
+        }
+
+        // 작업 토큰 생성
+        String accessToken = UUID.randomUUID().toString();
 
         if (request.getFindMode().equals("findId")) {
             findIdTokenMap.put(request.getEmail(), accessToken);
@@ -271,7 +314,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param request 게임방 생성 요청
      * @return 게인방 생성 응답
      */
-    public StatusResponseDto createGame(CreateGameDto request) {
+    public StatusResponseDto createGame(CreateGameDto request) throws Exception {
         if (request.getTitle() == null || request.getTitle().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
@@ -301,7 +344,35 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param request 게임방 참여 요청
      * @return 게임방 참여 응답
      */
-    public StatusResponseDto joinGame(JoinGameDto request) {
+    public StatusResponseDto joinGame(JoinGameDto request) throws Exception {
+        if (request.getGameId() < 1) {
+            return StatusResponseDto.builder()
+                .msg("게임방 참여중 오류가 발생했습니다.")
+                .build();
+        }
+        if (request.getChngrId() == null || request.getChngrId().isEmpty()) {
+            return StatusResponseDto.builder()
+                .msg("게임방 참여중 오류가 발생했습니다.")
+                .build();
+        }
+        if (getUserInfo(request.getChngrId()) == null) {
+            return StatusResponseDto.builder()
+                .msg("게임방 참여중 오류가 발생했습니다.")
+                .build();
+        }
+
+        GameRoomDto gameRoom = getGameRoom(request.getGameId());
+        if (gameRoom == null || !gameRoom.getStatus().equals("W")) {
+            return StatusResponseDto.builder()
+                .msg("참여할 수 없는 게임입니다.")
+                .build();
+        }
+        if (gameRoom.getOwnerId().equals(request.getChngrId())) {
+            return StatusResponseDto.builder()
+                .msg("참여자가 방장과 같은 아이디입니다.")
+                .build();
+        }
+
         if (this.ticTacToeRepository.joinGame(request) > 0) {
             return StatusResponseDto.builder()
                 .success(true)
@@ -395,9 +466,12 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 turnPlayer = gameRoom.getChngrId();
                 isCmdSwitch = true;
                 break;
+            case "W": // WAITING
+                String msg1 = "게임이 시작되지 않았습니다.";
+                return StatusResponseDto.builder().msg(msg1).build();
             default:
-                String msg = "게임이 종료된 게임방 입니다.";
-                return StatusResponseDto.builder().msg(msg).build();
+                String msg2 = "게임이 종료된 게임방 입니다.";
+                return StatusResponseDto.builder().msg(msg2).build();
         }
 
         // 게임 진행중일때
@@ -463,6 +537,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             sbBoard.setCharAt(boardPos.get(), mark);
 
             updateGameRoom = GameRoomRecord.builder()
+                .gameId(gameRoom.getGameId())
                 .ownerId(gameRoom.getOwnerId())
                 .chngrId(gameRoom.getChngrId())
                 .status(status)
@@ -518,9 +593,51 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
 
 
     /**
-     * 프로덕션 테스트 데이터 삭제용
+     * 테스트 데이터 삭제
+     * @param key 쿼리 구분
      */
     public void deleteTestData(String key) {
         this.ticTacToeRepository.deleteTestData(key);
     }
+
+    /**
+     * 테스트 데이터 수정
+     * @param key 쿼리 구분
+     */
+    public void updateTestData(String key) {
+        this.ticTacToeRepository.updateTestData(key);
+    }
+
+    /**
+     * 테스트 데이터 등록
+     * @param key 쿼리 구분
+     */
+    public void insertTestData(String key) {
+        this.ticTacToeRepository.insertTestData(key);
+    }
+
+    /**
+     * 테스트 상태 설정
+     * @param key 기능 구분
+     */
+    public void setTestStatus(String key) {
+        if (key.equals("testVerifyCode")) {
+            verifyCodeMap.put("test@test.com", "000000");
+        }
+    }
+
+    /**
+     * 테스트 상태 가져오기
+     * @param key 기능 구분
+     * @return 상태 데이터
+     */
+    public Object getTestStatus(String key) {
+        if (key.equals("testFindUserId > accessToken")) {
+            return findIdTokenMap.get("test@test.com");
+        } else if (key.equals("testFindUserPw > accessToken")) {
+            return findPwTokenMap.get("test@test.com");
+        }
+        return null;
+    }
+
 }
