@@ -1,5 +1,5 @@
 import { StatusResponseDto } from "../typedef/cmmn_dto";
-import { CreateGameDto } from "../typedef/game_dto";
+import { CreateGameDto, GameRoomDto, GameUpdateDto, JoinGameDto } from "../typedef/game_dto";
 import { LoginRequestDto } from "../typedef/login_dto";
 import { UserInfoDto, SignUpFormDto, FindAccountDto, FindApplyDto } from "../typedef/user_dto";
 import TicTacToeRepository from "./tictactoe_repos";
@@ -118,6 +118,7 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
     /**
      * 게임 생성
      * @param request 게임 생성 요청
+     * @returns 게임 생성 응답
      */
     async createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
         if (request.title == null || request.title.length == 0) {
@@ -129,4 +130,38 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
         return { success: true, msg: '' } as StatusResponseDto
     }
 
+    /**
+     * 게임 참가
+     * @param request 게임 참가 요청
+     * @returns 게임 참가 응답
+     */
+    async joinGame(request: JoinGameDto): Promise<StatusResponseDto | null> {
+        return null
+    }
+
+    /**
+     * 게임 진행
+     * @param request 게임 진행 요청
+     * @returns 게임 진행 응답
+     */
+    async updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
+        return null
+    }
+
+    /**
+     * 게임 정보 조회
+     * @param gameId 게임방 아이디
+     * @returns 게임방 정보
+     */
+    async getGameRoom(gameId: number): Promise<GameRoomDto | null> {
+        return null
+    }
+
+    /**
+     * 게임 리스트 조회
+     * @returns 게임 리스트
+     */
+    async listGameRoom(): Promise<GameRoomDto[] | null> {
+        return null
+    }
 }

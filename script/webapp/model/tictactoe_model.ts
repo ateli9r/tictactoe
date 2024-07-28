@@ -5,7 +5,7 @@ import { FindAccountDto, FindApplyDto, SignUpFormDto, UserInfoDto } from '../typ
 import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
 import CommonUtil from '../util/common'
-import { CreateGameDto } from '../typedef/game_dto'
+import { CreateGameDto, GameRoomDto, GameUpdateDto, JoinGameDto } from '../typedef/game_dto'
 
 /**
  * 틱택토 모델
@@ -104,4 +104,38 @@ export default class TicTactoeModel {
         return await this.tttRepos?.createGame(request) ?? null
     }
 
+    /**
+     * 게임 참가
+     * @param request 게임 참가 요청
+     * @returns 게임 참가 응답
+     */
+    async joinGame(request: JoinGameDto): Promise<StatusResponseDto | null> {
+        return await this.tttRepos?.joinGame(request) ?? null
+    }
+
+    /**
+     * 게임 진행
+     * @param request 게임 진행 요청
+     * @returns 게임 진행 응답
+     */
+    async updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
+        return await this.tttRepos?.updateGame(request) ?? null
+    }
+
+    /**
+     * 게임 정보 조회
+     * @param gameId 게임방 아이디
+     * @returns 게임방 정보
+     */
+    async getGameRoom(gameId: number): Promise<GameRoomDto | null> {
+        return await this.tttRepos?.getGameRoom(gameId) ?? null
+    }
+
+    /**
+     * 게임 리스트 조회
+     * @returns 게임 리스트
+     */
+    async listGameRoom(): Promise<GameRoomDto[] | null> {
+        return await this.tttRepos?.listGameRoom() ?? null
+    }
 }

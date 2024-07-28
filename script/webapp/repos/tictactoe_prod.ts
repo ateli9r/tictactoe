@@ -3,7 +3,7 @@ import { LoginRequestDto } from "../typedef/login_dto"
 import { FindAccountDto, FindApplyDto, SignUpFormDto, UserInfoDto } from "../typedef/user_dto"
 import TicTacToeRepository from "./tictactoe_repos"
 import CommonUtil from "../util/common";
-import { CreateGameDto } from "../typedef/game_dto";
+import { CreateGameDto, GameRoomDto, GameUpdateDto, JoinGameDto } from "../typedef/game_dto";
 
 export default class TicTacToeProdRepository implements TicTacToeRepository {
     /**
@@ -59,34 +59,72 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
     }
 
     /**
-     * 
-     * @param request 
+     * 계정정보 찾기
+     * @param request 계정정보 찾기 요청
+     * @returns 계정정보 찾기 응답
      */
     async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
         throw new Error("Method not implemented.");
     }
 
     /**
-     * 
-     * @param request 
+     * 계정찾기 적용
+     * @param request 계정찾기 적용 요청
+     * @returns 계정찾기 적용 응답
      */
     async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
         throw new Error("Method not implemented.");
     }
 
     /**
-     * 
+     * 게임 전적 목록
+     * @returns 게임 전적 목록
      */
     async listGameRank(): Promise<UserInfoDto[] | null> {
         throw new Error("Method not implemented.");
     }
 
     /**
-     * 
-     * @param request 
+     * 게임 생성
+     * @param request 게임 생성 요청
+     * @returns 게임 생성 응답
      */
     createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
         throw new Error("Method not implemented.");
     }
 
+    /**
+     * 게임 참가
+     * @param request 게임 참가 요청
+     * @returns 게임 참가 응답
+     */
+    joinGame(request: JoinGameDto): Promise<StatusResponseDto | null> {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * 게임 진행
+     * @param request 게임 진행 요청
+     * @returns 게임 진행 응답
+     */
+    updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * 게임 정보 조회
+     * @param gameId 게임방 아이디
+     * @returns 게임방 정보
+     */
+    getGameRoom(gameId: number): Promise<GameRoomDto | null> {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * 게임 리스트 조회
+     * @returns 게임 리스트
+     */
+    listGameRoom(): Promise<GameRoomDto[] | null> {
+        throw new Error("Method not implemented.");
+    }
 }

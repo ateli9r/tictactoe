@@ -1,7 +1,7 @@
 import { LoginRequestDto } from '../typedef/login_dto'
 import { SignUpFormDto, UserInfoDto, FindAccountDto, FindApplyDto } from '../typedef/user_dto'
 import { StatusResponseDto } from '../typedef/cmmn_dto'
-import { CreateGameDto } from '../typedef/game_dto'
+import { CreateGameDto, GameRoomDto, GameUpdateDto, JoinGameDto } from '../typedef/game_dto'
 
 export default interface TicTacToeRepository {
     /**
@@ -49,4 +49,26 @@ export default interface TicTacToeRepository {
      */
     createGame(request: CreateGameDto): Promise<StatusResponseDto | null>
 
+    /**
+     * 게임 참가
+     * @param request 게임 참가 요청
+     */
+    joinGame(request: JoinGameDto): Promise<StatusResponseDto | null>
+
+    /**
+     * 게임 진행
+     * @param request 게임 진행 요청
+     */
+    updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null>
+
+    /**
+     * 게임 정보 조회
+     * @param gameId 게임방 아이디
+     */
+    getGameRoom(gameId: number): Promise<GameRoomDto | null>
+
+    /**
+     * 게임 리스트 조회
+     */
+    listGameRoom(): Promise<GameRoomDto[] | null>
 }
