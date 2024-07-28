@@ -17,7 +17,7 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
             this.isLoggedIn = true
             return {success: true} as StatusResponseDto
         }
-        return {success: false} as StatusResponseDto
+        return {success: false, msg: '로그인 실패'} as StatusResponseDto
     }
 
     /**
