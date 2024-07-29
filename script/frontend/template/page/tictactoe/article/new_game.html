@@ -4,11 +4,12 @@
         <div class="fields">
             <div class="field">
                 <label for="game_room_name">제목</label>
-                <input type="text" id="game_room_name" value="" placeholder="제목" />
+                <input type="text" id="game_room_name" placeholder="제목" v-model="title" />
             </div>
         </div>
         <ul class="actions">
-            <li><button type="button" class="primary" @click="clickTest">만들기</button></li>
+            <li><button type="button" class="primary" @click="onClickCreateGame">만들기</button></li>
         </ul>
     </form>
+    <button type="button" class="hidden onShowClick" @click="onRefresh">refresh</button>
 </article>

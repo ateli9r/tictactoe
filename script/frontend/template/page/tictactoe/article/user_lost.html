@@ -39,7 +39,7 @@
         <ul class="actions">
             <li v-if="status == 'email'"><button type="button" @click="onClickSendEmail">이메일 발송</button></li>
             <li v-if="status == 'email'"><button type="button" @click="onClickVerifyNo">인증번호 확인</button></li>
-            <li v-if="status == 'printUserId'"><button type="button" @click="onClickChangeUserPw">확인</button></li>
+            <li v-if="status == 'printUserId'"><button type="button" @click="onClickOkUserId">확인</button></li>
             <li v-if="status == 'changeUserPw'"><button type="button" @click="onClickChangeUserPw">확인</button></li>
         </ul>
     </form>

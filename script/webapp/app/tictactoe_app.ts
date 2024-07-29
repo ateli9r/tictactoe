@@ -4,11 +4,12 @@ import TicTactoeModel from '../model/tictactoe_model'
 import TicTacToeProdRepository from '../repos/tictactoe_prod'
 import { LoginRequestDto } from '../typedef/login_dto'
 import MessageProdRepository from '../repos/message_prod'
-import { FindAccountDto, SignUpFormDto } from '../typedef/user_dto'
+import { FindAccountDto, SignUpFormDto, UserInfoDto } from '../typedef/user_dto'
 import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
 import MessageLocalRepository from '../repos/message_local'
+import { CreateGameDto, GameRoomDto } from '../typedef/game_dto'
 
 /**
  * 틱택토 앱
@@ -48,6 +49,15 @@ export default class TicTacToeApp {
 
     move(key: string) {
         location.hash = key
+    }
+
+    async checkLoggedIn() {
+        const userInfo = await this.model.getUserInfo()
+        if (userInfo == null) {
+            this.closeModal()
+            return false
+        }
+        return true
     }
 
     async renderHeader(selector: string) {
@@ -136,6 +146,7 @@ export default class TicTacToeApp {
     }
 
     async renderSignUp(selector: string) {
+        const isVerified = ref(false)
         const props = {
             userId: '',
             userPw: '',
@@ -143,20 +154,24 @@ export default class TicTacToeApp {
             nickname: '',
             email: '',
             verifyNo: '',
+            token: '',
         }
 
         const clearForm = () => {
+            isVerified.value = false
             props.userId = ''
             props.userPw = ''
             props.userPwRe = ''
             props.nickname = ''
             props.email = ''
             props.verifyNo = ''
+            props.token = ''
 
             jQuery('#sign_up').find('form')[0].reset()
         }
 
         const onClickSubmit = async () => {
+            // TODO: SignUp 요청에 token 검사 반영
             const request = {
                 userId: props.userId,
                 userPw: props.userPw,
@@ -205,7 +220,28 @@ export default class TicTacToeApp {
 
         const onClickCheckVerify = async () => {
             // TODO: onClickCheckVerify
-            console.log('onClickSendEmail')
+
+            // TODO: FindAccount에 signUp 지시자 반영
+            const form = {
+                findMode: 'signUp',
+                email: props.email,
+                verifyCode: props.verifyNo,
+            } as FindAccountDto
+
+            const resp = await this.model.findAccount(form) as StatusResponseDto
+            console.log(resp)
+
+            if (!resp.success && resp.msg.length > 0) {
+                alert(resp.msg)
+            } else {
+                // {success: true, msg: "accessToken"}
+                if (resp.msg.length > 0) {
+                    console.log('ok')
+
+                    props.token = resp.msg;
+                    isVerified.value = true
+                }
+            }
         }
 
         const onRefresh = async () => {
@@ -224,6 +260,7 @@ export default class TicTacToeApp {
                 })
 
                 return {
+                    isVerified,
                     onClickSubmit,
                     onClickSendEmail,
                     onClickCheckVerify,
@@ -236,7 +273,6 @@ export default class TicTacToeApp {
     }
 
     async renderUserLost(selector: string) {
-        // const findMode = ref('findId')
         const status = ref('email')
         const props = {
             findMode: '',
@@ -258,6 +294,7 @@ export default class TicTacToeApp {
             } as SendMailFormDto
 
             const resp = await this.model.sendVerifyEmail(form) as StatusResponseDto
+            console.log(resp)
 
             if (!resp.success && resp.msg.length > 0) {
                 alert(resp.msg)
@@ -275,25 +312,23 @@ export default class TicTacToeApp {
                 verifyCode: props.verifyNo,
             } as FindAccountDto
 
-            console.log(form)
-    
-            // const resp = await this.model.findAccount(form) as StatusResponseDto
+            const resp = await this.model.findAccount(form) as StatusResponseDto
+            console.log(resp)
 
-            // if (!resp.success && resp.msg.length > 0) {
-            //     alert(resp.msg)
-            // } else {
-            //     console.log('ok')
-            // }
-            if (true) {
-
+            if (!resp.success && resp.msg.length > 0) {
+                alert(resp.msg)
+            } else {
                 if (props.findMode == 'findId') {
                     status.value = 'printUserId'
 
                 } else if (props.findMode == 'findPw') {
-                    // props.status = 'changeUserPw'
                     status.value = 'changeUserPw'
                 }
             }
+        }
+
+        const onClickOkUserId = () => {
+            this.closeModal()
         }
 
         const onClickChangeUserPw = () => {
@@ -329,6 +364,7 @@ export default class TicTacToeApp {
                     status,
                     onClickSendEmail,
                     onClickVerifyNo,
+                    onClickOkUserId,
                     onClickChangeUserPw,
                     onRefresh,
                 }
@@ -339,24 +375,59 @@ export default class TicTacToeApp {
     }
 
     async renderNewGame(selector: string) {
-        const clickTest = () => {
-            this.closeModal()
-            this.isShowMenu.value = false
+        const props = {
+            title: '',
+        }
 
-            const game = jQuery('#game')
-            game.fadeOut()
+        const onClickCreateGame = async () => {
+            if (props.title.length == 0) {
+                const msg = '제목을 입력해주세요.'
+                alert(msg)
+                return
+            }
 
-            setTimeout(() => {
-                this.isShowGame.value = true
-                game.fadeIn(150)
-            }, 350)
+            const userInfo = await this.model.getUserInfo()
+            if (userInfo == null) return
+
+            const form = {
+                title: props.title,
+                ownerId: userInfo.userId,
+            } as CreateGameDto
+
+            const resp = await this.model.createGame(form) as StatusResponseDto
+            console.log(resp)
+
+
+            if (!resp.success && resp.msg.length > 0) {
+                alert(resp.msg)
+            } else {
+                console.log('ok')
+
+                this.closeModal()
+                this.isShowMenu.value = false
+
+                const game = jQuery('#game')
+                game.fadeOut()
+
+                setTimeout(() => {
+                    this.isShowGame.value = true
+                    game.fadeIn(150)
+                }, 350)
+            }
+        }
+
+        const onRefresh = async () => {
+            if (!await this.checkLoggedIn()) return
         }
 
         const app = createApp({
+            data() {
+                return props
+            },
             setup() {
                 return {
-                    // 
-                    clickTest,
+                    onClickCreateGame,
+                    onRefresh,
                 }
             }
         })
@@ -366,7 +437,11 @@ export default class TicTacToeApp {
 
     async renderJoinGame(selector: string) {
         const onRefresh = async () => {
+            if (!await this.checkLoggedIn()) return
+
             // TODO: onRefresh - renderJoinGame
+            const listGame = await this.model.listGameRoom() as GameRoomDto[]
+            console.log(listGame)
         }
 
         const app = createApp({
@@ -383,15 +458,33 @@ export default class TicTacToeApp {
 
     async renderMyPage(selector: string) {
         const onRefresh = async () => {
+            if (!await this.checkLoggedIn()) return
+
             // TODO: onRefresh - renderMyPage
+
+            // 사용자명
+            // #player
+
+            // 전적
+            // 0전 0승 0패 0무 (9999위)
+
+            // expect(await model?.getUserInfo() != null).toBe(false)
+
+            const userInfo = await this.model.getUserInfo()
+            if (userInfo == null) return
+
+            console.log(userInfo)
+
         }
 
         const onClickChangeName = () => {
             // TODO: onClickChangeName
+            console.log('onClickChangeName')
         }
 
         const onClickChangeUserPw = () => {
             // TODO: onClickChangeUserPw
+            console.log('onClickChangeUserPw')
         }
 
         const onClickLogout = async () => {
@@ -416,7 +509,16 @@ export default class TicTacToeApp {
 
     async renderRanking(selector: string) {
         const onRefresh = async () => {
+            if (!await this.checkLoggedIn()) return
+
             // TODO: onRefresh - renderRanking
+
+            const listUser = await this.model.listGameRank() as UserInfoDto[]
+            console.log(listUser)
+
+            // 0 {userId: "test", nickname: "test", email: "test@test.com", total: 123, wins: 100, …}
+            // 1 {userId: "user1", nickname: "nickname1", email: "user1@user1.com", total: 78, wins: 41, …}            
+
         }
 
         const app = createApp({
@@ -436,6 +538,7 @@ export default class TicTacToeApp {
 
         const onClickCell = () => {
             // TODO: onClickCell
+            console.log('onClickCell')
         }
 
         const onClickQuit = () => {
