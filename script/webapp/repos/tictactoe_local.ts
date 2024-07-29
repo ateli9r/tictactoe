@@ -172,10 +172,17 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
     async listGameRoom(): Promise<GameRoomDto[] | null> {
         const ret: GameRoomDto[] = []
         ret.push({
-            ownerId: 'owner',
-            chngrId: 'chngr',
-            status: 'status',
+            gameId: 1,
+            ownerId: 'test',
+            status: 'W',
             board: '.........',
+        } as GameRoomDto)
+        ret.push({
+            gameId: 2,
+            ownerId: 'test1',
+            chngrId: 'test2',
+            status: 'P1',
+            board: 'O...O...X',
         } as GameRoomDto)
         return ret
     }

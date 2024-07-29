@@ -9,7 +9,7 @@ import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
 import MessageLocalRepository from '../repos/message_local'
-import { CreateGameDto, GameRoomDto } from '../typedef/game_dto'
+import { CreateGameDto, GameRoomDto, JoinGameDto } from '../typedef/game_dto'
 import { UserInfo } from 'os'
 
 /**
@@ -59,6 +59,19 @@ export default class TicTacToeApp {
             return false
         }
         return true
+    }
+
+    async switchGameBoard() {
+        this.closeModal()
+        this.isShowMenu.value = false
+
+        const game = jQuery('#game')
+        game.fadeOut()
+
+        setTimeout(() => {
+            this.isShowGame.value = true
+            game.fadeIn(150)
+        }, 350)
     }
 
     async renderHeader(selector: string) {
@@ -398,22 +411,10 @@ export default class TicTacToeApp {
             const resp = await this.model.createGame(form) as StatusResponseDto
             console.log(resp)
 
-
             if (!resp.success && resp.msg.length > 0) {
                 alert(resp.msg)
             } else {
-                console.log('ok')
-
-                this.closeModal()
-                this.isShowMenu.value = false
-
-                const game = jQuery('#game')
-                game.fadeOut()
-
-                setTimeout(() => {
-                    this.isShowGame.value = true
-                    game.fadeIn(150)
-                }, 350)
+                this.switchGameBoard()
             }
         }
 
@@ -439,6 +440,27 @@ export default class TicTacToeApp {
     async renderJoinGame(selector: string) {
         const refList = ref<GameRoomDto[]>([])
 
+        const onClickJoin = async (game: GameRoomDto) => {
+            // TODO: onClickJoin
+
+            const userInfo = await this.model.getUserInfo()
+            if (userInfo == null) return
+
+            const form = {
+                gameId: 1,
+                chngrId: userInfo.userId,
+            } as JoinGameDto
+
+            const resp = await this.model.joinGame(form) as StatusResponseDto
+            console.log(resp)
+
+            if (!resp.success && resp.msg.length > 0) {
+                alert(resp.msg)
+            } else {
+                this.switchGameBoard()
+            }
+        }
+
         const onRefresh = async () => {
             if (!await this.checkLoggedIn()) return
 
@@ -455,6 +477,7 @@ export default class TicTacToeApp {
             setup() {
                 return {
                     refList,
+                    onClickJoin,
                     onRefresh,
                 }
             }
@@ -476,16 +499,6 @@ export default class TicTacToeApp {
             refUserInfo.value = userInfo
         }
 
-        const onClickChangeName = () => {
-            // TODO: onClickChangeName
-            console.log('onClickChangeName')
-        }
-
-        const onClickChangeUserPw = () => {
-            // TODO: onClickChangeUserPw
-            console.log('onClickChangeUserPw')
-        }
-
         const onClickLogout = async () => {
             await this.model.logout()
             this.isLoggedIn.value = false;
@@ -496,8 +509,6 @@ export default class TicTacToeApp {
             setup() {
                 return {
                     refUserInfo,
-                    onClickChangeName,
-                    onClickChangeUserPw,
                     onClickLogout,
                     onRefresh,
                 }

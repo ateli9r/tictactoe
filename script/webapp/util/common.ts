@@ -88,9 +88,9 @@ export default class CommonUtil {
     }
 
     /**
-     * 
-     * @param object 
-     * @returns 
+     * JS 오브젝트 복사
+     * @param object 복사대상 오브젝트
+     * @returns 복사된 오브젝트
      */
     static copyObject(object: any): object {
         return JSON.parse(JSON.stringify(object))
