@@ -10,6 +10,7 @@ import { SendMailFormDto } from '../typedef/message_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
 import MessageLocalRepository from '../repos/message_local'
 import { CreateGameDto, GameRoomDto } from '../typedef/game_dto'
+import { UserInfo } from 'os'
 
 /**
  * 틱택토 앱
@@ -436,17 +437,24 @@ export default class TicTacToeApp {
     }
 
     async renderJoinGame(selector: string) {
+        const refList = ref<GameRoomDto[]>([])
+
         const onRefresh = async () => {
             if (!await this.checkLoggedIn()) return
 
-            // TODO: onRefresh - renderJoinGame
+            refList.value.length = 0
             const listGame = await this.model.listGameRoom() as GameRoomDto[]
-            console.log(listGame)
+
+            for (let i = 0; i < listGame.length; i++) {
+                const item = CommonUtil.copyObject(listGame[i]) as GameRoomDto
+                refList.value.push(item)
+            }
         }
 
         const app = createApp({
             setup() {
                 return {
+                    refList,
                     onRefresh,
                 }
             }
@@ -457,24 +465,15 @@ export default class TicTacToeApp {
     }
 
     async renderMyPage(selector: string) {
+        const refUserInfo = ref<UserInfoDto | null>(null)
+
         const onRefresh = async () => {
             if (!await this.checkLoggedIn()) return
-
-            // TODO: onRefresh - renderMyPage
-
-            // 사용자명
-            // #player
-
-            // 전적
-            // 0전 0승 0패 0무 (9999위)
-
-            // expect(await model?.getUserInfo() != null).toBe(false)
 
             const userInfo = await this.model.getUserInfo()
             if (userInfo == null) return
 
-            console.log(userInfo)
-
+            refUserInfo.value = userInfo
         }
 
         const onClickChangeName = () => {
@@ -496,6 +495,7 @@ export default class TicTacToeApp {
         const app = createApp({
             setup() {
                 return {
+                    refUserInfo,
                     onClickChangeName,
                     onClickChangeUserPw,
                     onClickLogout,
@@ -508,22 +508,24 @@ export default class TicTacToeApp {
     }
 
     async renderRanking(selector: string) {
+        const refList = ref<UserInfoDto[]>([])
+
         const onRefresh = async () => {
             if (!await this.checkLoggedIn()) return
 
-            // TODO: onRefresh - renderRanking
-
+            refList.value.length = 0
             const listUser = await this.model.listGameRank() as UserInfoDto[]
-            console.log(listUser)
 
-            // 0 {userId: "test", nickname: "test", email: "test@test.com", total: 123, wins: 100, …}
-            // 1 {userId: "user1", nickname: "nickname1", email: "user1@user1.com", total: 78, wins: 41, …}            
-
+            for (let i = 0; i < listUser.length; i++) {
+                const item = CommonUtil.copyObject(listUser[i]) as UserInfoDto
+                refList.value.push(item)
+            }
         }
 
         const app = createApp({
             setup() {
                 return {
+                    refList,
                     onRefresh,
                 }
             }

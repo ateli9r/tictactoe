@@ -10,10 +10,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Item One</td>
-                    <td>Ante turpis integer aliquet porttitor.</td>
-                    <td>29.99</td>
+                <tr v-for="(row, index) in refList">
+                    <td>{{ index+1 }}</td>
+                    <td>{{ row.nickname }}</td>
+                    <td>{{ row.wins }}승 {{ row.losses }}패 {{ row.draws }}무</td>
                 </tr>
             </tbody>
         </table>

@@ -4,11 +4,16 @@
         <div class="fields">
             <div class="field half">
                 <label for="demo-name">사용자명</label>
-                <span>#player</span>
+                <span v-if="refUserInfo != null">{{ refUserInfo.nickname }}</span>
             </div>
             <div class="field half">
                 <label for="demo-email">전적</label>
-                <span>0전 0승 0패 0무 (9999위)</span>
+                <span v-if="refUserInfo != null">
+                    {{ refUserInfo.total }}전
+                    {{ refUserInfo.wins }}승
+                    {{ refUserInfo.losses }}패
+                    {{ refUserInfo.draws }}무
+                </span>
             </div>
         </div>
         <ul class="actions">

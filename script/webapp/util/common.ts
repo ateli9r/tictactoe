@@ -87,4 +87,13 @@ export default class CommonUtil {
         })
     }
 
+    /**
+     * 
+     * @param object 
+     * @returns 
+     */
+    static copyObject(object: any): object {
+        return JSON.parse(JSON.stringify(object))
+    }
+
 }
