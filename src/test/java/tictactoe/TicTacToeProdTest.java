@@ -159,11 +159,14 @@ public class TicTacToeProdTest implements TicTacToeTest {
         assertEquals(respDto5.isSuccess(), false);
         assertEquals(respDto5.getMsg(), "이미 가입되어 있는 아이디입니다.");
 
+        model.setTestStatus("signUp2");
+
         StatusResponseDto respDto6 = model.signUp(SignUpFormDto.builder()
             .userId("new_user")
             .nickname("new_user")
             .email("new_user@new_user.com")
             .userPw("new_user@new_user.com")
+            .token("accessToken")
             .build());
 
         assertNotNull(respDto6);

@@ -135,11 +135,14 @@ public class TicTacToeLocalTest implements TicTacToeTest {
         assertEquals(respDto5.isSuccess(), false);
         assertEquals(respDto5.getMsg(), "이미 가입되어 있는 아이디입니다.");
 
+        model.setTestStatus("signUp1");
+
         StatusResponseDto respDto6 = model.signUp(SignUpFormDto.builder()
             .userId("test")
             .nickname("test")
             .email("test@test.com")
             .userPw("test@test.com")
+            .token("accessToken")
             .build());
 
         assertNotNull(respDto6);

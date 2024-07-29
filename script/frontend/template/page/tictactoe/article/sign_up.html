@@ -33,8 +33,8 @@
         </div>
         <ul class="actions">
             <li v-if="isVerified"><button type="button" class="primary" @click="onClickSubmit">회원가입</button></li>
-            <li><button type="button" @click="onClickSendEmail">이메일 발송</button></li>
-            <li><button type="button" @click="onClickCheckVerify">인증번호 확인</button></li>
+            <li v-if="!isVerified"><button type="button" @click="onClickSendEmail">이메일 발송</button></li>
+            <li v-if="!isVerified"><button type="button" @click="onClickCheckVerify" v-bind:disabled="!isVerifySent">인증번호 확인</button></li>
         </ul>
     </form>
     <button type="button" class="hidden onShowClick" @click="onRefresh">refresh</button>

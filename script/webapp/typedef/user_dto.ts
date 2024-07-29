@@ -19,6 +19,7 @@ export interface SignUpFormDto {
     userPw: string;
     nickname: string;
     email: string;
+    token: string;
 }
 
 /**
@@ -28,7 +29,6 @@ export interface FindAccountDto {
     findMode: string;
     email: string;
     verifyCode: string;
-    // userId: string;
 }
 
 /**

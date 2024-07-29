@@ -4,7 +4,7 @@ import TicTactoeModel from '../model/tictactoe_model'
 import TicTacToeProdRepository from '../repos/tictactoe_prod'
 import { LoginRequestDto } from '../typedef/login_dto'
 import MessageProdRepository from '../repos/message_prod'
-import { FindAccountDto, SignUpFormDto, UserInfoDto } from '../typedef/user_dto'
+import { FindAccountDto, FindApplyDto, SignUpFormDto, UserInfoDto } from '../typedef/user_dto'
 import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
@@ -74,6 +74,9 @@ export default class TicTacToeApp {
         }, 350)
     }
 
+    /**
+     * VueApp - Header
+     */
     async renderHeader(selector: string) {
         const isLoggedIn = this.isLoggedIn
         const isShowMenu = this.isShowMenu
@@ -90,6 +93,9 @@ export default class TicTacToeApp {
         this.vueApp.header = app
     }
 
+    /**
+     * VueApp - 로그인
+     */
     async renderSignIn(selector: string) {
         const props = {
             userId: '',
@@ -159,8 +165,12 @@ export default class TicTacToeApp {
         this.vueApp.signIn = app
     }
 
+    /**
+     * VueApp - 회원가입
+     */
     async renderSignUp(selector: string) {
         const isVerified = ref(false)
+        const isVerifySent = ref(false)
         const props = {
             userId: '',
             userPw: '',
@@ -173,6 +183,8 @@ export default class TicTacToeApp {
 
         const clearForm = () => {
             isVerified.value = false
+            isVerifySent.value = false
+
             props.userId = ''
             props.userPw = ''
             props.userPwRe = ''
@@ -185,12 +197,12 @@ export default class TicTacToeApp {
         }
 
         const onClickSubmit = async () => {
-            // TODO: SignUp 요청에 token 검사 반영
             const request = {
                 userId: props.userId,
                 userPw: props.userPw,
                 nickname: props.nickname,
                 email: props.email,
+                token: props.token,
             } as SignUpFormDto
 
             if (props.userPw.length > 0) {
@@ -200,42 +212,34 @@ export default class TicTacToeApp {
                 }
             }
 
-            const resp = await this.model.signUp(request)
-            if (resp == null) {
-                alert('error')
-                return
-            }
+            const resp = await this.model.signUp(request) as StatusResponseDto
             if (!resp.success) {
                 alert(resp.msg)
                 return
-            } else {
-                const msg = '회원가입 완료'
-                alert(msg)
-                clearForm()
-                this.closeModal()
             }
+
+            clearForm()
+            this.closeModal()
+
+            const msg = '회원가입 완료'
+            alert(msg)
         }
 
         const onClickSendEmail = async () => {
-            // TODO: onClickSendEmail
-
             const form = {
                 mailTo: props.email,
             } as SendMailFormDto
 
             const resp = await this.model.sendVerifyEmail(form) as StatusResponseDto
 
-            if (!resp.success && resp.msg.length > 0) {
+            if (!resp.success) {
                 alert(resp.msg)
             } else {
-                console.log('ok')
+                isVerifySent.value = true
             }
         }
 
         const onClickCheckVerify = async () => {
-            // TODO: onClickCheckVerify
-
-            // TODO: FindAccount에 signUp 지시자 반영
             const form = {
                 findMode: 'signUp',
                 email: props.email,
@@ -243,18 +247,15 @@ export default class TicTacToeApp {
             } as FindAccountDto
 
             const resp = await this.model.findAccount(form) as StatusResponseDto
-            console.log(resp)
 
-            if (!resp.success && resp.msg.length > 0) {
-                alert(resp.msg)
-            } else {
-                // {success: true, msg: "accessToken"}
-                if (resp.msg.length > 0) {
-                    console.log('ok')
-
-                    props.token = resp.msg;
-                    isVerified.value = true
-                }
+            if (!resp.success) {
+                const msg = '인증 오류가 발생했습니다.'
+                alert(msg)
+                return
+            }
+            if (resp.msg.length > 0 && resp.msg.indexOf('accessToken=') == 0) {
+                props.token = resp.msg.substring(12)
+                isVerified.value = true
             }
         }
 
@@ -275,6 +276,7 @@ export default class TicTacToeApp {
 
                 return {
                     isVerified,
+                    isVerifySent,
                     onClickSubmit,
                     onClickSendEmail,
                     onClickCheckVerify,
@@ -286,17 +288,23 @@ export default class TicTacToeApp {
         this.vueApp.signUp = app
     }
 
+    /**
+     * VueApp - 계정찾기
+     */
     async renderUserLost(selector: string) {
         const status = ref('email')
+        const isVerifySent = ref(false)
         const props = {
             findMode: '',
             email: '',
             verifyNo: '',
+            token: '',
+            userId: '',
+            userPw: '',
+            userPwRe: '',
         }
 
         const onClickSendEmail = async () => {
-            // TODO: onClickSendEmail
-
             if (props.findMode.length == 0) {
                 const msg = '계정찾기 구분이 지정되지 않았습니다.'
                 alert(msg)
@@ -308,18 +316,16 @@ export default class TicTacToeApp {
             } as SendMailFormDto
 
             const resp = await this.model.sendVerifyEmail(form) as StatusResponseDto
-            console.log(resp)
 
-            if (!resp.success && resp.msg.length > 0) {
-                alert(resp.msg)
-            } else {
-                console.log('ok')
+            if (!resp.success) {
+                const msg = resp.msg
+                alert(msg)
+                return
             }
+            isVerifySent.value = true
         }
 
         const onClickVerifyNo = async () => {
-            // TODO: onClickVerifyNo
-
             const form = {
                 findMode: props.findMode,
                 email: props.email,
@@ -327,14 +333,18 @@ export default class TicTacToeApp {
             } as FindAccountDto
 
             const resp = await this.model.findAccount(form) as StatusResponseDto
-            console.log(resp)
 
-            if (!resp.success && resp.msg.length > 0) {
-                alert(resp.msg)
-            } else {
+            if (!resp.success) {
+                const msg = '인증 오류가 발생했습니다.'
+                alert(msg)
+                return
+            }
+
+            if (resp.msg.length > 0 && resp.msg.indexOf('accessToken=') == 0) {
+                props.token = resp.msg.substring(12)
+
                 if (props.findMode == 'findId') {
-                    status.value = 'printUserId'
-
+                    printUserId()
                 } else if (props.findMode == 'findPw') {
                     status.value = 'changeUserPw'
                 }
@@ -345,9 +355,58 @@ export default class TicTacToeApp {
             this.closeModal()
         }
 
-        const onClickChangeUserPw = () => {
-            // TODO: onClickChangeUserPw
-            console.log('onClickChangeUserPw')
+        const printUserId = async () => {
+            const form = {
+                findMode: 'findId',
+                email: props.email,
+                token: props.token,
+            } as FindApplyDto
+    
+            const resp = await this.model.findApply(form) as StatusResponseDto
+
+            if (!resp.success) {
+                const msg = '인증 오류가 발생했습니다.'
+                alert(msg)
+                return
+            }
+
+            if (resp.msg.length > 0 && resp.msg.indexOf('userId=') == 0) {
+                props.userId = resp.msg.substring(7)
+                status.value = 'printUserId'
+            }
+        }
+
+        const onClickChangeUserPw = async () => {
+            if (props.userPw.length == 0) {
+                const msg = '변경할 패스워드를 입력해주세요.'
+                alert(msg)
+                return
+            }
+            if (props.userPw != props.userPwRe) {
+                const msg = '패스워드가 다릅니다.'
+                alert(msg)
+                return
+            }
+
+            const form = {
+                findMode: 'findPw',
+                email: props.email,
+                token: props.token,
+                message: `password=${props.userPw}`,
+            } as FindApplyDto
+
+            const resp = await this.model.findApply(form) as StatusResponseDto
+
+            if (!resp.success) {
+                const msg = resp.msg
+                alert(msg)
+                return
+            }
+
+            this.closeModal()
+
+            const msg = '패스워드 변경 완료'
+            alert(msg)
         }
 
         const onRefresh = async () => {
@@ -358,9 +417,15 @@ export default class TicTacToeApp {
             jQuery('#user_lost').find('form')[0].reset()
 
             status.value = 'email'
+            isVerifySent.value = false
+
             props.findMode = ''
             props.email = ''
             props.verifyNo = ''
+            props.token = ''
+            props.userId = ''
+            props.userPw = ''
+            props.userPwRe = ''
         }
 
         const app = createApp({
@@ -376,6 +441,7 @@ export default class TicTacToeApp {
 
                 return {
                     status,
+                    isVerifySent,
                     onClickSendEmail,
                     onClickVerifyNo,
                     onClickOkUserId,
@@ -388,6 +454,9 @@ export default class TicTacToeApp {
         this.vueApp.userLost = app
     }
 
+    /**
+     * VueApp - 새 게임
+     */
     async renderNewGame(selector: string) {
         const props = {
             title: '',
@@ -409,13 +478,13 @@ export default class TicTacToeApp {
             } as CreateGameDto
 
             const resp = await this.model.createGame(form) as StatusResponseDto
-            console.log(resp)
 
-            if (!resp.success && resp.msg.length > 0) {
-                alert(resp.msg)
-            } else {
-                this.switchGameBoard()
+            if (!resp.success) {
+                const msg = resp.msg
+                alert(msg)
+                return
             }
+            this.switchGameBoard()
         }
 
         const onRefresh = async () => {
@@ -437,12 +506,13 @@ export default class TicTacToeApp {
         this.vueApp.newGame = app
     }
 
+    /**
+     * VueApp - 게임 참가
+     */
     async renderJoinGame(selector: string) {
         const refList = ref<GameRoomDto[]>([])
 
         const onClickJoin = async (game: GameRoomDto) => {
-            // TODO: onClickJoin
-
             const userInfo = await this.model.getUserInfo()
             if (userInfo == null) return
 
@@ -452,13 +522,12 @@ export default class TicTacToeApp {
             } as JoinGameDto
 
             const resp = await this.model.joinGame(form) as StatusResponseDto
-            console.log(resp)
 
-            if (!resp.success && resp.msg.length > 0) {
-                alert(resp.msg)
-            } else {
-                this.switchGameBoard()
+            if (!resp.success) {
+                const msg = resp.msg
+                alert(msg)
             }
+            this.switchGameBoard()
         }
 
         const onRefresh = async () => {
@@ -487,6 +556,9 @@ export default class TicTacToeApp {
         this.vueApp.joinGame = app
     }
 
+    /**
+     * VueApp - 마이 페이지
+     */
     async renderMyPage(selector: string) {
         const refUserInfo = ref<UserInfoDto | null>(null)
 
@@ -518,6 +590,9 @@ export default class TicTacToeApp {
         this.vueApp.myPage = app
     }
 
+    /**
+     * VueApp - 랭킹
+     */
     async renderRanking(selector: string) {
         const refList = ref<UserInfoDto[]>([])
 

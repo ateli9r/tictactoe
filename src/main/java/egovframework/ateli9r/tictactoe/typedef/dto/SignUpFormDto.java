@@ -10,4 +10,5 @@ public class SignUpFormDto {
     private String userPw;
     private String nickname;
     private String email;
+    private String token;
 }

@@ -65,6 +65,10 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      */
     private Map<String, String> findPwTokenMap;
 
+    /**
+     * 회원가입 찾기 토큰 맵
+     */
+    private Map<String, String> signUpTokenMap;
 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovSampleServiceImpl.class);
@@ -76,6 +80,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         this.verifyCodeMap = new HashMap<>();
         this.findIdTokenMap = new HashMap<>();
         this.findPwTokenMap = new HashMap<>();
+        this.signUpTokenMap = new HashMap<>();
     }
 
     /**
@@ -176,6 +181,14 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 .msg("이미 가입되어 있는 아이디입니다.")
                 .build();
         }
+        if (request.getToken() == null || request.getToken().isEmpty()) {
+            return StatusResponseDto.builder()
+                .success(false)
+                .msg("인증 정보가 없습니다.")
+                .build();
+        }
+
+        // if (this.findPwTokenMap.containsKey(request.getEmail())) {
 
         // 패스워드를 SHA256 hash해서 dto 다시 생성
         SignUpFormDto formDto = SignUpFormDto.builder()
@@ -286,18 +299,30 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         // 작업 토큰 생성
         String accessToken = UUID.randomUUID().toString();
 
+        // 아이디 찾기
         if (request.getFindMode().equals("findId")) {
             findIdTokenMap.put(request.getEmail(), accessToken);
             return StatusResponseDto.builder()
                 .success(true)
-                .msg(String.format("token: %s", accessToken))
+                .msg(String.format("accessToken=%s", accessToken))
                 .build();
         }
+
+        // 비밀번호 찾기
         if (request.getFindMode().equals("findPw")) {
             findPwTokenMap.put(request.getEmail(), accessToken);
             return StatusResponseDto.builder()
                 .success(true)
-                .msg(String.format("token: %s", accessToken))
+                .msg(String.format("accessToken=%s", accessToken))
+                .build();
+        }
+
+        // 회원가입
+        if (request.getFindMode().equals("signUp")) {
+            signUpTokenMap.put(request.getEmail(), accessToken);
+            return StatusResponseDto.builder()
+                .success(true)
+                .msg(String.format("accessToken=%s", accessToken))
                 .build();
         }
         return StatusResponseDto.builder()
@@ -585,10 +610,12 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
                 if (this.findIdTokenMap.get(request.getEmail()).equals(request.getToken())) {
                     // 토큰 제거
                     this.findIdTokenMap.remove(request.getEmail());
-                    
+
+                    UserInfoDto userInfo = getUserInfoByEmail(request.getEmail());
+
                     return StatusResponseDto.builder()
                         .success(true)
-                        .msg("successful_find_id")
+                        .msg(String.format("userId=%s", userInfo.getUserId()))
                         .build();
                 }
             }
@@ -653,6 +680,10 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
     public void setTestStatus(String key) {
         if (key.equals("testVerifyCode")) {
             verifyCodeMap.put("test@test.com", "000000");
+        } else if (key.equals("signUp1")) {
+            signUpTokenMap.put("test@test.com", "accessToken");
+        } else if (key.equals("signUp2")) {
+            signUpTokenMap.put("new_user@new_user.com", "accessToken");
         }
     }
 

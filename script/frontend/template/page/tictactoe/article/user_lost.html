@@ -22,23 +22,23 @@
             </template>
             <template v-if="status == 'printUserId'">
                 <div class="field">
-                    아이디는 ... 입니다.
+                    아이디는 {{ userId }} 입니다.
                 </div>
             </template>
             <template v-if="status == 'changeUserPw'">
                 <div class="field half">
                     <label for="userPw">패스워드</label>
-                    <input type="password" id="userPw" placeholder="패스워드" />
+                    <input type="password" id="userPw" placeholder="패스워드" v-model="userPw" />
                 </div>
                 <div class="field half">
                     <label for="userPwRe">패스워드 재입력</label>
-                    <input type="email" id="userPwRe" placeholder="패스워드 재입력" />
+                    <input type="password" id="userPwRe" placeholder="패스워드 재입력" v-model="userPwRe" />
                 </div>
             </template>
         </div>
         <ul class="actions">
             <li v-if="status == 'email'"><button type="button" @click="onClickSendEmail">이메일 발송</button></li>
-            <li v-if="status == 'email'"><button type="button" @click="onClickVerifyNo">인증번호 확인</button></li>
+            <li v-if="status == 'email'"><button type="button" @click="onClickVerifyNo" v-bind:disabled="!isVerifySent">인증번호 확인</button></li>
             <li v-if="status == 'printUserId'"><button type="button" @click="onClickOkUserId">확인</button></li>
             <li v-if="status == 'changeUserPw'"><button type="button" @click="onClickChangeUserPw">확인</button></li>
         </ul>

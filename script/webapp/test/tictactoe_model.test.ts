@@ -297,11 +297,18 @@ describe('TicTacToeModel 테스트', () => {
         expect(listGame != null).toBe(true)
         expect(listGame.length > 0)
 
-        const game = listGame[0]
-        expect(game != null).toBe(true)
-        expect(game.ownerId != null && game.ownerId.length > 0).toBe(true)
-        expect(game.chngrId != null && game.chngrId.length > 0).toBe(true)
-        expect(game.status != null && game.status.length > 0).toBe(true)
-        expect(game.board != null && game.board.length > 0).toBe(true)
+        for (let i = 0; i < listGame.length; i++) {
+            const game = listGame[i] as GameRoomDto
+            expect(game != null).toBe(true)
+            expect(game.ownerId != null && game.ownerId.length > 0).toBe(true)
+            expect(game.status != null && game.status.length > 0).toBe(true)
+            expect(game.board != null && game.board.length > 0).toBe(true)
+
+            if (game.status != 'W')
+                expect(game.chngrId != null && game.chngrId.length > 0).toBe(true)
+        }
     })
+
+    // TODO: 이메일 형식 검사
+    // TODO: 인증번호 형식 검사
 })

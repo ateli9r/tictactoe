@@ -62,7 +62,7 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 계정정보 찾기 응답
      */
     async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
-        return { success: true, msg: 'accessToken' } as StatusResponseDto
+        return { success: true, msg: 'accessToken=accessToken' } as StatusResponseDto
     }
 
     /**
@@ -72,7 +72,7 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      */
     async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
         if (request.findMode == 'findId') {
-            return { success: true, msg: 'userId' } as StatusResponseDto
+            return { success: true, msg: 'userId=userId' } as StatusResponseDto
         } else if (request.findMode == 'findPw') {
             return { success: true, msg: '' } as StatusResponseDto
         }
