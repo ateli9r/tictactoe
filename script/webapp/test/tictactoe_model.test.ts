@@ -222,7 +222,8 @@ describe('TicTacToeModel 테스트', () => {
         )
         expect(resp3 != null).toBe(true)
         expect(resp3!.success).toBe(true)
-        expect(resp3!.msg).toBe('')
+        // expect(resp3!.msg).toBe('')
+        expect(resp3!.msg.indexOf('gameId=') == 0).toBe(true)
     })
 
     /**

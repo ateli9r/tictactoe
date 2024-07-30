@@ -1,10 +1,40 @@
 <div v-if="isShowGame">
+    <form style="margin-top:40px;">
+        <div class="fields">
+            <div class="field half">
+                <div class="text-center">
+                    <b>O</b><br>
+                    #player
+                </div>
+            </div>
+            <div class="field half">
+                <div class="text-center">
+                    <b>X</b><br>
+                    #player
+                </div>
+            </div>
+        </div>
+    </form>
+
     <table>
-        <tr v-for="row in board">
-            <td v-for="cell in row" @click="onClickCell">{{ cell }}</td>
+        <tr>
+            <td @click="onClickCell(0)">{{ gameBoard[0] != '.' ? gameBoard[0] : '.' }}</td>
+            <td @click="onClickCell(1)">{{ gameBoard[1] != '.' ? gameBoard[1] : '.' }}</td>
+            <td @click="onClickCell(2)">{{ gameBoard[2] != '.' ? gameBoard[2] : '.' }}</td>
+        </tr>
+        <tr>
+            <td @click="onClickCell(3)">{{ gameBoard[3] != '.' ? gameBoard[3] : '.' }}</td>
+            <td @click="onClickCell(4)">{{ gameBoard[4] != '.' ? gameBoard[4] : '.' }}</td>
+            <td @click="onClickCell(5)">{{ gameBoard[5] != '.' ? gameBoard[5] : '.' }}</td>
+        </tr>
+        <tr>
+            <td @click="onClickCell(6)">{{ gameBoard[6] != '.' ? gameBoard[6] : '.' }}</td>
+            <td @click="onClickCell(7)">{{ gameBoard[7] != '.' ? gameBoard[7] : '.' }}</td>
+            <td @click="onClickCell(8)">{{ gameBoard[8] != '.' ? gameBoard[8] : '.' }}</td>
         </tr>
     </table>
     <div class="text-center">
         <button class="button primary small" @click="onClickQuit">나가기</button>
     </div>
+    <button type="button" class="hidden onShowClick" data-game_id="0" @click="onRefresh">refresh</button>
 </div>

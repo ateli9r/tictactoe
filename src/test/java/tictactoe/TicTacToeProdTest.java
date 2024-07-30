@@ -309,7 +309,7 @@ public class TicTacToeProdTest implements TicTacToeTest {
             .ownerId("test")
             .build());
         assertTrue(respDto3.isSuccess());
-        assertEquals(respDto3.getMsg(), "");
+        assertTrue(respDto3.getMsg().indexOf("gameId=") == 0);
     }
 
     /**

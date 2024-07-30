@@ -50,7 +50,7 @@
     </insert>
 
     <!-- int createGame(CreateGameDto request); -->
-    <insert id="createGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto">
+    <insert id="createGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.CreateGameDto" useGeneratedKeys="true" keyProperty="gameId">
         INSERT INTO `t_game_room` (`owner_id`, `status`, `board`)
         VALUES (#{ownerId}, 'W', '.........')
     </insert>

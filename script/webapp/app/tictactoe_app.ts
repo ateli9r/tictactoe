@@ -10,7 +10,6 @@ import { SendMailFormDto } from '../typedef/message_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
 import MessageLocalRepository from '../repos/message_local'
 import { CreateGameDto, GameRoomDto, JoinGameDto } from '../typedef/game_dto'
-import { UserInfo } from 'os'
 
 /**
  * 틱택토 앱
@@ -25,6 +24,9 @@ export default class TicTacToeApp {
     private isShowGame = ref(false)
     private isShowMenu = ref(true)
     private isProd = false
+
+    // private myGameId: number = 0
+    // private refGameBoard = ref('.........')
 
     private vueApp: any = {}
 
@@ -61,7 +63,7 @@ export default class TicTacToeApp {
         return true
     }
 
-    async switchGameBoard() {
+    async switchGameBoard(gameId: number) {
         this.closeModal()
         this.isShowMenu.value = false
 
@@ -71,6 +73,11 @@ export default class TicTacToeApp {
         setTimeout(() => {
             this.isShowGame.value = true
             game.fadeIn(150)
+
+            setTimeout(() => {
+                game.find('.onShowClick').data('game_id', gameId)
+                game.find('.onShowClick').get(0)?.click()
+            }, 150)
         }, 350)
     }
 
@@ -234,9 +241,9 @@ export default class TicTacToeApp {
 
             if (!resp.success) {
                 alert(resp.msg)
-            } else {
-                isVerifySent.value = true
+                return
             }
+            isVerifySent.value = true
         }
 
         const onClickCheckVerify = async () => {
@@ -484,7 +491,11 @@ export default class TicTacToeApp {
                 alert(msg)
                 return
             }
-            this.switchGameBoard()
+
+            if (resp.msg.length > 0 && resp.msg.indexOf('gameId=') == 0) {
+                const gameId = parseInt(resp.msg.substring(7))
+                this.switchGameBoard(gameId)
+            }
         }
 
         const onRefresh = async () => {
@@ -517,7 +528,7 @@ export default class TicTacToeApp {
             if (userInfo == null) return
 
             const form = {
-                gameId: 1,
+                gameId: game.gameId,
                 chngrId: userInfo.userId,
             } as JoinGameDto
 
@@ -526,8 +537,9 @@ export default class TicTacToeApp {
             if (!resp.success) {
                 const msg = resp.msg
                 alert(msg)
+                return
             }
-            this.switchGameBoard()
+            this.switchGameBoard(game.gameId)
         }
 
         const onRefresh = async () => {
@@ -620,13 +632,17 @@ export default class TicTacToeApp {
         this.vueApp.ranking = app
     }
 
+    /**
+     * VueApp - 틱택토 게임
+     */
     async renderGame(selector: string) {
+        const gameId = ref(0)
+        const gameBoard = ref('.........')
         const isShowGame = this.isShowGame
-        const board = ref([['O','X','O'],['O','X','O'],['O','X','O']])
 
-        const onClickCell = () => {
+        const onClickCell = (pos: number) => {
             // TODO: onClickCell
-            console.log('onClickCell')
+            console.log('onClickCell', pos)
         }
 
         const onClickQuit = () => {
@@ -639,13 +655,38 @@ export default class TicTacToeApp {
             this.isShowMenu.value = true
         }
 
+        const onRefresh = async () => {
+            const dataGameId = jQuery('#game').find('.onShowClick').data('game_id')
+            gameId.value = dataGameId
+
+            tickGameStatus()
+        }
+
+        /**
+         * 게임판 업데이트
+         */
+        const tickGameStatus = () => {
+            const isShowGame = this.isShowGame
+            if (!isShowGame.value) return
+
+            setTimeout(async () => {
+                const resp = await this.model.getGameRoom(gameId.value) as GameRoomDto
+                console.log(resp)
+
+                gameBoard.value = resp.board
+
+                tickGameStatus()
+            }, 1000)
+        }
+
         const app = createApp({
             setup() {
                 return {
                     isShowGame,
-                    board,
+                    gameBoard,
                     onClickCell,
                     onClickQuit,
+                    onRefresh,
                 }
             }
         })

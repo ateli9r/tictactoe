@@ -351,7 +351,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         if (this.ticTacToeRepository.createGame(request) > 0) {
             return StatusResponseDto.builder()
                 .success(true)
-                .msg("")
+                .msg(String.format("gameId=%d", request.getGameId()))
                 .build();
         } else {
             return StatusResponseDto.builder()

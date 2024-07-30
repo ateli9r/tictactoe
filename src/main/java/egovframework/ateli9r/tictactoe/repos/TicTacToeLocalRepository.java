@@ -72,7 +72,10 @@ public class TicTacToeLocalRepository implements TicTacToeRepository {
         int chk = 0;
         if (request.getTitle() != null && !request.getTitle().isEmpty()) chk++;
         if (request.getOwnerId() != null && !request.getOwnerId().isEmpty()) chk++;
-        if (chk == 2) return 1;
+        if (chk == 2) {
+            request.setGameId((long) 123);
+            return 1;
+        }
         return 0;
     }
 
