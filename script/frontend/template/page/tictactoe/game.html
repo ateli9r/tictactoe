@@ -1,36 +1,63 @@
 <div v-if="isShowGame">
     <form style="margin-top:40px;">
-        <div class="fields">
+        <div class="fields" v-if="status == 'W'">
+            <div class="field">
+                <div class="text-center">
+                    <b>WAITING...</b>
+                </div>
+            </div>
+        </div>
+        <div class="fields" v-if="['P1','P2'].includes(status)">
             <div class="field half">
                 <div class="text-center">
-                    <b>O</b><br>
-                    #player
+                    <span v-if="status != 'P1'">O</span>
+                    <b v-if="status == 'P1'">O</b>
+                    <div>{{ ownerId }}</div>
                 </div>
             </div>
             <div class="field half">
                 <div class="text-center">
-                    <b>X</b><br>
-                    #player
+                    <span v-if="status != 'P2'">X</span>
+                    <b v-if="status == 'P2'">X</b>
+                    <div>{{ chngrId }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="fields" v-if="['W1','W2'].includes(status)">
+            <div class="field">
+                <div class="text-center">
+                    <b>WINNER</b>
+                    <div>
+                        <span v-if="status == 'W1'">{{ ownerId }}</span>
+                        <span v-if="status == 'W2'">{{ chngrId }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fields" v-if="status == 'D'">
+            <div class="field">
+                <div class="text-center">
+                    <b>DRAW</b>
                 </div>
             </div>
         </div>
     </form>
 
-    <table>
+    <table class="game_board">
         <tr>
-            <td @click="onClickCell(0)">{{ gameBoard[0] != '.' ? gameBoard[0] : '.' }}</td>
-            <td @click="onClickCell(1)">{{ gameBoard[1] != '.' ? gameBoard[1] : '.' }}</td>
-            <td @click="onClickCell(2)">{{ gameBoard[2] != '.' ? gameBoard[2] : '.' }}</td>
+            <td @click="onClickCell(0)">{{ board[0] != '.' ? board[0] : '.' }}</td>
+            <td @click="onClickCell(1)">{{ board[1] != '.' ? board[1] : '.' }}</td>
+            <td @click="onClickCell(2)">{{ board[2] != '.' ? board[2] : '.' }}</td>
         </tr>
         <tr>
-            <td @click="onClickCell(3)">{{ gameBoard[3] != '.' ? gameBoard[3] : '.' }}</td>
-            <td @click="onClickCell(4)">{{ gameBoard[4] != '.' ? gameBoard[4] : '.' }}</td>
-            <td @click="onClickCell(5)">{{ gameBoard[5] != '.' ? gameBoard[5] : '.' }}</td>
+            <td @click="onClickCell(3)">{{ board[3] != '.' ? board[3] : '.' }}</td>
+            <td @click="onClickCell(4)">{{ board[4] != '.' ? board[4] : '.' }}</td>
+            <td @click="onClickCell(5)">{{ board[5] != '.' ? board[5] : '.' }}</td>
         </tr>
         <tr>
-            <td @click="onClickCell(6)">{{ gameBoard[6] != '.' ? gameBoard[6] : '.' }}</td>
-            <td @click="onClickCell(7)">{{ gameBoard[7] != '.' ? gameBoard[7] : '.' }}</td>
-            <td @click="onClickCell(8)">{{ gameBoard[8] != '.' ? gameBoard[8] : '.' }}</td>
+            <td @click="onClickCell(6)">{{ board[6] != '.' ? board[6] : '.' }}</td>
+            <td @click="onClickCell(7)">{{ board[7] != '.' ? board[7] : '.' }}</td>
+            <td @click="onClickCell(8)">{{ board[8] != '.' ? board[8] : '.' }}</td>
         </tr>
     </table>
     <div class="text-center">

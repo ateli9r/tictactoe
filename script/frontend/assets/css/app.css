@@ -22,3 +22,7 @@
 .text-center {
     text-align: center;
 }
+
+.game_board td {
+    cursor: pointer;
+}

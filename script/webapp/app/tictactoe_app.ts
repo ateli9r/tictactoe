@@ -9,7 +9,7 @@ import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
 import MessageLocalRepository from '../repos/message_local'
-import { CreateGameDto, GameRoomDto, JoinGameDto } from '../typedef/game_dto'
+import { CreateGameDto, GameRoomDto, GameUpdateDto, JoinGameDto } from '../typedef/game_dto'
 
 /**
  * 틱택토 앱
@@ -636,13 +636,50 @@ export default class TicTacToeApp {
      * VueApp - 틱택토 게임
      */
     async renderGame(selector: string) {
-        const gameId = ref(0)
-        const gameBoard = ref('.........')
         const isShowGame = this.isShowGame
+        const game = {
+            gameId: ref(0),
+            board: ref('.........'),
+            ownerId: ref(''),
+            chngrId: ref(''),
+            status: ref(''),
+        }
 
-        const onClickCell = (pos: number) => {
-            // TODO: onClickCell
-            console.log('onClickCell', pos)
+        const onClickCell = async (pos: number) => {
+            const userInfo = await this.model.getUserInfo()
+            if (userInfo == null) return
+
+            if (game.status.value == 'P1' || game.status.value == 'P2') {
+                let playerId = ''
+                if (game.status.value == 'P1') {
+                    playerId = game.ownerId.value
+                } else if (game.status.value == 'P2') {
+                    playerId = game.chngrId.value
+                }
+                if (playerId.length == 0) return
+    
+                if (userInfo.userId != playerId) {
+                    const msg = '차례가 아닙니다.'
+                    alert(msg)
+                    return
+                }
+    
+                const form = {
+                    gameId: game.gameId.value,
+                    playerId: playerId,
+                    msg: `B${pos}`,
+                } as GameUpdateDto
+                console.log(form)
+
+                const resp = await this.model.updateGame(form) as StatusResponseDto
+                console.log(resp)
+
+                if (!resp.success) {
+                    const msg = resp.msg
+                    alert(msg)
+                    return
+                }
+            }
         }
 
         const onClickQuit = () => {
@@ -657,9 +694,28 @@ export default class TicTacToeApp {
 
         const onRefresh = async () => {
             const dataGameId = jQuery('#game').find('.onShowClick').data('game_id')
-            gameId.value = dataGameId
+            game.gameId.value = dataGameId
 
+            onRenderGame()
             tickGameStatus()
+        }
+
+        const onRenderGame = async () => {
+            const resp = await this.model.getGameRoom(game.gameId.value) as GameRoomDto
+            console.log(resp)
+
+            if (resp.ownerId && game.ownerId.value != resp.ownerId) {
+                game.ownerId.value = resp.ownerId
+            }
+            if (resp.chngrId && game.chngrId.value != resp.chngrId) {
+                game.chngrId.value = resp.chngrId
+            }
+            if (resp.status && game.status.value != resp.status) {
+                game.status.value = resp.status
+            }
+            if (resp.board && game.board.value != resp.board) {
+                game.board.value = resp.board
+            }
         }
 
         /**
@@ -670,11 +726,7 @@ export default class TicTacToeApp {
             if (!isShowGame.value) return
 
             setTimeout(async () => {
-                const resp = await this.model.getGameRoom(gameId.value) as GameRoomDto
-                console.log(resp)
-
-                gameBoard.value = resp.board
-
+                onRenderGame()
                 tickGameStatus()
             }, 1000)
         }
@@ -683,7 +735,10 @@ export default class TicTacToeApp {
             setup() {
                 return {
                     isShowGame,
-                    gameBoard,
+                    ownerId: game.ownerId,
+                    chngrId: game.chngrId,
+                    board: game.board,
+                    status: game.status,
                     onClickCell,
                     onClickQuit,
                     onRefresh,
