@@ -474,15 +474,15 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         String rBoard = gameRoom.getBoard();
 
         // 턴에 해당하는 플레이어 아이디
-        boolean isCmdJoin = false;
+        // boolean isCmdJoin = false;
         boolean isCmdSwitch = false;
         String turnPlayer = null;
 
         switch (rStatus) {
-            case "IN": // JOIN
-                turnPlayer = gameUpdateDto.getPlayerId();
-                isCmdJoin = true;
-                break;
+            // case "IN": // JOIN
+            //     turnPlayer = gameUpdateDto.getPlayerId();
+            //     isCmdJoin = true;
+            //     break;
             case "P1": // TURN-PLAYER1
                 turnPlayer = gameRoom.getOwnerId();
                 isCmdSwitch = true;
@@ -544,15 +544,15 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
         // 게임방 업데이트 정보
         GameRoomRecord updateGameRoom = null;
 
-        // 게임방 참여
-        if (isCmdJoin) {
-            updateGameRoom = GameRoomRecord.builder()
-                .ownerId(gameRoom.getOwnerId())
-                .chngrId(gameRoom.getChngrId())
-                .status("P1")
-                .board(gameRoom.getBoard())
-                .build();
-        }
+        // // 게임방 참여
+        // if (isCmdJoin) {
+        //     updateGameRoom = GameRoomRecord.builder()
+        //         .ownerId(gameRoom.getOwnerId())
+        //         .chngrId(gameRoom.getChngrId())
+        //         .status("P1")
+        //         .board(gameRoom.getBoard())
+        //         .build();
+        // }
 
         // 턴 전환
         if (isCmdSwitch && boardPos.isPresent()) {
@@ -560,6 +560,8 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
             String status = rStatus.equals("P2") ? "P1" : "P2";
             StringBuffer sbBoard = new StringBuffer(rBoard);
             sbBoard.setCharAt(boardPos.get(), mark);
+
+            // TODO: 승패 판정
 
             updateGameRoom = GameRoomRecord.builder()
                 .gameId(gameRoom.getGameId())

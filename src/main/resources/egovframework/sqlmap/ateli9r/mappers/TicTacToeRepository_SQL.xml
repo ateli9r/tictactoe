@@ -58,7 +58,7 @@
     <!-- int joinGame(JoinGameDto request); -->
     <update id="joinGame" parameterType="egovframework.ateli9r.tictactoe.typedef.dto.JoinGameDto">
         UPDATE `t_game_room`
-        SET `chngr_id` = #{chngrId}, `status` = 'IN'
+        SET `chngr_id` = #{chngrId}, `status` = 'P1'
         WHERE `game_id` = #{gameId} AND `status` = 'W'
     </update>
 

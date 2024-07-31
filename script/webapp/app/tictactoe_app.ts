@@ -646,10 +646,13 @@ export default class TicTacToeApp {
         }
 
         const onClickCell = async (pos: number) => {
+            // 사용자 정보
             const userInfo = await this.model.getUserInfo()
             if (userInfo == null) return
 
+            // 게임진행 상태일 때
             if (game.status.value == 'P1' || game.status.value == 'P2') {
+                // 게임판에 두는 플레이어
                 let playerId = ''
                 if (game.status.value == 'P1') {
                     playerId = game.ownerId.value
@@ -657,12 +660,9 @@ export default class TicTacToeApp {
                     playerId = game.chngrId.value
                 }
                 if (playerId.length == 0) return
-    
-                if (userInfo.userId != playerId) {
-                    const msg = '차례가 아닙니다.'
-                    alert(msg)
-                    return
-                }
+
+                // 차례가 아닐때는 둘 수 없음
+                if (userInfo.userId != playerId) return
     
                 const form = {
                     gameId: game.gameId.value,
@@ -683,7 +683,8 @@ export default class TicTacToeApp {
         }
 
         const onClickQuit = () => {
-            if (!confirm('quit?')) return
+            const msg = '정말 나가시겠습니까?'
+            if (!confirm(msg)) return
 
             const game = jQuery('#game')
             game.fadeIn()
@@ -702,7 +703,6 @@ export default class TicTacToeApp {
 
         const onRenderGame = async () => {
             const resp = await this.model.getGameRoom(game.gameId.value) as GameRoomDto
-            console.log(resp)
 
             if (resp.ownerId && game.ownerId.value != resp.ownerId) {
                 game.ownerId.value = resp.ownerId
