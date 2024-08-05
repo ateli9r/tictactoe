@@ -134,8 +134,6 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 게임 생성 응답
      */
     async createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
-        console.log('createGame', request)
-
         const gameId = 1
         return { success: true, msg: `gameId=${gameId}` } as StatusResponseDto
     }
@@ -167,8 +165,6 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
      * @returns 게임 진행 응답
      */
     async updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
-        console.log('updateGame', request)
-
         return { success: true, msg: '' } as StatusResponseDto
     }
 

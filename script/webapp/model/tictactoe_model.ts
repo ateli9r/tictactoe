@@ -206,4 +206,40 @@ export default class TicTactoeModel {
     async listGameRoom(): Promise<GameRoomDto[] | null> {
         return await this.tttRepos?.listGameRoom() ?? null
     }
+
+
+    /**
+     * 이메일 형식 검사
+     * @param email 이메일 주소
+     * @returns 이메일 형식 여부
+     */
+    validateEmail(email: string): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+        const domainPart = email.split('@')[1]
+        
+        if (!emailRegex.test(email)) {
+            return false
+        }
+    
+        if (domainPart) {
+            const domainParts = domainPart.split('.')
+            if (domainParts.some(part => part.length === 0 || /-/.test(part[0]) || /-/.test(part[part.length - 1]))) {
+                return false
+            }
+        }
+    
+        return true
+    }
+
+
+    /**
+     * 인증번호 형식 검사
+     * @param verifyNo 인증번호
+     * @returns 인증번호 형식 여부
+     */
+    validateVerifyNo(verifyNo: string): boolean {
+        const verifyNoRegex = /^\d{6}$/
+        return verifyNoRegex.test(verifyNo)
+    }
+
 }

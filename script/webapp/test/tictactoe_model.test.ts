@@ -170,7 +170,6 @@ describe('TicTacToeModel 테스트', () => {
         } as FindAccountDto
 
         const resp = await model?.findAccount(form)
-        console.log(resp)
         expect(resp != null).toBe(true)
         expect(resp!.success).toBe(true)
         expect(resp!.msg.length > 0).toBe(true) // accessToken
@@ -318,6 +317,71 @@ describe('TicTacToeModel 테스트', () => {
         }
     })
 
-    // TODO: 이메일 형식 검사
-    // TODO: 인증번호 형식 검사
+    /**
+     * 이메일 형식 검사
+     */
+    test('validateEmail', () => {
+        const listCases = [
+            {email: 'test@example.com', isEmail: true},
+            {email: 'user@sub.domain.com', isEmail: true},
+            {email: 'user+name@example.co.uk', isEmail: true},
+            {email: 'user.name@domain.com', isEmail: true},
+            {email: 'user.name+tag+sorting@example.com', isEmail: true},
+            {email: 'user_name@domain.com', isEmail: true},
+            {email: 'username@domain.co.in', isEmail: true},
+            {email: 'username@domain', isEmail: false},  // No top-level domain
+            {email: '@domain.com', isEmail: false},  // No local part
+            {email: 'username@.com', isEmail: false},  // No domain
+            {email: 'username@domain..com', isEmail: false},  // Double dot in domain
+            {email: 'username@domain.com.', isEmail: false},  // Trailing dot
+            {email: 'user name@domain.com', isEmail: false},  // Space in local part
+            {email: 'username@domain,com', isEmail: false},  // Comma instead of dot
+            {email: 'username@-domain.com', isEmail: false},  // Leading dash in domain
+            {email: 'username@domain.c', isEmail: false},  // One character top-level domain
+            {email: 'username@domain.corporate', isEmail: true},  // Long top-level domain
+            {email: '', isEmail: false},  // Empty string
+        ]
+
+        let chk = 0
+        for (let i = 0; i < listCases.length; i++) {
+            const email = listCases[i].email
+            const isEmail = model?.validateEmail(email)
+
+            if (isEmail == listCases[i].isEmail) {
+                chk += 1
+            }
+        }
+
+        expect(chk).toBe(listCases.length)
+    })
+
+    /**
+     * 인증번호 형식 검사
+     */
+    test('validateVerifyNo', () => {
+        const listCases = [
+            {verifyNo: '123456', isOk: true},
+            {verifyNo: '000000', isOk: true},
+            {verifyNo: '999999', isOk: true},
+            {verifyNo: '12345', isOk: false},      // Less than 6 digits
+            {verifyNo: '1234567', isOk: false},    // More than 6 digits
+            {verifyNo: '12345a', isOk: false},     // Contains a letter
+            {verifyNo: '123 456', isOk: false},    // Contains a space
+            {verifyNo: '12-3456', isOk: false},    // Contains a special character
+            {verifyNo: 'abcdef', isOk: false},     // All letters
+            {verifyNo: '', isOk: false},           // Empty string
+        ];
+    
+        let chk = 0;
+        for (let i = 0; i < listCases.length; i++) {
+            const verifyNo = listCases[i].verifyNo
+            const isOk = model?.validateVerifyNo(verifyNo)
+    
+            if (isOk === listCases[i].isOk) {
+                chk += 1;
+            }
+        }
+    
+        expect(chk).toBe(listCases.length)
+    })
 })

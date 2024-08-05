@@ -64,7 +64,12 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 계정정보 찾기 응답
      */
     async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
-        throw new Error("Method not implemented.");
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/findAccount.do',
+            body: CommonUtil.toForm(request),
+        })
+        return await response?.json() as StatusResponseDto
     }
 
     /**
@@ -73,7 +78,12 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 계정찾기 적용 응답
      */
     async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
-        throw new Error("Method not implemented.");
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/findApply.do',
+            body: CommonUtil.toForm(request),
+        })
+        return await response?.json() as StatusResponseDto
     }
 
     /**
@@ -81,7 +91,11 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 게임 전적 목록
      */
     async listGameRank(): Promise<UserInfoDto[] | null> {
-        throw new Error("Method not implemented.");
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/listGameRank.do',
+        })
+        return await response?.json() as UserInfoDto[]
     }
 
     /**
@@ -89,8 +103,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @param request 게임 생성 요청
      * @returns 게임 생성 응답
      */
-    createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
-        throw new Error("Method not implemented.");
+    async createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/createGame.do',
+            body: CommonUtil.toForm(request),
+        })
+        return await response?.json() as StatusResponseDto
     }
 
     /**
@@ -98,8 +117,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @param request 게임 참가 요청
      * @returns 게임 참가 응답
      */
-    joinGame(request: JoinGameDto): Promise<StatusResponseDto | null> {
-        throw new Error("Method not implemented.");
+    async joinGame(request: JoinGameDto): Promise<StatusResponseDto | null> {
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/joinGame.do',
+            body: CommonUtil.toForm(request),
+        })
+        return await response?.json() as StatusResponseDto
     }
 
     /**
@@ -107,8 +131,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @param request 게임 진행 요청
      * @returns 게임 진행 응답
      */
-    updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
-        throw new Error("Method not implemented.");
+    async updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/updateGame.do',
+            body: CommonUtil.toForm(request),
+        })
+        return await response?.json() as StatusResponseDto
     }
 
     /**
@@ -116,15 +145,24 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @param gameId 게임방 아이디
      * @returns 게임방 정보
      */
-    getGameRoom(gameId: number): Promise<GameRoomDto | null> {
-        throw new Error("Method not implemented.");
+    async getGameRoom(gameId: number): Promise<GameRoomDto | null> {
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/getGameRoom.do',
+            body: CommonUtil.toForm({gameId: gameId}),
+        })
+        return await response?.json() as GameRoomDto
     }
 
     /**
      * 게임 리스트 조회
      * @returns 게임 리스트
      */
-    listGameRoom(): Promise<GameRoomDto[] | null> {
-        throw new Error("Method not implemented.");
+    async listGameRoom(): Promise<GameRoomDto[] | null> {
+        const response = await CommonUtil.request({
+            method: 'POST',
+            url: '/api/listGameRoom.do',
+        })
+        return await response?.json() as GameRoomDto[]
     }
 }

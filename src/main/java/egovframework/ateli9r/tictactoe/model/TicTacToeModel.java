@@ -224,7 +224,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param request 이메일 발송 요청
      * @return 이메일 발송 결과
      */
-    public StatusResponseDto sendVerifyEmail(SendMailFormDto request) {
+    public StatusResponseDto sendVerifyEmail(SendMailFormDto request) throws Exception {
         if (request.getMailTo() == null || request.getMailTo().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
@@ -260,7 +260,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param request 계정정보 찾기 요청
      * @return 계정정보 찾기 응답
      */
-    public StatusResponseDto findAccount(FindAccountDto request) {
+    public StatusResponseDto findAccount(FindAccountDto request) throws Exception {
         if (request.getFindMode() == null || request.getFindMode().isEmpty()) {
             return StatusResponseDto.builder()
                 .success(false)
@@ -450,7 +450,7 @@ public class TicTacToeModel extends EgovAbstractServiceImpl {
      * @param gameUpdateDto 게임 진행 요청
      * @return 게임 진행 응답
      */
-    public StatusResponseDto updateGame(GameUpdateDto gameUpdateDto) {
+    public StatusResponseDto updateGame(GameUpdateDto gameUpdateDto) throws Exception {
         // 게임방 아이디 검사
         if (gameUpdateDto.getGameId() == 0) {
             return StatusResponseDto.builder().msg("게임방 아이디가 없습니다.").build();
