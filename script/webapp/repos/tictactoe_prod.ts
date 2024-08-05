@@ -37,11 +37,11 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 사용자 정보
      */
     async getUserInfo(): Promise<UserInfoDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/userInfo.do',
         })
-        return await response?.json() as UserInfoDto
+        return await CommonUtil.response(resp) as UserInfoDto ?? null
     }
 
     /**
@@ -50,12 +50,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 회원가입 응답
      */
     async signUp(request: SignUpFormDto): Promise<StatusResponseDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/signUp.do',
             body: CommonUtil.toForm(request),
         })
-        return await response?.json() as StatusResponseDto
+        // return await response?.json() as StatusResponseDto
+        return await CommonUtil.response(resp) as StatusResponseDto ?? null
     }
 
     /**
@@ -64,12 +65,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 계정정보 찾기 응답
      */
     async findAccount(request: FindAccountDto): Promise<StatusResponseDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/findAccount.do',
             body: CommonUtil.toForm(request),
         })
-        return await response?.json() as StatusResponseDto
+        // return await response?.json() as StatusResponseDto
+        return await CommonUtil.response(resp) as StatusResponseDto ?? null
     }
 
     /**
@@ -78,12 +80,13 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 계정찾기 적용 응답
      */
     async findApply(request: FindApplyDto): Promise<StatusResponseDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/findApply.do',
             body: CommonUtil.toForm(request),
         })
-        return await response?.json() as StatusResponseDto
+        // return await response?.json() as StatusResponseDto
+        return await CommonUtil.response(resp) as StatusResponseDto ?? null
     }
 
     /**
@@ -91,11 +94,11 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 게임 전적 목록
      */
     async listGameRank(): Promise<UserInfoDto[] | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/listGameRank.do',
         })
-        return await response?.json() as UserInfoDto[]
+        return await CommonUtil.response(resp) as UserInfoDto[] ?? null
     }
 
     /**
@@ -104,12 +107,12 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 게임 생성 응답
      */
     async createGame(request: CreateGameDto): Promise<StatusResponseDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/createGame.do',
             body: CommonUtil.toForm(request),
         })
-        return await response?.json() as StatusResponseDto
+        return await CommonUtil.response(resp) as StatusResponseDto ?? null
     }
 
     /**
@@ -118,12 +121,12 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 게임 참가 응답
      */
     async joinGame(request: JoinGameDto): Promise<StatusResponseDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/joinGame.do',
             body: CommonUtil.toForm(request),
         })
-        return await response?.json() as StatusResponseDto
+        return await CommonUtil.response(resp) as StatusResponseDto ?? null
     }
 
     /**
@@ -132,12 +135,12 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 게임 진행 응답
      */
     async updateGame(request: GameUpdateDto): Promise<StatusResponseDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/updateGame.do',
             body: CommonUtil.toForm(request),
         })
-        return await response?.json() as StatusResponseDto
+        return await CommonUtil.response(resp) as StatusResponseDto ?? null
     }
 
     /**
@@ -146,12 +149,12 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 게임방 정보
      */
     async getGameRoom(gameId: number): Promise<GameRoomDto | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/getGameRoom.do',
             body: CommonUtil.toForm({gameId: gameId}),
         })
-        return await response?.json() as GameRoomDto
+        return await CommonUtil.response(resp) as GameRoomDto ?? null
     }
 
     /**
@@ -159,10 +162,10 @@ export default class TicTacToeProdRepository implements TicTacToeRepository {
      * @returns 게임 리스트
      */
     async listGameRoom(): Promise<GameRoomDto[] | null> {
-        const response = await CommonUtil.request({
+        const resp = await CommonUtil.request({
             method: 'POST',
             url: '/api/listGameRoom.do',
         })
-        return await response?.json() as GameRoomDto[]
+        return await CommonUtil.response(resp) as GameRoomDto[] ?? null
     }
 }

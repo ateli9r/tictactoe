@@ -88,6 +88,19 @@ export default class CommonUtil {
     }
 
     /**
+     * HTTP 응답 데이터 가져오기
+     * @param response HTTP 응답
+     * @returns 데이터 객체
+     */
+    static async response(response: any): Promise<any | null> {
+        if (response && response.ok) {
+            const respText = await response.text()
+            if (respText) return JSON.parse(respText)
+        }
+        return null
+    }
+
+    /**
      * JS 오브젝트 복사
      * @param object 복사대상 오브젝트
      * @returns 복사된 오브젝트

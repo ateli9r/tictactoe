@@ -287,4 +287,19 @@ public class TicTacToeApp {
 		return null;
 	}
 
+	/**
+	 * 테스트 상태 설정
+	 * @param key 구분 키
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/api/testStatus.do", method = RequestMethod.POST)
+	public StatusResponseDto testStatus(String key) {
+		try {
+			// 
+		} catch (Exception e) {
+			LOGGER.debug(e.getMessage());
+		}
+		return null;
+	}
+
 }

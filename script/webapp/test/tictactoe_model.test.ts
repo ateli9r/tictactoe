@@ -50,9 +50,17 @@ describe('TicTacToeModel 테스트', () => {
         expect(await model?.logout()).toBe(true)
         expect(await model?.getUserInfo() != null).toBe(false)
 
+        let userId = 'test1'
+        let userPw = 'test1'
+
+        if (process.env.PROD_TEST == 'true') {
+            userId = 'user1'
+            userPw = 'user1'
+        }
+
         const resp = await model?.login({
-            userId: 'test1',
-            userPw: 'test1',
+            userId: userId,
+            userPw: userPw,
         } as LoginRequestDto)
 
         expect(resp != null).toBe(true)
