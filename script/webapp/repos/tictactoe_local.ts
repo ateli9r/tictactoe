@@ -35,7 +35,7 @@ export default class TicTacToeLocalRepository implements TicTacToeRepository {
         this.dataUserInfo.push(...[
             {
                 userId: 'test1',
-                nickname: 'test1',
+                nickname: '테스트',
                 email: "test@test.com",
                 total: 123,
                 wins: 100,

@@ -5,7 +5,9 @@ import { StatusResponseDto } from '../typedef/cmmn_dto'
 import { SendMailFormDto } from '../typedef/message_dto'
 import { CreateGameDto, GameRoomDto, GameUpdateDto, JoinGameDto } from '../typedef/game_dto'
 import TicTacToeLocalRepository from '../repos/tictactoe_local'
+import TicTacToeProdRepository from '../repos/tictactoe_prod'
 import MessageLocalRepository from '../repos/message_local'
+import MessageProdRepository from '../repos/message_prod'
 import TicTacToeModel from '../model/tictactoe_model'
 
 
@@ -13,9 +15,15 @@ describe('TicTacToeModel 테스트', () => {
     let model: TicTacToeModel | null = null
 
     beforeAll(() => {
-        const tttRepos = new TicTacToeLocalRepository()
-        const msgRepos = new MessageLocalRepository()
-        model = new TicTacToeModel(tttRepos, msgRepos)
+        if (process.env.PROD_TEST == 'true') { // Production Test
+            const tttRepos = new TicTacToeProdRepository()
+            const msgRepos = new MessageProdRepository()
+            model = new TicTacToeModel(tttRepos, msgRepos)
+        } else { // Local Test
+            const tttRepos = new TicTacToeLocalRepository()
+            const msgRepos = new MessageLocalRepository()
+            model = new TicTacToeModel(tttRepos, msgRepos)
+        }
     })
 
     /**
